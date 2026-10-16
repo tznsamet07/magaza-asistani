@@ -256,7 +256,7 @@ body[data-role="staff"] .layout{grid-template-columns:1fr}
 .srow2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
 .skt{max-width:760px;margin:0 auto;padding:0 clamp(12px,4vw,40px) 30px;display:flex;flex-direction:column;gap:14px}
 .skt-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.skt-sum div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.skt-sum button{font:inherit;color:inherit;cursor:pointer}.skt-sum div,.skt-sum button{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
 .skt-sum b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:30px;line-height:1.1}
 .skt-sum span{font-size:12px;color:var(--muted);font-weight:600}
 .skt-sum .exp b{color:var(--danger)}
@@ -629,9 +629,12 @@ body{-webkit-font-smoothing:antialiased}
 .sf input:focus,.ssel:focus,.ssearch:focus,.sf select:focus,.rp-row input:focus,.hol-add input:focus{outline:0;border-color:var(--green)!important;box-shadow:var(--ring)}
 .si-act button,.ui .acts button,.ak-card .acts button{border-radius:10px}
 /* SKT özet kutuları */
-.skt-sum div{border:0;box-shadow:var(--card-sh);border-radius:18px;padding:14px 10px;position:relative;overflow:hidden}
-.skt-sum div::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--line)}
-.skt-sum .exp::before{background:#E5484D}.skt-sum .soon::before{background:var(--accent)}.skt-sum div:last-child::before{background:var(--green)}
+.skt-sum div,.skt-sum button{border:0;box-shadow:var(--card-sh);border-radius:18px;padding:14px 10px;position:relative;overflow:hidden}
+.skt-sum div::before,.skt-sum button::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--line)}
+.skt-sum .exp::before{background:#E5484D}.skt-sum .soon::before{background:var(--accent)}.skt-sum div:last-child::before,.skt-sum button:last-child::before{background:var(--green)}
+.skt-go{display:grid;grid-template-columns:1.6fr 1fr;gap:8px;margin:12px 0}.skt-go .btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;font-size:16px;font-weight:800}.skt-go svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+#sktAddBox:not([open]){display:none}#sktAddBox>summary h2::after{content:" · kapat";font-size:13px;font-weight:600;color:var(--muted)}#sktAddBox.known .s-nm{display:none}.s-nm{display:contents}
+.s-more{border:1px solid var(--line);border-radius:12px;padding:10px 12px}.s-more summary{cursor:pointer;font-weight:700;font-size:14px;list-style:none}.s-more summary::-webkit-details-marker{display:none}.s-more summary::before{content:"+ ";color:var(--green)}.s-more[open] summary::before{content:"− "}.s-more summary small{color:var(--muted);font-weight:500;margin-left:4px}
 .skt-sum b{font-size:34px}
 .salert{border:0;border-left:5px solid var(--danger);border-radius:14px;box-shadow:var(--card-sh)}
 .slist .si{border-radius:14px}
@@ -1001,7 +1004,7 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
 .pn-rem .btn{flex:none;padding:8px 14px}
 /* SKT ekleme: iki seçenek */
 .sadd-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sadd-row #sAdd:only-child{grid-column:1/-1}
+.sadd-row #sAdd:only-child{grid-column:1/-1}.sadd-row:has(#sSell[hidden]) #sAdd{grid-column:1/-1}
 #sSell[hidden]{display:none!important}
 .gr-demo{margin-top:2px}.gr-demo summary{font-size:13px;color:var(--muted);font-weight:600;cursor:pointer;padding:4px 0}.gr-demo .gr-emps{margin-top:8px}
 .emp-row input.emp-sicil{flex:0 0 92px;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;font-variant-numeric:tabular-nums}
@@ -1240,8 +1243,9 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
   <div class="salert" id="sAlert" role="alert" hidden></div>
   <div class="salert" id="fireAlert" role="alert" hidden style="background:#FFF4D6;border-color:#E0A21B"></div>
   <div class="skt-sum" id="sktSum"></div>
+  <div class="skt-go"><button type="button" class="btn primary" id="sGoScan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 8v8M11 8v8M14 8v8M17 8v8"/></svg>Barkod okut</button><button type="button" class="btn" id="sGoAdd">Elle ekle</button></div>
 
-  <details class="box sect" id="sktAddBox" open>
+  <details class="box sect" id="sktAddBox">
     <summary><h2>Ürün ekle</h2></summary>
     <div class="sf">
       <label>Barkod
@@ -1256,17 +1260,18 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
         <p class="hint" id="sCamMsg" aria-live="polite"></p>
         <button type="button" class="btn small" id="sCamClose">Kamerayı kapat</button>
       </div>
-      <label>Ürün adı<input id="sName" autocomplete="off" placeholder="Örn. Süt 1 L"></label>
-      <label>Ürün grubu<select id="sGroup" class="ssel"></select></label>
+      <div class="s-nm"><label>Ürün adı<input id="sName" autocomplete="off" placeholder="Örn. Süt 1 L"></label>
+      <label>Ürün grubu<select id="sGroup" class="ssel"></select></label></div>
       <div class="srow2">
         <label>Son kullanma tarihi<input type="date" id="sDate"></label>
         <label>Adet<input type="number" id="sQty" min="1" value="1" inputmode="numeric"></label>
       </div>
+      <details class="s-more"><summary>Diğer bilgiler <small>uyarı günü, reyon, fiyat</small></summary><div class="sf" style="margin-top:8px">
       <div class="srow2">
         <label>Kaç gün kala uyarsın<input type="number" id="sWarn" min="0" max="365" inputmode="numeric"></label>
         <label>Reyon / raf<input id="sShelf" autocomplete="off" placeholder="İsteğe bağlı"></label>
       </div>
-      <label>Satış fiyatı (₺, isteğe bağlı)<input id="sPrice" inputmode="decimal" autocomplete="off" placeholder="Fire tutarı için; barkodla hatırlanır"></label>
+      <label>Satış fiyatı (₺)<input id="sPrice" inputmode="decimal" autocomplete="off" placeholder="Fire tutarı için"></label></div></details>
       <div id="sPrev" class="sknown" hidden></div>
       <div class="sadd-row"><button type="button" class="btn primary" id="sAdd">Listeye ekle</button><button type="button" class="btn" id="sSell" hidden>Satıldı</button></div>
       <p class="hint" style="margin:0" id="sAddHint">Barkod bir kez girilince ürün bilgileri hatırlanır.</p>
@@ -1275,9 +1280,9 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
 
   <div class="box">
     <div class="sfilter" role="group" aria-label="Liste">
-      <button type="button" data-sf="kontrol" aria-pressed="true">Kontrol edilecek</button>
-      <button type="button" data-sf="tumu" aria-pressed="false">Tüm ürünler</button>
-      <button type="button" data-sf="done" aria-pressed="false">Kaldırılan / satılan</button>
+      <button type="button" data-sf="kontrol" aria-pressed="true">Kontrol et</button>
+      <button type="button" data-sf="tumu" aria-pressed="false">Tümü</button>
+      <button type="button" data-sf="done" aria-pressed="false">Geçmiş</button>
     </div>
     <input type="search" id="sSearch" class="ssearch" placeholder="Ara: ürün, barkod, reyon" aria-label="Ara">
     <ul class="slist" id="sList"></ul>
@@ -1300,15 +1305,17 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
   </details>
 
   <details class="box sect" id="sCatBox">
-    <summary><h2>Kayıtlı ürünler <span class="ccount" id="sCatCount"></span></h2></summary>
-    <p class="hint">Okuttuğun her barkod burada saklanır. Bir sonraki okutmada adı, reyonu ve uyarı günü kendiliğinden dolar. Bilgisi yanlışsa buradan düzeltebilirsin.</p>
+    <summary><h2>Ürün kataloğu <span class="ccount" id="sCatCount"></span></h2></summary>
+    <p class="hint">Barkodu okutulan ürünler burada. Bilgisi yanlışsa buradan düzelt.</p>
     <input type="search" id="sCatSearch" class="ssearch" placeholder="Ara: ürün veya barkod" aria-label="Kayıtlı ürünlerde ara">
     <ul class="slist" id="sCatList"></ul>
+<div class="s-imp" hidden>
     <h3 style="font-size:16px;margin:16px 0 4px">Toplu ürün yükle</h3>
     <p class="hint" style="margin:0 0 6px">Her satıra bir ürün: <b>barkod; ürün adı; grup; satış fiyatı</b> (grup ve fiyat isteğe bağlı). Excel'den iki sütunu kopyalayıp yapıştırabilir ya da .csv / .txt dosyası seçebilirsin.</p>
     <textarea id="sImpText" class="simp" rows="4" placeholder="8690000000011; Süt 1 L&#10;8690000000028; Tavuk but; Tavuk / beyaz et"></textarea>
     <div class="simp-act"><label class="btn small simp-file">Dosya seç<input type="file" id="sImpFile" accept=".csv,.txt,text/plain,text/csv" hidden></label><button type="button" class="btn small" id="sImpBtn">Listeye ekle</button><button type="button" class="btn small" id="sExpBtn">Listeyi paylaş</button></div>
     <p class="hint" style="margin:6px 0 0">“Listeyi paylaş” kayıtlı ürünleri bu biçimde metin olarak verir; mağazadaki diğer telefonlara WhatsApp ile gönderip oraya yapıştırabilirsin.</p>
+  </div>
   </details>
 
   <details class="box sect">
@@ -2951,7 +2958,7 @@ function render(){
   const maxLate=late.reduce((m,i)=>Math.max(m,-daysLeft(remDate(i))),0);
   $('sAlert').hidden=!late.length;
   $('sAlert').innerHTML=late.length?`<b>${late.length} ürün hâlâ raftan kaldırılmadı.</b> ${maxLate>1?`En eskisi ${maxLate} gündür bekliyor. `:''}“Raftan kaldırıldı” diye işaretlenene kadar her gün uyarı verilir.`:'';
-  $('sktSum').innerHTML=`<div class="exp"><b>${c.exp}</b><span>Kaldırılmadı</span></div><div class="soon"><b>${c.soon}</b><span>Yaklaşan</span></div><div><b>${c.all}</b><span>Takipte</span></div>`;
+  $('sktSum').innerHTML=`<button type="button" class="exp" data-sf="kontrol"><b>${c.exp}</b><span>Kaldırılacak</span></button><button type="button" class="soon" data-sf="kontrol"><b>${c.soon}</b><span>Yaklaşan</span></button><button type="button" data-sf="tumu"><b>${c.all}</b><span>Takipte</span></button>`;
   const q=()=>($('sSearch').value||'').toLocaleLowerCase('tr-TR').trim();
   if(filter==='done'){renderFireList(q());return;}
   let list=S().items.filter(i=>!i.done);
@@ -2979,6 +2986,7 @@ function render(){
 let lastFilled='';
 function showKnown(c,bc){
   const k=$('sKnown');k.classList.remove('web');
+  $('sktAddBox').classList.toggle('known',!!(c&&c.name));
   if(!c){k.hidden=true;return;}
   const n=S().items.filter(i=>i.barcode===bc).length;
   k.hidden=false;k.textContent=`Kayıtlı ürün: ${c.name||'(adsız)'}${n?`, daha önce ${n} kez eklendi`:''}. Sadece tarihi seç.`;
@@ -3397,6 +3405,8 @@ $('moreMenu').addEventListener('click',e=>{if(e.target.closest('.more-list butto
 document.addEventListener('click',e=>{const m=$('moreMenu');if(m.open&&!m.contains(e.target))m.open=false;});
 $('sAdd').addEventListener('click',add);
 $('sScan').addEventListener('click',startScan);
+$('sGoScan').addEventListener('click',()=>{$('sktAddBox').open=true;$('sktAddBox').scrollIntoView({behavior:'smooth',block:'start'});if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&('BarcodeDetector' in window))startScan();else $('sPhotoBtn').click();});
+$('sGoAdd').addEventListener('click',()=>{$('sktAddBox').open=true;$('sktAddBox').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>$('sBar').focus(),250);});
 $('sCamClose').addEventListener('click',stopScan);
 function sellVis(){const bc=$('sBar').value.trim(),on=!!bc&&S().items.some(i=>!i.done&&i.barcode===bc);$('sSell').hidden=!on;
   $('sAddHint').textContent=on?'Bu ürün listede var. Yeni tarihli parti ise Listeye ekle, satıldıysa Satıldı (en yakın tarihliden düşer).':'Barkod bir kez girilince ürün bilgileri hatırlanır.';
@@ -3408,10 +3418,10 @@ $('sBar').addEventListener('change',()=>{if(!fillFromCatalog(true))lookupOnline(
 $('sBar').addEventListener('input',()=>{const bc=$('sBar').value.trim();if(S().catalog[bc]){fillFromCatalog(true);}else showKnown(null);});
 $('sBar').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();fillFromCatalog(true);($('sName').value?$('sDate'):$('sName')).focus();}});
 $('sSearch').addEventListener('input',render);
-document.querySelector('.sfilter').addEventListener('click',e=>{
+const sfClick=e=>{
   const b=e.target.closest('[data-sf]');if(!b)return;filter=b.dataset.sf;
-  document.querySelectorAll('.sfilter [data-sf]').forEach(x=>x.setAttribute('aria-pressed',x===b));render();
-});
+  document.querySelectorAll('.sfilter [data-sf]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.sf===filter));render();if(b.closest('#sktSum'))$('sList').scrollIntoView({behavior:'smooth',block:'center'});
+};document.querySelector('.sfilter').addEventListener('click',sfClick);$('sktSum').addEventListener('click',sfClick);
 $('sList').addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b)return;
   const it=S().items.find(i=>i.id===b.dataset.id);if(!it)return;
@@ -4873,6 +4883,7 @@ const monOf=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));re
 const wkAd=w=>`${fmtD(w)} – ${fmtD(wkAdd(w,6))}`;
 const dolu=W=>!!W&&Object.values(W).some(r=>Array.isArray(r)&&r.some(c=>c&&c.k));
 if(!Array.isArray(D.vd)){D.vd=[{id:uid(),tip:'deg',store:'s3',w:monOf(),by:'Serçeönü 3360 MS',at:isoAt(18,40,-1),L:[{ad:'Hüseyin Koç',gun:wkAdd(monOf(),Math.min(6,(new Date().getDay()+6)%7+1)),from:'Sabah 08:30–16:30',to:'Rapor'}]}];save();}
+document.addEventListener('click',e=>{if(e.target.closest('#tabV'))setTimeout(()=>{const L=notifs().filter(x=>x.go&&x.go.tab==='v');if(L.length){dismiss(L);updBell();}},50);},true);
 function vdKontrol(force){const g=giris();if(!g||g.tip!=='magaza')return;const b=document.body;if(!force&&b.classList.contains('tab-v')&&!document.hidden)return;
   const st=V.state(),S0=st.schedules||{},E={};(st.employees||[]).forEach(e=>{if(e&&e.id)E[e.id]=(e.name||'').trim()||'Çalışan';});
   const ilk=!st.vdSnap,snap=st.vdSnap=st.vdSnap||{},min=wkAdd(monOf(),-7);let deg=0;
@@ -5277,8 +5288,10 @@ function render(){
   }
   el.innerHTML=h;
   const c=$('icChat');if(c)c.scrollTop=c.scrollHeight;
-  updBell();
+  autoRead();updBell();
 }
+/* Açılan sayfa okundu sayılır: bildirimi bu sayfayı gösteren her şey (mesaj, sohbet, talep, form, vardiya değişikliği) zilden düşer */
+function autoRead(){if($('icView').hidden||!giris())return;const L=notifs().filter(x=>x.go&&x.go.page===ui.page&&(!x.go.id||x.go.id===ui.id));if(L.length)dismiss(L);}
 // Bildirim: gerçek sistemde telefona anlık bildirim (push) gider; demoda bu cihazda bildirim gösterilir
 function notify(r){const title=`BS'den yeni ${TYPES[r.type].toLocaleLowerCase('tr-TR')}`,body=r.title;
   try{if('Notification' in window&&Notification.permission==='granted'){navigator.serviceWorker&&navigator.serviceWorker.getRegistration?navigator.serviceWorker.getRegistration().then(g=>g&&g.showNotification?g.showNotification(title,{body,tag:'ic-'+r.id}):new Notification(title,{body})).catch(()=>new Notification(title,{body})):new Notification(title,{body});}}catch(e){}
