@@ -4497,13 +4497,20 @@ function keep(){['grStore:store','grSicil:sicil','grName:name','grRole:role','gr
 /* Sicilden kişi ve görev: merkezi kayıt (BS, PM, GM, depo) ya da mağaza çalışan listesi */
 function rozet(g){if(!g)return null;const t=g.tip;if(t==='pm'&&g.unvan==='GM')return {k:'GM',t:'Genel müdürlük'};if(t==='pm'&&g.unvan==='BM')return {k:'BM',t:'Bölge müdürü'};if(t==='pm')return {k:'PM',t:'PM'};if(t==='bs')return {k:'BS',t:'Bölge sorumlusu'};if(t==='depo')return {k:'DEPO',t:'Depo'+(g.unvan?' · '+g.unvan:'')};const u=g.unvan||g.role||'PER';return {k:u==='PER'?'PER':u,t:UNVAN[u]||u};}
 function bul(sc){sc=String(sc||'').replace(/\D/g,'');if(sc.length<3)return null;const k=KAYIT[sc];if(k)return k.tip==='depo'?{tip:'depo',ad:k.ad,depo:k.depo||'',unvan:k.unvan||'',sicil:sc}:{tip:k.tip,ad:k.ad,bolge:k.bolge||'',unvan:k.unvan,sicil:sc};
-  const e=emps().find(x=>String(x.sicil||'')===sc);return e?{tip:'magaza',ad:e.name.trim(),unvan:e.role||'PER',empId:e.id,magaza:(AB().store||window.__MGDEF).trim(),sicil:sc}:null;}
-function kimText(sc){const g=bul(sc);return g?`${esc(g.ad)} · ${esc(rozet(g).t)}`:'';}
+  const e=emps().find(x=>String(x.sicil||'')===sc);if(e)return {tip:'magaza',ad:e.name.trim(),unvan:e.role||'PER',empId:e.id,magaza:cihazMg(),sicil:sc};
+  const m=merkez().find(r=>r[0]===sc);if(!m)return null;const M=window.__mg,o=M&&M.kod(m[3]);return {tip:'magaza',ad:m[1],unvan:['MS','MSY','GT','PER','PART'].includes(m[2])?(m[2]==='PART'?'PER':m[2]):'PER',empId:null,magaza:o?o.isim:m[3],sicil:sc};}
+/* Merkezi çalışan kaydı: gönderilen çalışan listesi (bimVeri.calisanlar: sicil, ad, unvan, mağaza kodu) + sunum için diğer mağazalardan örnek kişiler.
+   Sicil yazılınca kişinin mağazası buradan gelir; bu cihazın mağazasına bağlı değildir. */
+/* Bu telefonun mağazası: çalışan listesi ve vardiya bu mağazaya aittir. Başka mağazadan biri girince oturumun mağazası değişir, bu değişmez. */
+function cihazMg(){const st=V.state();if(!st.cihazMg){st.cihazMg=(AB().store||window.__MGDEF).trim();V.save();}return st.cihazMg;}
+const DEMO_CAL=[['105210','Hatice Er','MS','3361'],['105233','Mert Şahin','MSY','3366'],['105247','Zehra Kılınç','PER','6182']];
+function merkez(){let L=[];try{L=(JSON.parse(document.getElementById('bimVeri').textContent).calisanlar||[]).map(r=>[String(r[0]),String(r[1]||''),String(r[2]||'').toUpperCase(),String(r[3]||'').toUpperCase()]);}catch(e){}return L.concat(DEMO_CAL.filter(d=>!L.some(r=>r[0]===d[0])));}
+function kimText(sc){const g=bul(sc);return g?`${esc(g.ad)} · ${esc(rozet(g).t)}${g.tip==='magaza'&&g.magaza?' · '+esc(g.magaza):''}`:'';}
 function rozetCiz(g){const r=$('grRozet');if(!r)return;const z=rozet(g);r.hidden=!z;if(z){r.textContent=z.k;r.title=z.t;r.className='gr-rozet r-'+z.k.toLowerCase();}}
 function draw(){
   const el=$('girisBody');let h='';
   if(step==='sicil'){
-    const E=emps().filter(e=>e.sicil),DM=[...E.map(e=>[e.sicil,e.name,e.role]),...Object.entries(KAYIT).map(([n,k])=>[n,k.ad,rozet(k).k])];
+    const E=emps().filter(e=>e.sicil),DM=[...E.map(e=>[e.sicil,e.name,e.role]),...DEMO_CAL.map(r=>[r[0],r[1]+' · '+((window.__mg&&window.__mg.kod(r[3])||{}).ad||r[3]),r[2]]),...Object.entries(KAYIT).map(([n,k])=>[n,k.ad,rozet(k).k])];
     h=`<div class="sf">
       <label>Sicil numaran<input id="grSicil" inputmode="numeric" autocomplete="off" maxlength="10" value="${esc(form.sicil||'')}" placeholder="Örn. 104512"></label>
       <p class="hint" id="grKim" style="margin:0">${kimText(form.sicil)}</p>
@@ -4531,7 +4538,7 @@ function draw(){
   el.innerHTML=h+(step==='tel'||step==='kod'?'<p class="gr-note">Sunum sürümü: kod ekranda SMS gibi gösterilir. Gerçek SMS, uygulama sunucuya bağlanınca gelecek.</p>':'');if(step==='kod'){tick();setTimeout(()=>{const o=el.querySelector('[data-otp]');if(o)o.focus();},50);return;}
   const f=el.querySelector('input:not([type=hidden])');if(f&&step!=='tip'&&!f.value)setTimeout(()=>f.focus(),50);
 }
-function show(){G=null;step='sicil';sel=null;form={store:AB().store||'',sicil:'',name:'',role:'PER',bolge:''};
+function show(){G=null;step='sicil';sel=null;form={store:'',sicil:'',name:'',role:'PER',bolge:''};
   document.body.classList.add('giris-lock');$('giris').hidden=false;const n=$('icNote');if(n)n.hidden=true;draw();window.scrollTo(0,0);}
 function label(g){return g.tip==='pm'?{ad:g.ad,rol:(g.unvan==='GM'?'Genel müdürlük':g.unvan==='BM'?'Bölge müdürü':'PM')+(g.bolge?' · '+g.bolge:'')+(g.sicil?' · Sicil '+g.sicil:'')}:g.tip==='depo'?{ad:g.ad,rol:'Depo'+(g.depo?' · '+g.depo:'')+(g.sicil?' · Sicil '+g.sicil:'')}:g.tip==='bs'?{ad:g.ad,rol:'Bölge sorumlusu'+(g.bolge?' · '+g.bolge:'')+(g.sicil?' · Sicil '+g.sicil:'')}:{ad:g.ad,rol:(UNVAN[g.unvan]||'')+' · '+(g.magaza||'')+(g.sicil?' · Sicil '+g.sicil:'')};}
 /* Ayarlar > Mağazam (mağaza rolleri) ya da Bölgem (BS, PM, depo): mağaza listesinden kod, adres, bölge */
