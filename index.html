@@ -821,6 +821,8 @@ body{-webkit-font-smoothing:antialiased}
 .sk-main{flex:1;min-width:0}.sk-plaka{display:inline-block;font-weight:800;font-size:16px;letter-spacing:.06em;border:2px solid var(--ink);border-left:10px solid #2F57B8;border-radius:6px;padding:2px 8px;background:var(--panel)}
 .sk-main small{display:block;color:var(--muted);font-size:12.5px;margin-top:4px}
 .ic-av.iz{background:#2F8F6B;color:#fff}.ic-av.iz svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ky-st{display:grid;gap:4px;border-radius:12px;padding:12px 14px;border-left:5px solid var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--panel))}.ky-st span{font-size:14px;color:var(--ink)}
+.ky-st.ok{border-left-color:var(--ok,var(--green));background:color-mix(in srgb,var(--ok,var(--green)) 12%,var(--panel))}.ky-st.no{border-left-color:var(--danger);background:var(--danger-bg)}
 .iz-list{list-style:none;margin:8px 0 0;padding:0}.iz-row{padding:12px 0;border-top:1px solid var(--line)}.iz-row:first-child{border-top:0}
 .iz-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.iz-top b{display:block}.iz-top b small{color:var(--muted);font-weight:600}.iz-top>div>small{color:var(--muted);font-size:13px}
 .iz-not{margin:6px 0 0;font-size:14px}.iz-act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -4686,10 +4688,22 @@ const UNVAN={MS:'Mağaza Sorumlusu',MSY:'Mağaza Sorumlu Yardımcısı',GT:'Gün
 const KISA={MS:'MS',MSY:'MSY',GT:'GT',PER:'Personel',PART:'Part'};
 if(window.__unvan)window.__unvan(UNVAN,KISA);
 /* Sicil kaydı (sunum). Gerçek sürümde ~14.000 mağaza ve tüm çalışanlar merkezi kayıtta tutulur; giriş sicille yapılır, kişinin görevi, mağazası ya da bölgesi kayıttan gelir. */
-const KAYIT={'200118':{tip:'bs',ad:'Ali Yıldırım',bolge:'Finike bölgesi'},'200126':{tip:'bs',ad:'Murat Kaya',bolge:'Kumluca bölgesi'},'200134':{tip:'bs',ad:'Selin Aydın',bolge:'Kaş bölgesi'},'300021':{tip:'pm',ad:'Kemal Arslan',bolge:'Antalya Bölge Müdürlüğü'},'900012':{tip:'pm',unvan:'GM',ad:'Selim Aktaş',bolge:''},'400305':{tip:'depo',ad:'Hakan Öztürk',unvan:'Sevkiyat elemanı',depo:'Döşemealtı-2 deposu (9562)'},'300009':{tip:'pm',unvan:'BM',ad:'Nihat Öz',bolge:'Antalya Bölge Müdürlüğü'}};
+const KAYIT={'200118':{tip:'bs',ad:'Ali Yıldırım',bolge:'Finike bölgesi'},'200126':{tip:'bs',ad:'Murat Kaya',bolge:'Kumluca bölgesi'},'200134':{tip:'bs',ad:'Selin Aydın',bolge:'Kaş bölgesi'},'300021':{tip:'pm',ad:'Kemal Arslan',bolge:'Antalya Bölge Müdürlüğü'},'900012':{tip:'pm',unvan:'GM',ad:'Selim Aktaş',bolge:''},'400305':{tip:'depo',ad:'Hakan Öztürk',unvan:'Sevkiyat elemanı',depo:'Döşemealtı-2 deposu (9562)'},'400412':{tip:'depo',ad:'Derya Koç',unvan:'İnsan kaynakları',depo:'Döşemealtı-2 deposu (9562)'},'300009':{tip:'pm',unvan:'BM',ad:'Nihat Öz',bolge:'Antalya Bölge Müdürlüğü'}};
 const AB=()=>{const s=V.state();s.ab=s.ab||{};return s.ab;};
 const IC_MG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></svg>';
-let G=null,step='sicil',sel=null,form={store:'',name:'',role:'PER',bolge:''};
+let G=null,step='sicil',sel=null,form={store:'',name:'',role:'PER',bolge:''},bek=null;
+/* Yeni çalışan kaydı: sicili listede olmayan kişi kayıt olur, insan kaynakları (İK) onaylar.
+   İK isterse bölge sorumlularına (BS) da onay yetkisi verir. Sunumda aynı telefonda saklanır; gerçekte sunucuda tutulur. */
+const KYK='magaza-kayit';
+function KY(){let o=null;try{o=JSON.parse(localStorage.getItem(KYK)||'null');}catch(e){}if(!o||!Array.isArray(o.list))o={list:[],bsYetki:{}};if(!o.bsYetki)o.bsYetki={};
+  if(!o.seed){o.seed=1;const ago=m=>new Date(Date.now()-m*60000).toISOString();
+    o.list.push({id:'ky1',sicil:'105301',ad:'Burak Demir',unvan:'PER',magaza:'ACISU K767',at:ago(95),durum:'bek'},{id:'ky2',sicil:'105318',ad:'Elif Yurt',unvan:'PER',magaza:window.__MGDEF||'',at:ago(40),durum:'bek'});KYsave(o);}
+  return o;}
+function KYsave(o){try{localStorage.setItem(KYK,JSON.stringify(o));}catch(e){}}
+const kyOf=sc=>KY().list.find(x=>x.sicil===sc);
+window.__kayit={get:KY,save:KYsave,
+  bsler:()=>Object.entries(KAYIT).filter(([,k])=>k.tip==='bs').map(([sc,k])=>({sicil:sc,ad:k.ad,bolge:k.bolge||''})),
+  yetkili:()=>!!G&&(G.tip==='depo'||(G.tip==='bs'&&!!KY().bsYetki[G.sicil]))};
 /* SMS doğrulama (sunum): kod ekranda SMS bildirimi olarak gösterilir. Gerçekte kod SMS sağlayıcısıyla (ör. Firebase Auth) telefona gider. */
 let pend=null,prev='sicil',tel='',sms=null,tmr=null;
 const TKEY='magaza-tel',telKey=g=>g.tip+':'+(g.empId||g.ad).toString().toLocaleLowerCase('tr-TR');
@@ -4712,6 +4726,7 @@ function keep(){['grStore:store','grSicil:sicil','grName:name','grRole:role','gr
 function rozet(g){if(!g)return null;const t=g.tip;if(t==='pm'&&g.unvan==='GM')return {k:'GM',t:'Genel müdürlük'};if(t==='pm'&&g.unvan==='BM')return {k:'BM',t:'Bölge müdürü'};if(t==='pm')return {k:'PM',t:'PM'};if(t==='bs')return {k:'BS',t:'Bölge sorumlusu'};if(t==='depo')return {k:'DEPO',t:'Depo'+(g.unvan?' · '+g.unvan:'')};const u=g.unvan||g.role||'PER';return {k:u==='PER'?'PER':u,t:UNVAN[u]||u};}
 function bul(sc){sc=String(sc||'').replace(/\D/g,'');if(sc.length<3)return null;const k=KAYIT[sc];if(k)return k.tip==='depo'?{tip:'depo',ad:k.ad,depo:k.depo||'',unvan:k.unvan||'',sicil:sc}:{tip:k.tip,ad:k.ad,bolge:k.bolge||'',unvan:k.unvan,sicil:sc};
   const e=emps().find(x=>String(x.sicil||'')===sc);if(e)return {tip:'magaza',ad:e.name.trim(),unvan:e.role||'PER',empId:e.id,magaza:cihazMg(),sicil:sc};
+  const ky=kyOf(sc);if(ky&&ky.durum==='onay')return {tip:'magaza',ad:ky.ad,unvan:ky.unvan||'PER',empId:null,magaza:ky.magaza,sicil:sc};
   const m=merkez().find(r=>r[0]===sc);if(!m)return null;const M=window.__mg,o=M&&M.kod(m[3]);return {tip:'magaza',ad:m[1],unvan:['MS','MSY','GT','PER','PART'].includes(m[2])?(m[2]==='PART'?'PER':m[2]):'PER',empId:null,magaza:o?o.isim:m[3],sicil:sc};}
 /* Merkezi çalışan kaydı: gönderilen çalışan listesi (bimVeri.calisanlar: sicil, ad, unvan, mağaza kodu) + sunum için diğer mağazalardan örnek kişiler.
    Sicil yazılınca kişinin mağazası buradan gelir; bu cihazın mağazasına bağlı değildir. */
@@ -4730,11 +4745,17 @@ function draw(){
     h=`<div class="sf">
       <label>Sicil numaran<input id="grSicil" inputmode="numeric" autocomplete="off" maxlength="10" value="${esc(form.sicil||'')}" placeholder="Örn. 104512"></label>
       <div id="grKim" aria-live="polite">${kimText(form.sicil)}</div>
-      ${sel==='yeni'?`<p class="hint" style="margin:0">Bu sicil numarası kayıtlı değil. Mağaza kodunu, adını ve görevini yaz; MS seni çalışan listesine ekleyince sadece sicille girersin.</p><label>Mağaza kodu ya da adı<input id="grStore" autocomplete="off" value="${esc(form.store)}" placeholder="Örn. K767 ya da Acısu"></label><div id="grMgBul" class="gr-mg">${mgBul(form.store)}</div><div class="srow2"><label>Adın soyadın<input id="grName" autocomplete="name" value="${esc(form.name)}"></label><label>Görevin<select id="grRole">${['MS','MSY','GT','PER'].map(r=>`<option value="${r}"${form.role===r?' selected':''}>${UNVAN[r]}</option>`).join('')}</select></label></div>`:''}
+      ${sel==='yeni'?`<p class="hint" style="margin:0">Bu sicil numarası kayıtlı değil. Mağaza kodunu, adını ve görevini yaz. Kaydın insan kaynaklarının onayından sonra açılır.</p><label>Mağaza kodu ya da adı<input id="grStore" autocomplete="off" value="${esc(form.store)}" placeholder="Örn. K767 ya da Acısu"></label><div id="grMgBul" class="gr-mg">${mgBul(form.store)}</div><div class="srow2"><label>Adın soyadın<input id="grName" autocomplete="name" value="${esc(form.name)}"></label><label>Görevin<select id="grRole">${['MS','MSY','GT','PER'].map(r=>`<option value="${r}"${form.role===r?' selected':''}>${UNVAN[r]}</option>`).join('')}</select></label></div>`:''}
       <p class="auth-err" id="grErr" role="alert"></p>
       <button type="button" class="btn primary" id="grGo" style="width:100%">Devam</button>
       <p class="hint" style="margin:2px 0 0;text-align:center">Görevin sicilinden bulunur, telefonuna gelen kodla girersin.</p>
       <details class="gr-demo"><summary>Sunum: örnek sicil numaraları</summary><div class="gr-emps">${DM.map(([n,a,k])=>`<button type="button" data-grsicil="${esc(n)}"><b>${esc(n)}</b><small>${esc(a)} · ${esc(k)}</small></button>`).join('')}</div></details></div>`;
+  }else if(step==='bekle'){
+    const r=kyOf(bek.sicil)||bek,K=r.karar,kim=K?`${esc(K.by)}${K.rol?' ('+esc(K.rol)+')':''}`:'';
+    const who=`<p class="gr-who">${esc(r.ad)} · ${esc(UNVAN[r.unvan]||r.unvan||'')}<small style="display:block;font-weight:600;color:var(--muted);margin-top:2px">${esc(r.magaza||'')} · Sicil ${esc(r.sicil)}</small></p>`;
+    h=r.durum==='onay'?`<div class="sf"><div class="ky-st ok"><b>✓ Kaydın onaylandı</b><span>${kim} onayladı. Artık sicil numaranla girebilirsin.</span></div>${who}<button type="button" class="btn primary" id="grGo" style="width:100%">Giriş yap</button></div>`
+      :r.durum==='red'?`<div class="sf"><div class="ky-st no"><b>Kaydın onaylanmadı</b><span>${kim?kim+' onaylamadı.':''}${K&&K.not?' Not: '+esc(K.not):''} Bilgilerin yanlışsa düzeltip tekrar başvurabilirsin ya da mağaza müdürüne danış.</span></div>${who}<button type="button" class="btn primary" id="grKyYeni" style="width:100%">Bilgileri düzelt, tekrar başvur</button></div><button type="button" class="auth-link" data-grback>‹ Başa dön</button>`
+      :`<div class="sf"><div class="ky-st wait"><b>Kaydın onay bekliyor</b><span>İnsan kaynakları onaylayınca bu sicille girebilirsin. Onay bölge sorumlusundan da gelebilir.</span></div>${who}<button type="button" class="btn primary" id="grGo" style="width:100%">Durumu kontrol et</button></div><button type="button" class="auth-link" data-grback>‹ Başa dön</button>`;
   }else if(step==='tel'){
     h=`<div class="sf"><p class="gr-who">${esc(pend.ad)} · ${pend.tip==='bs'?'Bölge sorumlusu':pend.tip==='pm'?'PM':pend.tip==='depo'?'Depo':esc(UNVAN[pend.unvan]||'')}${pend.magaza||pend.bolge||pend.depo?`<small style="display:block;font-weight:600;color:var(--muted);margin-top:2px">${esc(pend.magaza||pend.bolge||pend.depo)}${pend.sicil?' · Sicil '+esc(pend.sicil):''}</small>`:''}</p>
       <label>Cep telefonun<div class="gr-tel"><span>+90</span><input id="grTel" type="tel" inputmode="tel" autocomplete="tel-national" value="${esc(tel?telFmt(tel):'')}" placeholder="05xx xxx xx xx"></div></label>
@@ -4768,7 +4789,7 @@ function apply(g){
   G=g;const b=document.body;b.classList.remove('giris-lock');$('giris').hidden=true;
   b.classList.toggle('giris-bs',g.tip==='bs');b.classList.toggle('giris-depo',g.tip==='depo');b.classList.toggle('giris-pm',g.tip==='pm');
   b.dataset.role=g.tip==='pm'?'pm':g.tip==='depo'?'depo':g.tip==='bs'?'bs':(['MS','MSY','GT'].includes(g.unvan)?'admin':'staff');
-  $('userbar').hidden=false;const un=$('userName');un.style.display='';const fn=String(g.ad||'').trim().split(/\s+/)[0];un.textContent=g.tip==='pm'?`${fn} · ${['GM','BM'].includes(g.unvan)?g.unvan:'PM'}`:g.tip==='depo'?`${fn} · Depo`:g.tip==='bs'?`${fn} · BS`:`${fn} · ${KISA[g.unvan]||''}`;
+  $('userbar').hidden=false;const un=$('userName');un.style.display='';const fn=String(g.ad||'').trim().split(/\s+/)[0];un.textContent=g.tip==='pm'?`${fn} · ${['GM','BM'].includes(g.unvan)?g.unvan:'PM'}`:g.tip==='depo'?`${fn} · ${g.unvan==='İnsan kaynakları'?'İK':'Depo'}`:g.tip==='bs'?`${fn} · BS`:`${fn} · ${KISA[g.unvan]||''}`;
   const L=label(g);$('hsAv').textContent=g.tip==='bs'?'BS':g.tip==='pm'?(['GM','BM'].includes(g.unvan)?g.unvan:'PM'):g.tip==='depo'?'D':(g.ad||'?').trim()[0].toLocaleUpperCase('tr-TR');$('hsAv').classList.toggle('bs',g.tip==='bs');$('hsAd').textContent=L.ad;$('hsRol').textContent=L.rol+(g.tel?' · '+telFmt(g.tel):'');
   mgKutu(g);
   $('icView').hidden=true;
@@ -4776,7 +4797,11 @@ function apply(g){
   if(window.__setTab)window.__setTab('h');
 }
 $('girisBody').addEventListener('click',e=>{const t=e.target;let b;
-  if(t.closest('[data-grback]')){keep();if(step==='kod'){step='tel';}else if(step==='tel'){step=prev;}else step='sicil';draw();return;}
+  if(t.closest('[data-grback]')){keep();if(step==='kod'){step='tel';}else if(step==='tel'){step=prev;}else{step='sicil';sel=null;}draw();return;}
+  if(t.id==='grKyYeni'){const r=kyOf(bek.sicil)||bek;const o=KY();o.list=o.list.filter(x=>x.sicil!==r.sicil);KYsave(o);form={store:r.magaza||'',sicil:r.sicil,name:r.ad||'',role:r.unvan||'PER',bolge:''};sel='yeni';step='sicil';draw();return;}
+  if(t.id==='grGo'&&step==='bekle'){const r=kyOf(bek.sicil);if(!r){step='sicil';draw();return;}
+    if(r.durum==='onay'){pend=bul(r.sicil);prev='sicil';tel=telMap()[telKey(pend)]||'';step='tel';draw();return;}
+    draw();V.toast(r.durum==='bek'?'Henüz onaylanmadı. Onaylanınca giriş yapabilirsin.':'Kaydın onaylanmadı.');return;}
   if(t.id==='grAgain'){if(!sms||Date.now()<sms.again)return;sendCode();draw();return;}
   if((b=t.closest('[data-grmg]'))){keep();const o=window.__mg.kod(b.dataset.grmg)||window.__mg.bul(b.dataset.grmg);if(o)form.store=o.isim;draw();if($('grName')&&!$('grName').value)$('grName').focus();return;}
   if((b=t.closest('[data-grsicil]'))){keep();form.sicil=b.dataset.grsicil;sel=null;draw();return;}
@@ -4787,12 +4812,14 @@ $('girisBody').addEventListener('click',e=>{const t=e.target;let b;
     if(!sms||Date.now()>sms.until)return err('Kodun süresi doldu, yeni kod iste.');
     if(c!==sms.code){sms.tries++;document.querySelectorAll('[data-otp]').forEach(i=>i.value='');document.querySelector('[data-otp]').focus();return err(sms.tries>=5?'Çok fazla hatalı deneme, yeni kod iste.':'Kod yanlış, tekrar dene.');}
     const g={...pend,tel};const M=telMap();M[telKey(g)]=tel;try{localStorage.setItem(TKEY,JSON.stringify(M));}catch(x){}
-    sms=null;clearInterval(tmr);$('smsDemo').hidden=true;put(g);apply(g);if(window.__icLogin)setTimeout(window.__icLogin,400);return;}
+    sms=null;clearInterval(tmr);$('smsDemo').hidden=true;
+    if(g.yeni){const o=KY();o.list=o.list.filter(x=>x.sicil!==g.sicil);const r={id:Math.random().toString(36).slice(2,9),sicil:g.sicil,ad:g.ad,unvan:g.unvan,magaza:g.magaza,at:new Date().toISOString(),durum:'bek'};o.list.push(r);KYsave(o);bek=r;step='bekle';draw();return;}
+    put(g);apply(g);if(window.__icLogin)setTimeout(window.__icLogin,400);return;}
   if(t.id==='grGo'){keep();const err=m=>{$('grErr').textContent=m;};const sc=String(form.sicil||'').replace(/\D/g,'');if(sc.length<3)return err('Sicil numaranı yaz.');
     let g=bul(sc);
-    if(!g&&sel!=='yeni'){sel='yeni';draw();if($('grStore'))$('grStore').focus();return;}
+    if(!g&&sel!=='yeni'){const r=kyOf(sc);if(r&&r.durum!=='onay'){bek=r;step='bekle';draw();return;}sel='yeni';draw();if($('grStore'))$('grStore').focus();return;}
     if(!g){const store=mgSec(form.store);if(!String(form.store||'').trim())return err('Mağaza kodunu yaz.');if(!store)return err('Mağazayı listeden seç ya da mağaza kodunu tam yaz (ör. K767).');form.store=store;if(!form.name.trim())return err('Adını soyadını yaz.');
-      g={tip:'magaza',ad:form.name.trim(),unvan:form.role,empId:null,magaza:store,sicil:sc};}
+      g={tip:'magaza',ad:form.name.trim(),unvan:form.role,empId:null,magaza:store,sicil:sc,yeni:true};}
     if(g.tip==='magaza'&&AB().store!==g.magaza){AB().store=g.magaza;V.save();}
     pend=g;prev=step;tel=telMap()[telKey(g)]||'';step='tel';draw();return;}
 });
@@ -4889,13 +4916,14 @@ const $=id=>document.getElementById(id),esc=V.esc;
 const TILES={
   magaza:[['c','İletişim','BS talepleri ve sohbet'],['c:izin','İzin / takas','İzin ya da vardiya takası iste'],['c:ise','İşe giriş','Yeni personel evrakları'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['v','Vardiya planı','Haftalık çalışma planı'],['s','SKT kontrol','Ürün ekle, satıldı ya da fire'],['b','BS raporu','BS\'nin istediği günlük dönüşler'],['a','Ay başı','Ciro hedefi ve grafikler'],['k','Aktüel','Salı, Cuma ve Pazar ürünleri'],['g','Ayarlar','Hesap, görünüm, çalışanlar']],
   pm:[['c','BS\'lerim','Bölge sorumlularıyla birebir sohbet'],['c:bsgrup','BS grubu','Tüm BS\'lere duyuru ve sohbet'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['g','Ayarlar','Hesap ve görünüm']],
-  depo:[['c','Sevkiyat girişi','Araç plakası, saat ve şoför'],['c:ik','İşe giriş (İK)','Yeni personel evraklarını kontrol et'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Ayarlar','Hesap ve görünüm']],
-  bs:[['c','Mağazalarım','Durum, sohbet ve talepler'],['c:bsgrup','BS grubu','Diğer bölge sorumlularıyla sohbet'],['c:new','Talep gönder','Görev, bilgi isteği, kontrol'],['c:svnew','Savunma iste','MS, MSY ya da personelden'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Personel yetkileri','Personelin göreceği bölümler, ayarlar']]
+  depo:[['c','Sevkiyat girişi','Araç plakası, saat ve şoför'],['c:kayit','Kayıt onayları','Yeni çalışan kayıtlarını onayla'],['c:ik','İşe giriş (İK)','Yeni personel evraklarını kontrol et'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Ayarlar','Hesap ve görünüm']],
+  bs:[['c','Mağazalarım','Durum, sohbet ve talepler'],['c:bsgrup','BS grubu','Diğer bölge sorumlularıyla sohbet'],['c:new','Talep gönder','Görev, bilgi isteği, kontrol'],['c:svnew','Savunma iste','MS, MSY ya da personelden'],['c:kayit','Kayıt onayları','Yeni çalışan kayıtlarını onayla'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Personel yetkileri','Personelin göreceği bölümler, ayarlar']]
 };
 const ICON={'c:kurum':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg>','c:rehber':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>','c:ise':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>','c:ik':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>','c:izin':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg>','c:bsgrup':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.3.2 3.9 1.8 4.5 4.3"/></svg>','c:grup':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.3.2 3.9 1.8 4.5 4.3"/></svg>','c:new':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>','c:svnew':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>'};
+ICON['c:kayit']='<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20c.8-3.6 3.6-5.5 7-5.5 1.3 0 2.5.3 3.5.8"/><path d="m15.5 18 2 2 4-4.5"/></svg>';
 /* Portal: modüller bölümlere ayrılır */
 const PGRP=[['ilt','İletişim'],['mgz','Mağaza işleri'],['lj','Lojistik'],['ik','İnsan kaynakları'],['hs','Hesap ve ayarlar']];
-function grpOf(k,r){if(k==='g')return r==='bs'?'ik':'hs';if(['c:izin','c:ise','c:ik','c:svnew'].includes(k))return 'ik';if(k==='c'&&r==='depo')return 'lj';if(['v','s','b','a','k'].includes(k))return 'mgz';if(k==='c:kurum')return r==='bs'?'ilt':'hs';if(k==='c:rehber')return r==='depo'?'lj':r==='magaza'?'mgz':'ilt';return 'ilt';}
+function grpOf(k,r){if(k==='g')return r==='bs'?'ik':'hs';if(['c:izin','c:ise','c:ik','c:svnew','c:kayit'].includes(k))return 'ik';if(k==='c'&&r==='depo')return 'lj';if(['v','s','b','a','k'].includes(k))return 'mgz';if(k==='c:kurum')return r==='bs'?'ilt':'hs';if(k==='c:rehber')return r==='depo'?'lj':r==='magaza'?'mgz':'ilt';return 'ilt';}
 const BTN={v:'tabV',s:'tabS',b:'tabB',c:'tabC',a:'tabA',k:'tabK',g:'tabG'};
 const shown=id=>{const b=$(id);return b&&getComputedStyle(b).display!=='none';};
 function selam(){const h=new Date().getHours();return h<6?'İyi geceler':h<12?'Günaydın':h<18?'İyi günler':'İyi akşamlar';}
@@ -4916,7 +4944,7 @@ function render(){
     else st=sk+(S.vdGun?stat(S.vdGun.gec?false:null,S.vdGun.t,S.vdGun.d):'')+(S.izB?stat(false,'İzin / takas',`${S.izB} talep onayını bekliyor`):'')+(S.iseEk?stat(false,'İşe giriş evrakı',`${S.iseEk} dosyada eksik var`):'')+(S.ist.skt?stat(S.mskt?true:mins>9*60+15?false:null,'Sabah SKT dönüşü',S.mskt?'Gönderildi':'09.15\'e kadar'):'')+(S.ist.rapor?stat(S.rapor?true:null,'Akşam raporu',S.rapor?'Gönderildi':'Akşam BS\'ye gönderilecek'):'')+stat(S.wait?false:true,'BS talepleri',S.wait?`${S.wait} talep yanıt bekliyor`:'Bekleyen yok')+(S.sv?stat(false,'Savunma',`${S.sv} savunma isteniyor`):'');
   }
   const stf=document.body.dataset.role==='staff'&&!document.body.classList.contains('yk-c');
-  const T=(pm?TILES.pm:dp?TILES.depo:bs?TILES.bs:stf?TILES.magaza.map(x=>x[0]==='c'?['c','Mağaza grubu','Çalışanlarla sohbet']:x):[TILES.magaza[0],['c:grup','Mağaza grubu','Çalışanlarla sohbet'],...TILES.magaza.slice(1)]).filter(([k])=>shown(BTN[k.split(':')[0]])&&(k!=='c:ise'||(g&&['MS','MSY'].includes(g.unvan))));
+  const T=(pm?TILES.pm:dp?TILES.depo:bs?TILES.bs:stf?TILES.magaza.map(x=>x[0]==='c'?['c','Mağaza grubu','Çalışanlarla sohbet']:x):[TILES.magaza[0],['c:grup','Mağaza grubu','Çalışanlarla sohbet'],...TILES.magaza.slice(1)]).filter(([k])=>shown(BTN[k.split(':')[0]])&&(k!=='c:ise'||(g&&['MS','MSY'].includes(g.unvan)))&&(k!=='c:kayit'||(window.__kayit&&window.__kayit.yetkili())));
   $('homeBody').innerHTML=`<div class="box hm-hero"><div class="hm-logo" aria-hidden="true"></div><div><p class="hm-hi">${selam()}${ad?', '+esc(ad):''}</p><h2>BİM Mağaza Portalı</h2><p class="hm-sub">${pm?(g.unvan==='GM'?'Genel müdürlük':g.unvan==='BM'?'Bölge müdürü':'PM')+(g.bolge?' · '+esc(g.bolge):''):dp?'Depo'+(g.depo?' · '+esc(g.depo):''):bs?'Bölge sorumlusu'+(g.bolge?' · '+esc(g.bolge):''):esc((g&&g.magaza)||'')+(()=>{const o=g&&window.__mg&&window.__mg.bul(g.magaza);return o?' · '+esc(o.yer):'';})()}</p></div></div>
   ${(()=>{const F=window.__icFeed?window.__icFeed():[];return F.length?`<div class="box hm-feed"><h2>Son gelenler</h2><ul>${F.map(x=>`<li data-hmnt="${esc(x.k)}"><i class="${x.red?'red':''}"></i><span><b>${esc(x.t)}</b><small>${esc(x.d||'')}</small></span><em>${esc(x.w)}</em></li>`).join('')}</ul>${F.n>F.length?`<button type="button" class="linkbtn" data-hmall>Tümünü gör (${F.n})</button>`:''}</div>`:'';})()}
   ${st?`<div class="box"><h2>Bugün</h2><div class="hm-today">${st}</div></div>`:''}
@@ -5061,6 +5089,21 @@ const izTarih=x=>x.bas===x.bit?fmtD(x.bas):fmtD(x.bas)+' – '+fmtD(x.bit);
 const izGun=x=>Math.round((new Date(x.bit+'T12:00:00')-new Date(x.bas+'T12:00:00'))/864e5)+1;
 const IZD={bek:['wait','Onay bekliyor'],onay:['ok','Onaylandı'],red:['no','Reddedildi']};
 function izRow(x,act){const [c,l]=IZD[x.durum];return `<li class="iz-row"><div class="iz-top"><div><b>${esc(x.ad)} <small>${KISA[x.unvan]||''}</small></b><small>${IZT[x.tur]} · ${izTarih(x)}${x.kimle?' · '+esc(x.kimle)+' ile':''}${izGun(x)>1?' ('+izGun(x)+' gün)':''}</small></div><span class="iz-st ${x.durum}">${l}</span></div>${x.not?`<p class="iz-not">${esc(x.not)}</p>`:''}${x.karar?`<p class="hint" style="margin:4px 0 0">${esc(x.karar.by)} · ${when(x.karar.at)}${x.karar.not?' · '+esc(x.karar.not):''}</p>`:''}${act?`<div class="iz-act"><button type="button" class="btn" data-izred="${x.id}">Reddet</button><button type="button" class="btn primary" data-izok="${x.id}">Onayla</button></div>`:''}${x.durum==='bek'&&izMine(x)?`<button type="button" class="linkbtn" data-izdel="${x.id}" style="margin-top:6px">Talebi geri çek</button>`:''}</li>`;}
+/* Kayıt onayları: İK (depo girişi) onaylar; İK yetki verdiği BS'ler de onaylar */
+const KYa=()=>window.__kayit,kyYetki=()=>!!(KYa()&&KYa().yetkili());
+const kyBek=()=>KYa()?KYa().get().list.filter(x=>x.durum==='bek').sort((a,b)=>b.at.localeCompare(a.at)):[];
+const KY_IC='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20c.8-3.6 3.6-5.5 7-5.5 1.3 0 2.5.3 3.5.8"/><path d="m15.5 18 2 2 4-4.5"/></svg>';
+function kayitRowBox(){if(!kyYetki())return '';const n=kyBek().length;
+  return `<div class="box ic-bsrow" data-icgo="kayit"><div class="ic-av ise">${KY_IC}</div><div class="ic-sm"><b>Kayıt onayları</b><small>${n?`${n} yeni çalışan onay bekliyor`:'Bekleyen kayıt yok'}</small></div>${n?`<span class="ic-unread">${n}</span>`:'<span class="ic-go">›</span>'}</div>`;}
+function kyRow(r,act){const st=r.durum==='bek'?['bek','Onay bekliyor']:r.durum==='onay'?['onay','Onaylandı']:['red','Reddedildi'];
+  return `<li class="iz-row"><div class="iz-top"><div><b>${esc(r.ad)} <small>${KISA[r.unvan]||esc(r.unvan||'')}</small></b><small>${esc(r.magaza||'-')} · Sicil ${esc(r.sicil)} · ${when(r.at)}</small></div><span class="iz-st ${st[0]}">${st[1]}</span></div>${r.karar?`<p class="hint" style="margin:4px 0 0">${esc(r.karar.by)}${r.karar.rol?' ('+esc(r.karar.rol)+')':''} · ${when(r.karar.at)}</p>`:''}${act?`<div class="iz-act"><button type="button" class="btn" data-kyred="${r.id}">Reddet</button><button type="button" class="btn primary" data-kyok="${r.id}">Onayla</button></div>`:''}</li>`;}
+function kayitPage(){let h=head('Kayıt onayları',true);
+  if(!kyYetki())return h+`<div class="box"><p class="hint" style="margin:0">Yeni çalışan kayıtlarını insan kaynakları onaylar. Sana onay yetkisi verilmemiş.</p></div>`;
+  const o=KYa().get(),B=kyBek(),K=o.list.filter(x=>x.durum!=='bek'&&x.karar).sort((a,b)=>b.karar.at.localeCompare(a.karar.at)).slice(0,10),ik=giris().tip==='depo';
+  h+=`<div class="box"><h2>Onay bekleyenler</h2><p class="hint" style="margin:2px 0 0">Sicil numarası listede olmayan biri kayıt olunca buraya düşer. Onaylarsan o sicille giriş yapabilir.</p>${B.length?`<ul class="iz-list">${B.map(r=>kyRow(r,true)).join('')}</ul>`:'<p class="hint" style="margin:8px 0 0">Bekleyen kayıt yok.</p>'}</div>`;
+  if(K.length)h+=`<div class="box"><h2>Son kararlar</h2><ul class="iz-list">${K.map(r=>kyRow(r,false)).join('')}</ul></div>`;
+  if(ik){const L=KYa().bsler();h+=`<div class="box"><h2>BS'lere onay yetkisi</h2><p class="hint" style="margin:2px 0 0">Açtığın bölge sorumlusu da yeni çalışan kayıtlarını onaylayabilir.</p><ul class="yk-list">${L.map(b=>`<li><div><b>${esc(b.ad)}</b><small>${esc(b.bolge||'Bölge sorumlusu')} · Sicil ${esc(b.sicil)}</small></div><button type="button" class="yk-sw" role="switch" data-kybs="${esc(b.sicil)}" aria-checked="${!!o.bsYetki[b.sicil]}" aria-label="${esc(b.ad)} onay yetkisi"><i></i></button></li>`).join('')}</ul></div>`;}
+  return h+`<p class="kvkk" style="text-align:center">🔒 Kayıtta T.C. kimlik no, adres ya da telefon gösterilmez.</p>`;}
 function izRowBox(){const n=izBekl().length,mine=D.izin.filter(izMine),last=mine.slice().sort((a,b)=>b.at.localeCompare(a.at))[0];
   return `<div class="box ic-bsrow" data-icgo="izin"><div class="ic-av iz"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg></div><div class="ic-sm"><b>İzin ve vardiya takası</b><small>${n?`${n} talep onayını bekliyor`:last?`Son talebin: ${IZD[last.durum][1].toLocaleLowerCase('tr-TR')}`:'İzin iste, durumunu takip et'}</small></div>${n?`<span class="ic-unread">${n}</span>`:'<span class="ic-go">›</span>'}</div>`;}
 function izPage(){const f=ui.form||{},B=izBekl(),mine=D.izin.filter(izMine).sort((a,b)=>b.at.localeCompare(a.at)),hist=canOnay()?D.izin.filter(x=>x.durum!=='bek'&&!izMine(x)).sort((a,b)=>b.at.localeCompare(a.at)):[];
@@ -5365,7 +5408,7 @@ function render(){
   {const g=giris();D.role=g&&g.tip==='bs'?'bs':g&&g.tip==='depo'?'depo':g&&g.tip==='pm'?'pm':'magaza';if(g&&g.tip==='bs'&&(D.bsAd!==g.ad||D.bsBolge!==(g.bolge||''))){D.bsAd=g.ad;D.bsBolge=g.bolge||'';save();}if(g&&g.tip==='pm'&&D.pmAd!==g.ad){D.pmAd=g.ad;save();}}
   document.querySelectorAll('[data-icrole]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.icrole===D.role));
   const el=$('icBody');let h='';
-  if(ui.page==='rehber'){h+=rehberPage();}else if(ui.page==='kurum'){h+=kurumPage();}else
+  if(ui.page==='rehber'){h+=rehberPage();}else if(ui.page==='kurum'){h+=kurumPage();}else if(ui.page==='kayit'){h+=kayitPage();}else
   if(D.role==='pm'){
     if(ui.page==='pmchat'){const k=ui.id,p=bsPeople().find(x=>nrm(x.ad)===k)||{ad:'BS'};if(!$('icView').hidden)markPm(k);
       h+=head(esc(p.ad),true)+`<div class="box"><p class="hint" style="margin:0">Bölge sorumlusu${p.bolge?' · '+esc(p.bolge):''}</p>${pmChat(k)}</div>`;}
@@ -5380,7 +5423,7 @@ function render(){
       h+=`<div class="box"><h2>Bölge sorumlularım</h2><ul class="ic-stores">${P.map(p=>{const k=nrm(p.ad),L=D.pmMsg[k]||[],l=L[L.length-1],u=pmUnreadOf(k).length;return `<li data-pmbs="${esc(k)}"><div class="ic-av">${esc(p.ad[0])}</div><div class="ic-sm"><b>${esc(p.ad)}</b><small>${esc((p.bolge||'Bölge sorumlusu')+(p.mg?' · '+p.mg+' mağaza':''))}${l?'<br>'+esc((l.from==='pm'?'Sen: ':'')+l.text):''}</small></div>${u?`<span class="ic-unread">${u}</span>`:'<span class="ic-go">›</span>'}</li>`;}).join('')}</ul></div>`;}
   }else if(D.role==='depo'){
     if(ui.page==='ik'){h+=ikPage();}else if(ui.page==='ikv'){const x=D.ise.find(y=>y.id===ui.id);if(!x){ui={page:'ik'};return render();}h+=iseView(x,true);}else{
-    h+=ikRowBox();
+    h+=kayitRowBox()+ikRowBox();
     const A=D.sevk.filter(x=>x.tarih>=today()).sort((a,b)=>(a.tarih+a.saat).localeCompare(b.tarih+b.saat)),nT=A.filter(x=>x.tarih===today()).length,nY=A.filter(x=>x.tarih===dstr(1)).length;
     dpSel=dpSel.filter(id=>D.stores.some(x=>x.id===id));
     h+=`<div class="ic-kpi"><div><b>${nT}</b><span>Bugün araç</span></div><div><b>${nY}</b><span>Yarın araç</span></div><div><b>${D.stores.length}</b><span>Mağaza</span></div></div>`;
@@ -5398,6 +5441,7 @@ function render(){
       {const I=ist(),ft=st.reduce((a,s)=>a+fire7(s.id,s.name).t,0),K=[I.skt?`<div><b>${sk}/${st.length}</b><span>Sabah SKT</span></div>`:'',I.rapor?`<div><b>${rp}/${st.length}</b><span>Akşam raporu</span></div>`:'',`<div><b>${open}</b><span>Açık talep</span></div>`,`<div><b>${Math.round(ft/1000).toLocaleString('tr-TR')}<small style="font-size:.6em"> bin ₺</small></b><span>Fire 7 gün</span></div>`].filter(Boolean);h+=`<div class="ic-kpi${K.length>3?' k4':''}" style="grid-template-columns:repeat(${K.length},1fr)">${K.join('')}</div>`;}
       h+=`<div class="ic-acts"><button type="button" class="btn primary" data-icgo="new">+ Talep gönder</button><button type="button" class="btn" data-icgo="svnew">Savunma iste</button></div>`;
       {const k=nrm(giris().ad),Lp=(D.pmMsg[k]||[]).slice(-1)[0],up=pmUnreadOf(k).length;h+=`<div class="box ic-bsrow" data-pmbs="${esc(k)}"><div class="ic-av pm">PM</div><div class="ic-sm"><b>PM · ${esc(pmName())}</b><small>${Lp?esc((Lp.from==='bs'?'Sen: ':'')+Lp.text):'Yöneticinle birebir sohbet'}</small></div>${up?`<span class="ic-unread">${up}</span>`:'<span class="ic-go">›</span>'}</div>`;}
+      h+=kayitRowBox();
       {const L=D.bsgrup[D.bsgrup.length-1],u=bsUnread().length;h+=`<div class="box ic-bsrow" data-icgo="bsgrup"><div class="ic-av gm">${GRP_IC}</div><div class="ic-sm"><b>BS grubu</b><small>${L?esc(L.from.split(' ')[0]+': '+L.text):'Diğer bölge sorumlularıyla sohbet'}</small></div>${u?`<span class="ic-unread">${u}</span>`:'<span class="ic-go">›</span>'}</div>`;}
       const SV=D.savunma.slice().sort((a,b)=>(!!a.sonuc-!!b.sonuc)||b.at.localeCompare(a.at)),svWait=SV.filter(x=>!x.sonuc).length;
       h+=`<div class="ic-seg bs-seg"><button type="button" data-bstab="m" aria-pressed="${bsTab==='m'}">Mağazalar</button><button type="button" data-bstab="t" aria-pressed="${bsTab==='t'}">Talepler${open?` <em>${open}</em>`:''}</button><button type="button" data-bstab="s" aria-pressed="${bsTab==='s'}">Savunmalar${svWait?` <em>${svWait}</em>`:''}</button></div>`;
@@ -5600,6 +5644,11 @@ $('icView').addEventListener('click',async e=>{
     if(!bas)return V.toast('Tarihi seç.');if(bit<bas)return V.toast('Bitiş, başlangıçtan önce olamaz.');
     const p=staffOf('me').find(x=>(g.empId&&x.id===g.empId)||nrm(x.ad)===nrm(g.ad));
     D.izin.push({id:uid(),kisiId:g.empId||(p&&p.id)||null,ad:g.ad,unvan:g.unvan,tur,bas,bit,kimle:tur==='T'?f.kimle:'',not:(f.not||'').trim(),at:new Date().toISOString(),durum:'bek'});save();ui={page:'izin',form:{}};render();V.toast(tur==='T'?'Takas talebin MS ve MSY\'ye gönderildi.':'İzin talebin MS ve MSY\'ye gönderildi.');return;}
+  if((b=t.closest('[data-kyok],[data-kyred]'))){const o=KYa().get(),id=b.dataset.kyok||b.dataset.kyred,r=o.list.find(x=>x.id===id),ok=!!b.dataset.kyok;if(!r||!kyYetki())return;
+    const g=giris();r.durum=ok?'onay':'red';r.karar={by:g.ad,rol:g.tip==='bs'?'BS':'İK',at:new Date().toISOString()};KYa().save(o);render();if(window.__renderHome)window.__renderHome();
+    V.toast(ok?`${r.ad} onaylandı; artık ${r.sicil} sicil numarasıyla girebilir.`:`${r.ad} kaydı reddedildi.`);return;}
+  if((b=t.closest('[data-kybs]'))){if(giris().tip!=='depo')return;const o=KYa().get(),k=b.dataset.kybs;o.bsYetki[k]=!o.bsYetki[k];KYa().save(o);render();
+    const p=KYa().bsler().find(x=>x.sicil===k);V.toast(o.bsYetki[k]?`${p?p.ad:'BS'} artık kayıt onaylayabilir.`:`${p?p.ad:'BS'} için onay yetkisi kapatıldı.`);return;}
   if((b=t.closest('[data-izok],[data-izred]'))){const id=b.dataset.izok||b.dataset.izred,x=D.izin.find(y=>y.id===id),ok=!!b.dataset.izok;if(!x)return;
     let not='';if(!ok){not=(prompt('Reddetme nedeni (isteğe bağlı):','')||'').trim();}
     x.durum=ok?'onay':'red';x.karar={by:giris().ad,at:new Date().toISOString(),not};const pl=ok?planIsle(x):0;save();render();
@@ -5653,11 +5702,12 @@ $('icView').addEventListener('change',async e=>{const ei=e.target.closest('[data
 $('icView').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='icMsg'){e.preventDefault();$('icMsgGo').click();}});
 /* --- bildirimler: liste, tek tek ya da toplu silme (silinenler D.dismissed içinde tutulur) --- */
 function notifs(){const g=giris();if(!g)return [];const dis=D.dismissed||{},L=[],bs=g.tip==='bs';
-  if(g.tip==='depo'){D.ise.filter(x=>x.durum==='ik').forEach(x=>L.push({k:'ik:'+x.id+':'+x.gonder,t:`İşe giriş dosyası: ${x.ad}`,d:S(x.store).name+' · '+evN(x)+'/'+EV.length+' evrak',at:x.gonder||x.at,go:{page:'ikv',id:x.id}}));return L.filter(x=>!dis[x.k]).sort((a,b)=>b.at.localeCompare(a.at));}
+  const kyN=()=>{if(kyYetki())kyBek().forEach(r=>L.push({k:'ky:'+r.id,t:`Kayıt onayı: ${r.ad}`,d:`${KISA[r.unvan]||r.unvan||''} · ${r.magaza||''}`,at:r.at,go:{page:'kayit'}}));};
+  if(g.tip==='depo'){kyN();D.ise.filter(x=>x.durum==='ik').forEach(x=>L.push({k:'ik:'+x.id+':'+x.gonder,t:`İşe giriş dosyası: ${x.ad}`,d:S(x.store).name+' · '+evN(x)+'/'+EV.length+' evrak',at:x.gonder||x.at,go:{page:'ikv',id:x.id}}));return L.filter(x=>!dis[x.k]).sort((a,b)=>b.at.localeCompare(a.at));}
   const pmN=k=>{const u=pmUnreadOf(k);if(u.length){const last=u[u.length-1],p=bsPeople().find(x=>nrm(x.ad)===k);L.push({k:'pm:'+k+':'+last.at,t:g.tip==='pm'?`${p?p.ad:'BS'}: ${u.length} yeni mesaj`:`PM'den ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'pmchat',id:k},seen:(g.tip==='pm'?'pm:':'pmbs:')+k});}};
   const bgN=()=>{const bu=bsUnread();if(bu.length){const last=bu[bu.length-1];L.push({k:'bg:'+last.at,t:`BS grubu: ${bu.length} yeni mesaj`,d:last.from+': '+last.text,at:last.at,go:{page:'bsgrup'},seen:bsgKey()});}};
   if(g.tip==='pm'){bsPeople().forEach(p=>pmN(nrm(p.ad)));bgN();}
-  else if(bs){pmN(nrm(g.ad));
+  else if(bs){pmN(nrm(g.ad));kyN();
     const lim=new Date(Date.now()-2*864e5).toISOString();D.requests.forEach(r=>{const R=D.responses[r.id]||{},ids=Object.keys(R);if(!ids.length)return;const last=ids.map(id=>R[id].at).sort().pop();if(last<lim)return;const n=r.to.filter(id=>R[id]).length;L.push({k:'a:'+r.id+':'+n,t:n>=r.to.length?`${r.title}: tüm mağazalar dönüş yaptı`:`${r.title}: ${n}/${r.to.length} mağaza dönüş yaptı`,d:'Son dönüş: '+S(ids.sort((a,b)=>R[a].at.localeCompare(R[b].at)).pop()).name,at:last,go:{page:'req',id:r.id}});});
     D.stores.forEach(s=>{const M=(D.messages[s.id]||[]).filter(m=>m.from==='magaza'),seen=(D.seen||{})['bs:'+s.id]||'',u=M.filter(m=>m.at>seen);if(u.length){const last=u[u.length-1];L.push({k:'m:'+s.id+':'+last.at,t:`${s.name}: ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'store',id:s.id},seen:'bs:'+s.id});}});
     bgN();
