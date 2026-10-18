@@ -30,9 +30,10 @@ var IL={'mersin içel':'Mersin','içel':'Mersin','afyon':'Afyonkarahisar','agri'
 function ilAd(x){x=String(x||'').trim();return IL[nr(x)]||x;}
 /* Kodsuz mağazalar: BİM sitesindeki 'Mağaza Bul' listesinden gelen, bizdeki rapor listesinde olmayan mağazalar (kod ve bölge yok, sadece rehberde) */
 function L2(){if(A2)return A2;L();A2=M.slice();try{var v=JSON.parse(document.getElementById('bimVeri').textContent);(v.ekMagazalar||[]).forEach(function(r){var a=String(r[0]||'').split(/\s*[\/\\]\s*/)[0]||r[0],il=ilAd(r[3]),o={kod:'',ad:up(a),tamAd:r[0],sokak:tc(r[1]),no:'',yer:tc(r[2])+' / '+il,il:il,bk:String(r[4]||'')};o.isim=nr(o.ad).indexOf(nr(r[2]))>=0?o.ad:o.ad+' · '+tc(r[2]);o.adres=o.sokak+(o.yer?' · '+o.yer:'');o.q=nr([o.tamAd,o.sokak,o.yer,o.il].join(' '));A2.push(o);});}catch(e){}return A2;}
-function L(){if(M)return M;M=[];try{var v=JSON.parse(document.getElementById('bimVeri').textContent);B=v.bolgeler||{};T=v.tarih||'';M=(v.magazalar||[]).map(function(r){var a=String(r[1]||'').split(/\s*[\/\\]\s*/)[0]||r[1],o={kod:String(r[0]),ad:up(a),eskiAd:tc(a),tamAd:r[1],sokak:tc(r[2]),no:String(r[3]||'').trim().replace(/^no\s*:?\s*/i,'No: ').replace(/[\s\-\/]+$/,''),yer:tc(r[4]),il:ilAd(r[5]),bk:String(r[6]||'')};o.isim=o.ad+' '+o.kod;o.adres=[o.sokak,o.no].filter(Boolean).join(' ')+(o.yer?' · '+o.yer:'');o.q=nr([o.kod,o.tamAd,o.sokak,o.yer,o.il,B[o.bk]||''].join(' '));K[o.kod]=o;return o;});}catch(e){}return M;}
+function L(){if(M)return M;M=[];try{var v=JSON.parse(document.getElementById('bimVeri').textContent);B=v.bolgeler||{};T=v.tarih||'';var Y=[];try{Y=(JSON.parse(localStorage.getItem('magaza-yeni')||'{}').list||[]).map(function(m){return [m.kod,m.ad,m.sokak,m.no||'',m.ilce+' / '+m.il,m.il,m.bk,1];});}catch(e){}
+M=(v.magazalar||[]).concat(Y).map(function(r){var a=String(r[1]||'').split(/\s*[\/\\]\s*/)[0]||r[1],o={kod:String(r[0]),ad:up(a),eskiAd:tc(a),tamAd:r[1],sokak:tc(r[2]),no:String(r[3]||'').trim().replace(/^no\s*:?\s*/i,'No: ').replace(/[\s\-\/]+$/,''),yer:tc(r[4]),il:ilAd(r[5]),bk:String(r[6]||''),yeni:!!r[7]};o.isim=o.ad+' '+o.kod;o.adres=[o.sokak,o.no].filter(Boolean).join(' ')+(o.yer?' · '+o.yer:'');o.q=nr([o.kod,o.tamAd,o.sokak,o.yer,o.il,B[o.bk]||''].join(' '));K[o.kod]=o;return o;});}catch(e){}return M;}
 function kodOf(s){var t=String(s||'').toLocaleUpperCase('tr-TR').split(/[\s·,()]+/).filter(function(x){return /^[A-Z0-9]\d{3,5}$/.test(x);});return t.length?t[t.length-1]:'';}
-return {hepsi:L,var:function(){return L().length>0;},kod:function(k){L();return K[String(k||'').toUpperCase()]||null;},kodOf:kodOf,
+return {hepsi:L,yenile:function(){M=null;A2=null;K={};},var:function(){return L().length>0;},kod:function(k){L();return K[String(k||'').toUpperCase()]||null;},kodOf:kodOf,
   bul:function(s){L();var k=kodOf(s);if(k&&K[k])return K[k];var n=nr(s);if(!n)return null;var A=L2();for(var i=0;i<A.length;i++)if(!A[i].kod&&nr(A[i].isim)===n)return A[i];return null;},
   tumu:L2,tumSay:function(){return L2().length;},
   ara:function(q,n,tum){var A=tum?L2():L();q=nr(q);if(!q)return [];var u=q.toLocaleUpperCase('tr-TR'),w=q.split(' '),r=[];if(K[u])r.push(K[u]);for(var i=0;i<A.length&&r.length<(n||20);i++){var o=A[i];if(o===K[u])continue;if(w.every(function(x){return o.q.indexOf(x)>=0;}))r.push(o);}return r;},
@@ -823,6 +824,8 @@ body{-webkit-font-smoothing:antialiased}
 .ic-av.iz{background:#2F8F6B;color:#fff}.ic-av.iz svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ky-st{display:grid;gap:4px;border-radius:12px;padding:12px 14px;border-left:5px solid var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--panel))}.ky-st span{font-size:14px;color:var(--ink)}
 .ky-st.ok{border-left-color:var(--ok,var(--green));background:color-mix(in srgb,var(--ok,var(--green)) 12%,var(--panel))}.ky-st.no{border-left-color:var(--danger);background:var(--danger-bg)}
+.yk-f{display:grid;gap:8px;margin-top:10px;padding:10px;border-radius:12px;background:var(--bg)}
+.yk-puan{margin:6px 0 0;font-size:14px}.yk-puan b{font-size:18px}.yk-puan.gecti b{color:var(--ok,var(--green))}.yk-puan.kaldi b{color:var(--danger)}
 .iz-list{list-style:none;margin:8px 0 0;padding:0}.iz-row{padding:12px 0;border-top:1px solid var(--line)}.iz-row:first-child{border-top:0}
 .iz-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.iz-top b{display:block}.iz-top b small{color:var(--muted);font-weight:600}.iz-top>div>small{color:var(--muted);font-size:13px}
 .iz-not{margin:6px 0 0;font-size:14px}.iz-act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -3445,7 +3448,7 @@ function setTab(t){
     $('subtitle').textContent=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'});
     if(window.__renderHome)window.__renderHome();
   }else if(t==='c'&&document.body.classList.contains('giris-depo')){
-    h.firstChild.textContent='Sevkiyat';$('subtitle').textContent='Mağazalara gidecek araçlar: plaka, saat, şoför';
+    const ikG=(window.__giris&&window.__giris()||{}).unvan==='İnsan kaynakları';h.firstChild.textContent=ikG?'İnsan kaynakları':'Sevkiyat';$('subtitle').textContent=ikG?'Kayıt onayı, yükselme sınavı, yeni mağaza':'Mağazalara gidecek araçlar: plaka, saat, şoför';
   }else if(t==='c'&&document.body.classList.contains('giris-pm')){
     h.firstChild.textContent='İletişim';$('subtitle').textContent='Bölge sorumlularıyla sohbet ve duyuru';
   }else if(t==='c'){
@@ -4914,16 +4917,16 @@ draw();
 const V=window.__vardiya;if(!V)return;
 const $=id=>document.getElementById(id),esc=V.esc;
 const TILES={
-  magaza:[['c','İletişim','BS talepleri ve sohbet'],['c:izin','İzin / takas','İzin ya da vardiya takası iste'],['c:ise','İşe giriş','Yeni personel evrakları'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['v','Vardiya planı','Haftalık çalışma planı'],['s','SKT kontrol','Ürün ekle, satıldı ya da fire'],['b','BS raporu','BS\'nin istediği günlük dönüşler'],['a','Ay başı','Ciro hedefi ve grafikler'],['k','Aktüel','Salı, Cuma ve Pazar ürünleri'],['g','Ayarlar','Hesap, görünüm, çalışanlar']],
+  magaza:[['c','İletişim','BS talepleri ve sohbet'],['c:izin','İzin / takas','İzin ya da vardiya takası iste'],['c:ise','İşe giriş','Yeni personel evrakları'],['c:yuk','Yükselme sınavı','Aday, sınav tarihi ve sonuç'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['v','Vardiya planı','Haftalık çalışma planı'],['s','SKT kontrol','Ürün ekle, satıldı ya da fire'],['b','BS raporu','BS\'nin istediği günlük dönüşler'],['a','Ay başı','Ciro hedefi ve grafikler'],['k','Aktüel','Salı, Cuma ve Pazar ürünleri'],['g','Ayarlar','Hesap, görünüm, çalışanlar']],
   pm:[['c','BS\'lerim','Bölge sorumlularıyla birebir sohbet'],['c:bsgrup','BS grubu','Tüm BS\'lere duyuru ve sohbet'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['g','Ayarlar','Hesap ve görünüm']],
-  depo:[['c','Sevkiyat girişi','Araç plakası, saat ve şoför'],['c:kayit','Kayıt onayları','Yeni çalışan kayıtlarını onayla'],['c:ik','İşe giriş (İK)','Yeni personel evraklarını kontrol et'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Ayarlar','Hesap ve görünüm']],
-  bs:[['c','Mağazalarım','Durum, sohbet ve talepler'],['c:bsgrup','BS grubu','Diğer bölge sorumlularıyla sohbet'],['c:new','Talep gönder','Görev, bilgi isteği, kontrol'],['c:svnew','Savunma iste','MS, MSY ya da personelden'],['c:kayit','Kayıt onayları','Yeni çalışan kayıtlarını onayla'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Personel yetkileri','Personelin göreceği bölümler, ayarlar']]
+  depo:[['c','Sevkiyat girişi','Araç plakası, saat ve şoför'],['c:kayit','Kayıt onayları','Yeni çalışan kayıtlarını onayla'],['c:yuk','Yükselme sınavı','Sınav tarihi ver, puan gir'],['c:mgyeni','Yeni mağaza','Açılan mağazanın bilgilerini gir'],['c:ik','İşe giriş (İK)','Yeni personel evraklarını kontrol et'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Ayarlar','Hesap ve görünüm']],
+  bs:[['c','Mağazalarım','Durum, sohbet ve talepler'],['c:bsgrup','BS grubu','Diğer bölge sorumlularıyla sohbet'],['c:new','Talep gönder','Görev, bilgi isteği, kontrol'],['c:svnew','Savunma iste','MS, MSY ya da personelden'],['c:kayit','Kayıt onayları','Yeni çalışan kayıtlarını onayla'],['c:yuk','Yükselme sınavı','Aday göster, sonuçları gör'],['c:rehber','Mağaza rehberi','Kod, ad ya da adresle ara'],['c:kurum','Kurum yapısı','Üst yönetim ve kademeler'],['g','Personel yetkileri','Personelin göreceği bölümler, ayarlar']]
 };
 const ICON={'c:kurum':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg>','c:rehber':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>','c:ise':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>','c:ik':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>','c:izin':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg>','c:bsgrup':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.3.2 3.9 1.8 4.5 4.3"/></svg>','c:grup':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.3.2 3.9 1.8 4.5 4.3"/></svg>','c:new':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>','c:svnew':'<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>'};
-ICON['c:kayit']='<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20c.8-3.6 3.6-5.5 7-5.5 1.3 0 2.5.3 3.5.8"/><path d="m15.5 18 2 2 4-4.5"/></svg>';
+ICON['c:mgyeni']='<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h8"/><path d="M18 15v6M15 18h6"/></svg>';ICON['c:yuk']='<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/><path d="M5 21h14"/></svg>';ICON['c:kayit']='<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 20c.8-3.6 3.6-5.5 7-5.5 1.3 0 2.5.3 3.5.8"/><path d="m15.5 18 2 2 4-4.5"/></svg>';
 /* Portal: modüller bölümlere ayrılır */
 const PGRP=[['ilt','İletişim'],['mgz','Mağaza işleri'],['lj','Lojistik'],['ik','İnsan kaynakları'],['hs','Hesap ve ayarlar']];
-function grpOf(k,r){if(k==='g')return r==='bs'?'ik':'hs';if(['c:izin','c:ise','c:ik','c:svnew','c:kayit'].includes(k))return 'ik';if(k==='c'&&r==='depo')return 'lj';if(['v','s','b','a','k'].includes(k))return 'mgz';if(k==='c:kurum')return r==='bs'?'ilt':'hs';if(k==='c:rehber')return r==='depo'?'lj':r==='magaza'?'mgz':'ilt';return 'ilt';}
+function grpOf(k,r){if(k==='g')return r==='bs'?'ik':'hs';if(['c:izin','c:ise','c:ik','c:svnew','c:kayit','c:yuk'].includes(k))return 'ik';if(k==='c:mgyeni')return 'lj';if(k==='c'&&r==='depo')return 'lj';if(['v','s','b','a','k'].includes(k))return 'mgz';if(k==='c:kurum')return r==='bs'?'ilt':'hs';if(k==='c:rehber')return r==='depo'?'lj':r==='magaza'?'mgz':'ilt';return 'ilt';}
 const BTN={v:'tabV',s:'tabS',b:'tabB',c:'tabC',a:'tabA',k:'tabK',g:'tabG'};
 const shown=id=>{const b=$(id);return b&&getComputedStyle(b).display!=='none';};
 function selam(){const h=new Date().getHours();return h<6?'İyi geceler':h<12?'Günaydın':h<18?'İyi günler':'İyi akşamlar';}
@@ -5089,6 +5092,111 @@ const izTarih=x=>x.bas===x.bit?fmtD(x.bas):fmtD(x.bas)+' – '+fmtD(x.bit);
 const izGun=x=>Math.round((new Date(x.bit+'T12:00:00')-new Date(x.bas+'T12:00:00'))/864e5)+1;
 const IZD={bek:['wait','Onay bekliyor'],onay:['ok','Onaylandı'],red:['no','Reddedildi']};
 function izRow(x,act){const [c,l]=IZD[x.durum];return `<li class="iz-row"><div class="iz-top"><div><b>${esc(x.ad)} <small>${KISA[x.unvan]||''}</small></b><small>${IZT[x.tur]} · ${izTarih(x)}${x.kimle?' · '+esc(x.kimle)+' ile':''}${izGun(x)>1?' ('+izGun(x)+' gün)':''}</small></div><span class="iz-st ${x.durum}">${l}</span></div>${x.not?`<p class="iz-not">${esc(x.not)}</p>`:''}${x.karar?`<p class="hint" style="margin:4px 0 0">${esc(x.karar.by)} · ${when(x.karar.at)}${x.karar.not?' · '+esc(x.karar.not):''}</p>`:''}${act?`<div class="iz-act"><button type="button" class="btn" data-izred="${x.id}">Reddet</button><button type="button" class="btn primary" data-izok="${x.id}">Onayla</button></div>`:''}${x.durum==='bek'&&izMine(x)?`<button type="button" class="linkbtn" data-izdel="${x.id}" style="margin-top:6px">Talebi geri çek</button>`:''}</li>`;}
+/* Yükselme: MS ya da BS aday gösterir, İK sınav tarihini verir ve puanı girer. Geçme notunu alan kişinin görevi kendiliğinden yükselir. */
+const RUT=['PART','PER','GT','MSY','MS','BS'],RUTAD={...UNVAN,BS:'Bölge Sorumlusu'},RUTK={...KISA,BS:'BS'};
+const rNext=u=>RUT[Math.min(RUT.length-1,Math.max(0,RUT.indexOf(u))+1)];
+function yukInit(){if(Array.isArray(D.yuk))return;D.yuk=[];D.yukGec=D.yukGec||70;
+  const p=staffOf('me').find(x=>x.unvan==='PER');
+  if(p)D.yuk.push({id:uid(),store:'me',ad:p.ad,kisiId:p.id,from:'PER',to:'GT',by:{ad:'Erol',rol:'MS'},at:isoAt(10,5,-6),not:'Kasada ve sevkiyatta çok iyi.',sinav:{tarih:dstr(3),saat:'10:00',yer:'Döşemealtı-2 deposu eğitim salonu'},puan:null,durum:'sinav'});
+  const q=staffOf('s4').find(x=>x.unvan==='MSY');
+  if(q)D.yuk.push({id:uid(),store:'s4',ad:q.ad,kisiId:q.id,from:'MSY',to:'MS',by:{ad:D.bsAd||'Ali Yıldırım',rol:'BS'},at:isoAt(9,30,-20),not:'',sinav:{tarih:dstr(-5),saat:'10:00',yer:'Döşemealtı-2 deposu eğitim salonu'},puan:84,sonucAt:isoAt(15,0,-4),durum:'gecti'});
+  save();}
+const YU=()=>{yukInit();return D.yuk;};
+const yGec=()=>Number(D.yukGec)||70;
+const isIkY=()=>{const g=giris();return !!g&&g.tip==='depo';};
+const canAday=()=>{const g=giris();return !!g&&(g.tip==='bs'||(g.tip==='magaza'&&g.unvan==='MS'));};
+const yMine=y=>{const g=giris();return !!g&&g.tip==='magaza'&&y.store==='me'&&((g.empId&&y.kisiId===g.empId)||nrm(y.ad)===nrm(g.ad));};
+function yGor(){const g=giris();if(!g)return [];const L=YU();if(g.tip==='depo'||g.tip==='pm')return L;if(g.tip==='bs')return L;if(canOnay())return L.filter(y=>y.store==='me');return L.filter(yMine);}
+const YD={aday:['bek','Sınav tarihi bekleniyor'],sinav:['bek','Sınava girecek'],gecti:['onay','Geçti, yükseldi'],kaldi:['red','Geçemedi']};
+function ySinavTxt(y){return y.sinav?`${fmtD(y.sinav.tarih)} ${y.sinav.saat||''}${y.sinav.yer?' · '+y.sinav.yer:''}`:'';}
+function yRow(y){const [c,l]=YD[y.durum],ik=isIkY();
+  let h=`<li class="iz-row"><div class="iz-top"><div><b>${esc(y.ad)} <small>${RUTK[y.from]||''} → ${RUTK[y.to]||''}</small></b><small>${esc(S(y.store).name)} · aday gösteren ${esc(y.by.ad)} (${esc(y.by.rol)})</small></div><span class="iz-st ${c}">${l}</span></div>`;
+  if(y.not)h+=`<p class="iz-not">${esc(y.not)}</p>`;
+  if(y.sinav)h+=`<p class="hint" style="margin:4px 0 0">Sınav: ${esc(ySinavTxt(y))}</p>`;
+  if(y.puan!=null)h+=`<p class="yk-puan ${y.durum}"><b>${y.puan}</b> puan · geçme notu ${y.gec||yGec()}${y.durum==='gecti'?` · yeni görevi: ${esc(RUTAD[y.to]||y.to)}`:''}</p>`;
+  if(ik&&y.durum==='aday')h+=`<div class="yk-f"><div class="srow2"><label>Sınav günü<input type="date" id="yt-${y.id}" value="${dstr(7)}"></label><label>Saat<input type="time" id="ys-${y.id}" value="10:00"></label></div><label>Yer<input id="yy-${y.id}" autocomplete="off" value="Döşemealtı-2 deposu eğitim salonu"></label><button type="button" class="btn primary" data-ytar="${y.id}">Sınav tarihini kaydet</button></div>`;
+  if(ik&&y.durum==='sinav')h+=`<div class="yk-f"><label>Sınav puanı (0-100)<input id="yp-${y.id}" type="number" min="0" max="100" inputmode="numeric" placeholder="Örn. 78"></label><button type="button" class="btn primary" data-ypuan="${y.id}">Puanı kaydet</button></div>`;
+  if(y.durum==='aday'&&(canAday()&&!yMine(y)))h+=`<button type="button" class="linkbtn" data-ydel="${y.id}" style="margin-top:6px">Adaylığı geri çek</button>`;
+  return h+'</li>';}
+function yukRowBox(){const L=yGor(),g=giris();if(!g)return '';const me=L.find(yMine);
+  const ik=isIkY(),n=ik?L.filter(y=>y.durum==='aday'||(y.durum==='sinav'&&y.sinav&&y.sinav.tarih<=today())).length:L.filter(y=>y.durum==='aday'||y.durum==='sinav').length;
+  const sub=me?(me.durum==='sinav'?`Sınavın: ${ySinavTxt(me)}`:me.durum==='aday'?'Aday gösterildin, sınav tarihi bekleniyor':me.durum==='gecti'?`Tebrikler, ${RUTAD[me.to]} oldun`:'Sınav sonucun geldi'):ik?(n?`${n} aday işlem bekliyor`:'Sınav tarihi ver, puan gir'):(n?`${n} kişi sınav sürecinde`:canAday()?'Aday göster, sonuçları takip et':'Yükselme sınavları');
+  if(!me&&!L.length&&!canAday()&&!ik)return '';
+  return `<div class="box ic-bsrow" data-icgo="yuk"><div class="ic-av ise"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/><path d="M5 21h14"/></svg></div><div class="ic-sm"><b>Yükselme sınavı</b><small>${esc(sub)}</small></div>${ik&&n?`<span class="ic-unread">${n}</span>`:'<span class="ic-go">›</span>'}</div>`;}
+function yukPage(){let h=head('Yükselme sınavı',true);const L=yGor(),ik=isIkY(),me=L.find(yMine);
+  h+=`<div class="box"><p class="hint" style="margin:0">Seçilen kişiler yükselme sınavına girer. Geçme notu <b>${yGec()}</b>. Geçen kişinin görevi kendiliğinden bir üst göreve geçer; geçemeyen eski görevinde devam eder.</p></div>`;
+  if(me&&!ik)h+=`<div class="box"><h2>Senin durumun</h2><ul class="iz-list">${yRow(me)}</ul></div>`;
+  if(canAday()){const g=giris(),bs=g.tip==='bs',stores=bs?D.stores:[D.stores[0]];
+    const opts=stores.map(s=>{const P=staffOf(s.id).filter(p=>p.unvan!=='MS'||bs);if(!P.length)return '';const o=P.map(p=>`<option value="${esc(s.id+'|'+p.id)}">${esc(p.ad)} · ${RUTK[p.unvan]||p.unvan}</option>`).join('');return bs?`<optgroup label="${esc(s.name)}">${o}</optgroup>`:o;}).join('');
+    h+=`<details class="box sect" id="yuBox"${L.length?'':' open'}><summary><h2>Aday göster</h2></summary><div class="sf" style="margin-top:8px"><label>Kişi<select id="yuK" class="ssel">${opts}</select></label>
+      <label>Yükseleceği görev<select id="yuTo" class="ssel"><option value="">Bir üst görev</option>${['GT','MSY','MS','BS'].map(k=>`<option value="${k}">${RUTAD[k]}</option>`).join('')}</select></label>
+      <label>Neden aday gösteriyorsun? (isteğe bağlı)<input id="yuNot" autocomplete="off" placeholder="Örn. Kasada ve sevkiyatta çok iyi"></label>
+      <button type="button" class="btn primary" id="yuAdd">Aday göster, İK'ya gönder</button><p class="hint" style="margin:0">İK sınav tarihini verir; kişiye ve sana bildirim gider.</p></div></details>`;}
+  const A=L.filter(y=>(y.durum==='aday'||y.durum==='sinav')&&!(me&&y===me&&!ik)).sort((a,b)=>((a.sinav||{}).tarih||'9').localeCompare((b.sinav||{}).tarih||'9')),R=L.filter(y=>(y.durum==='gecti'||y.durum==='kaldi')&&!(me&&y===me&&!ik)).sort((a,b)=>(b.sonucAt||'').localeCompare(a.sonucAt||''));
+  if(ik||canAday()||canOnay()){h+=`<div class="box"><h2>Sınav süreci</h2>${A.length?`<ul class="iz-list">${A.map(yRow).join('')}</ul>`:'<p class="hint" style="margin:6px 0 0">Sınav bekleyen aday yok.</p>'}</div>`;
+    if(R.length)h+=`<div class="box"><h2>Sonuçlar</h2><ul class="iz-list">${R.slice(0,15).map(yRow).join('')}</ul></div>`;}
+  if(ik)h+=`<div class="box"><h2>Geçme notu</h2><div class="sf" style="margin-top:8px"><div class="srow2"><label>Puan<input id="yuGec" type="number" min="1" max="100" inputmode="numeric" value="${yGec()}"></label><button type="button" class="btn" id="yuGecK" style="align-self:end;min-height:48px">Kaydet</button></div></div></div>`;
+  if(!ik&&!canAday()&&!canOnay()&&!me)h+=`<div class="box"><p class="hint" style="margin:0">Henüz yükselme sınavı için aday gösterilmedin. Mağaza müdürün ya da bölge sorumlun aday gösterince burada görürsün.</p></div>`;
+  return h;}
+// Sınavı geçen kişinin görevi: bu mağazanın çalışan listesinde ve kayıt listesinde güncellenir
+function yTerfi(y){if(y.store!=='me'||!['GT','MSY','MS'].includes(y.to))return;const st=V.state();
+  const e=(st.employees||[]).find(x=>x&&(x.id===y.kisiId||nrm(x.name)===nrm(y.ad)));if(e){e.role=y.to;V.save();}
+  if(window.__kayit){const o=window.__kayit.get(),r=o.list.find(x=>nrm(x.ad)===nrm(y.ad));if(r){r.unvan=y.to;window.__kayit.save(o);}}}
+function yukClick(t){let b;
+  if(t.id==='yuAdd'){const v=($('yuK')||{}).value||'';if(!v)return V.toast('Kişiyi seç.'),true;const [sid,pid]=v.split('|'),p=staffOf(sid).find(x=>x.id===pid);if(!p)return true;
+    const to=$('yuTo').value||rNext(p.unvan);if(RUT.indexOf(to)<=RUT.indexOf(p.unvan)){V.toast(`${p.ad} zaten ${RUTAD[p.unvan]}; daha üst bir görev seç.`);return true;}
+    if(YU().some(y=>y.store===sid&&y.kisiId===pid&&(y.durum==='aday'||y.durum==='sinav'))){V.toast(`${p.ad} zaten sınav sürecinde.`);return true;}
+    const g=giris();YU().push({id:uid(),store:sid,ad:p.ad,kisiId:p.id,from:p.unvan,to,by:{ad:g.ad,rol:g.tip==='bs'?'BS':g.unvan},at:new Date().toISOString(),not:($('yuNot').value||'').trim(),sinav:null,puan:null,durum:'aday'});
+    save();render();V.toast(`${p.ad} aday gösterildi. İK sınav tarihini verecek.`);return true;}
+  if((b=t.closest('[data-ytar]'))){const y=YU().find(x=>x.id===b.dataset.ytar);if(!y||!isIkY())return true;const d=$('yt-'+y.id).value;if(!d){V.toast('Sınav gününü seç.');return true;}
+    y.sinav={tarih:d,saat:$('ys-'+y.id).value||'',yer:($('yy-'+y.id).value||'').trim()};y.durum='sinav';y.sinavAt=new Date().toISOString();save();render();V.toast(`${y.ad} için sınav tarihi kaydedildi; kişiye bildirim gitti.`);return true;}
+  if((b=t.closest('[data-ypuan]'))){const y=YU().find(x=>x.id===b.dataset.ypuan);if(!y||!isIkY())return true;const v=$('yp-'+y.id).value;const p=Number(v);if(v===''||!(p>=0&&p<=100)){V.toast('0 ile 100 arasında bir puan yaz.');return true;}
+    y.puan=Math.round(p);y.gec=yGec();y.durum=y.puan>=y.gec?'gecti':'kaldi';y.sonucAt=new Date().toISOString();if(y.durum==='gecti')yTerfi(y);save();render();
+    V.toast(y.durum==='gecti'?`${y.ad} geçti (${y.puan}); görevi ${RUTAD[y.to]} oldu.`:`${y.ad} geçemedi (${y.puan}, geçme notu ${y.gec}).`);return true;}
+  if((b=t.closest('[data-ydel]'))){D.yuk=YU().filter(x=>x.id!==b.dataset.ydel);save();render();V.toast('Adaylık geri çekildi.');return true;}
+  if(t.id==='yuGecK'){const v=Math.round(Number($('yuGec').value));if(!(v>=1&&v<=100)){V.toast('1 ile 100 arasında bir not yaz.');return true;}D.yukGec=v;save();render();V.toast(`Geçme notu ${v} oldu.`);return true;}
+  return false;}
+function yukN(L){const g=giris();if(!g)return;const lim=new Date(Date.now()-7*864e5).toISOString(),Y=yGor();
+  if(g.tip==='depo'){Y.forEach(y=>{if(y.durum==='aday')L.push({k:'yk:a:'+y.id,t:`Yükselme adayı: ${y.ad}`,d:`${RUTK[y.from]} → ${RUTK[y.to]} · ${S(y.store).name} · sınav tarihi ver`,at:y.at,go:{page:'yuk'}});else if(y.durum==='sinav'&&y.sinav&&y.sinav.tarih<=today())L.push({k:'yk:p:'+y.id,t:`Sınav puanı gir: ${y.ad}`,d:ySinavTxt(y),at:y.sinavAt||y.at,go:{page:'yuk'}});});return;}
+  Y.forEach(y=>{const m=yMine(y);
+    if(m&&y.durum==='sinav')L.push({k:'yk:s:'+y.id+':'+y.sinav.tarih,t:'Yükselme sınavın var',d:ySinavTxt(y),at:y.sinavAt||y.at,go:{page:'yuk'}});
+    if((y.durum==='gecti'||y.durum==='kaldi')&&(y.sonucAt||'')>lim)L.push({k:'yk:r:'+y.id,t:m?(y.durum==='gecti'?`Tebrikler, sınavı geçtin: ${RUTAD[y.to]} oldun`:'Yükselme sınavını geçemedin'):`${y.ad} sınavı ${y.durum==='gecti'?'geçti':'geçemedi'}`,d:`${y.puan} puan · geçme notu ${y.gec||yGec()}`,at:y.sonucAt,go:{page:'yuk'}});});}
+/* Yeni mağaza: İK açılan mağazanın kodunu, adını, adresini ve bölgesini girer; rehberde ve kayıtta hemen görünür.
+   Sunumda bu telefonda saklanır; gerçekte merkezi mağaza listesine yazılır. */
+const MGY='magaza-yeni';
+const mgyAl=()=>{try{const o=JSON.parse(localStorage.getItem(MGY)||'null');return o&&Array.isArray(o.list)?o:{list:[]};}catch(e){return {list:[]};}};
+const mgyKoy=o=>{try{localStorage.setItem(MGY,JSON.stringify(o));}catch(e){}if(MG()&&MG().yenile)MG().yenile();};
+function mgyRowBox(){if(!isIkY())return '';const n=mgyAl().list.length;
+  return `<div class="box ic-bsrow" data-icgo="mgyeni"><div class="ic-av ise">${IC_MGY}</div><div class="ic-sm"><b>Yeni mağaza</b><small>${n?`${n} yeni mağaza girildi · yenisini ekle`:'Açılan mağazanın bilgilerini gir'}</small></div><span class="ic-go">›</span></div>`;}
+const IC_MGY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h8"/><path d="M18 15v6M15 18h6"/></svg>';
+function mgyPage(){let h=head('Yeni mağaza',true);
+  if(!isIkY())return h+`<div class="box"><p class="hint" style="margin:0">Yeni mağaza bilgilerini insan kaynakları girer.</p></div>`;
+  const B=MG()?MG().bolgeler():[],g=giris(),my=MG()?MG().bolgeBul(g.depo||''):'',f=ui.form||{};
+  const il=[...new Set((MG()?MG().tumu():[]).map(o=>o.il).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));
+  h+=`<div class="box"><h2>Açılan mağazayı ekle</h2><p class="hint" style="margin:2px 0 0">Eklediğin mağaza hemen mağaza rehberinde görünür; çalışanlar kayıt olurken bu mağazayı seçebilir.</p><div class="sf" style="margin-top:10px">
+    <div class="srow2"><label>Mağaza kodu<input id="myKod" autocomplete="off" maxlength="6" placeholder="Örn. K812" style="text-transform:uppercase" value="${esc(f.kod||'')}"></label><label>Açılış tarihi<input id="myAc" type="date" value="${esc(f.ac||dstr(0))}"></label></div>
+    <label>Mağaza adı<input id="myAd" autocomplete="off" placeholder="Örn. Sahil - Finike" value="${esc(f.ad||'')}"></label>
+    <div class="srow2"><label>Mahalle, cadde / sokak<input id="mySk" autocomplete="off" placeholder="Örn. Sahil Mah. 102. Sok." value="${esc(f.sk||'')}"></label><label>No<input id="myNo" autocomplete="off" placeholder="Örn. 14/A" value="${esc(f.no||'')}"></label></div>
+    <div class="srow2"><label>İlçe<input id="myIlce" autocomplete="off" placeholder="Örn. Finike" value="${esc(f.ilce||'')}"></label><label>İl<input id="myIl" autocomplete="off" list="myIlL" placeholder="Örn. Antalya" value="${esc(f.il||'')}"><datalist id="myIlL">${il.map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label></div>
+    <label>Bağlı olduğu bölge (depo)<select id="myBk" class="ssel">${B.map(b=>`<option value="${b.kod}"${(f.bk||my)===b.kod?' selected':''}>${esc(b.ad)} · ${b.kod}</option>`).join('')}</select></label>
+    <p class="auth-err" id="myErr" role="alert"></p>
+    <button type="button" class="btn primary" id="myAdd">Mağazayı ekle</button></div></div>`;
+  const L=mgyAl().list.slice().reverse();
+  h+=`<div class="box"><h2>Eklenen yeni mağazalar</h2>${L.length?`<ul class="iz-list">${L.map(m=>`<li class="iz-row"><div class="iz-top"><div><b>${esc(m.ad.toLocaleUpperCase('tr-TR'))} ${esc(m.kod)}</b><small>${esc([m.sokak,m.no].filter(Boolean).join(' '))} · ${esc(m.ilce)} / ${esc(m.il)}<br>Bölge ${esc(m.bk)} · ${esc(MG()?MG().bolge(m.bk):'')} · açılış ${fmtD(m.acilis)}</small></div><span class="iz-st onay">Yeni</span></div><p class="hint" style="margin:4px 0 0">${esc(m.by)} · ${when(m.at)}</p><button type="button" class="linkbtn" data-mydel="${esc(m.kod)}" style="margin-top:6px">Listeden çıkar</button></li>`).join('')}</ul>`:'<p class="hint" style="margin:6px 0 0">Henüz yeni mağaza eklenmedi.</p>'}</div>`;
+  return h;}
+function mgyClick(t){let b;
+  if(t.id==='myAdd'){const v=id=>($(id).value||'').trim(),err=m=>{$('myErr').textContent=m;return true;};
+    const f={kod:v('myKod').toLocaleUpperCase('tr-TR'),ac:v('myAc'),ad:v('myAd'),sk:v('mySk'),no:v('myNo'),ilce:v('myIlce'),il:v('myIl'),bk:$('myBk').value};ui.form=f;
+    if(!/^[A-ZÇĞİÖŞÜ]\d{3,5}$/.test(f.kod))return err('Mağaza kodunu harf ve rakamla yaz (ör. K812).');
+    if(MG()&&MG().kod(f.kod))return err(`${f.kod} kodlu mağaza zaten var: ${MG().kod(f.kod).isim}.`);
+    if(!f.ad)return err('Mağaza adını yaz.');if(!f.sk)return err('Adresi yaz.');if(!f.ilce||!f.il)return err('İlçe ve ili yaz.');
+    const tcz=x=>x.toLocaleLowerCase('tr-TR').replace(/(^|[\s(./-])(\p{L})/gu,(m,a,c)=>a+c.toLocaleUpperCase('tr-TR'));
+    const o=mgyAl();o.list.push({kod:f.kod,ad:f.ad,sokak:f.sk,no:f.no,ilce:tcz(f.ilce),il:tcz(f.il),bk:f.bk,acilis:f.ac||dstr(0),at:new Date().toISOString(),by:giris().ad});mgyKoy(o);
+    ui.form={};render();window.scrollTo({top:0});const m=MG()&&MG().kod(f.kod);V.toast(`${m?m.isim:f.kod} eklendi. Rehberde ve kayıt ekranında görünüyor.`);return true;}
+  if((b=t.closest('[data-mydel]'))){const o=mgyAl();o.list=o.list.filter(x=>x.kod!==b.dataset.mydel);mgyKoy(o);render();V.toast('Mağaza listeden çıkarıldı.');return true;}
+  return false;}
+function mgyN(L){const g=giris();if(!g||g.tip!=='bs')return;const lim=new Date(Date.now()-7*864e5).toISOString();
+  mgyAl().list.filter(m=>m.at>lim).forEach(m=>{const o=MG()&&MG().kod(m.kod);L.push({k:'mgy:'+m.kod,t:`Yeni mağaza açıldı: ${o?o.isim:m.kod}`,d:`${m.ilce} / ${m.il} · açılış ${fmtD(m.acilis)}`,at:m.at,go:{page:'rehber'}});});}
 /* Kayıt onayları: İK (depo girişi) onaylar; İK yetki verdiği BS'ler de onaylar */
 const KYa=()=>window.__kayit,kyYetki=()=>!!(KYa()&&KYa().yetkili());
 const kyBek=()=>KYa()?KYa().get().list.filter(x=>x.durum==='bek').sort((a,b)=>b.at.localeCompare(a.at)):[];
@@ -5384,7 +5492,7 @@ function chip(ok,label,t){return `<span class="ic-chip ${ok?'ok':'no'}">${ok?'�
 /* Mağaza rehberi: bimVeri.magazalar listesinden kod, ad, mahalle, ilçe ya da il ile arama */
 const MG=()=>window.__mg&&window.__mg.var()?window.__mg:null;
 function mgAdres(name,hm){const M=MG(),o=M&&M.bul(name);if(!o)return '';return `<p class="mg-adr"${hm?` style="margin:${hm}"`:''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>${esc(o.adres)}${o.bk?`<small>Bölge ${esc(o.bk)} · ${esc(M.bolge(o.bk))}</small>`:''}</span><a href="${esc(M.harita(o))}" target="_blank" rel="noopener">Harita</a></p>`;}
-function rhRows(L){const M=MG(),my=window.__mg.kodOf(myName());return L.map(o=>`<li><div><b>${esc(o.ad)}${o.kod?` <span class="rh-kod">${esc(o.kod)}</span>`:''}${D.role==='magaza'&&(o.kod?o.kod===my:o===MG().bul(myName()))?' <em class="rh-me">Bizim mağaza</em>':''}</b><small>${esc(o.adres)}</small>${o.bk?`<small>${nrm(o.il)!==nrm(M.bolge(o.bk))?esc(o.il)+' · ':''}Bölge ${esc(o.bk)} · ${esc(M.bolge(o.bk))}</small>`:''}</div><a class="btn small" href="${esc(M.harita(o))}" target="_blank" rel="noopener">Harita</a></li>`).join('');}
+function rhRows(L){const M=MG(),my=window.__mg.kodOf(myName());return L.map(o=>`<li><div><b>${esc(o.ad)}${o.kod?` <span class="rh-kod">${esc(o.kod)}</span>`:''}${o.yeni?' <span class="stag">Yeni</span>':''}${D.role==='magaza'&&(o.kod?o.kod===my:o===MG().bul(myName()))?' <em class="rh-me">Bizim mağaza</em>':''}</b><small>${esc(o.adres)}</small>${o.bk?`<small>${nrm(o.il)!==nrm(M.bolge(o.bk))?esc(o.il)+' · ':''}Bölge ${esc(o.bk)} · ${esc(M.bolge(o.bk))}</small>`:''}</div><a class="btn small" href="${esc(M.harita(o))}" target="_blank" rel="noopener">Harita</a></li>`).join('');}
 let rhIl='';
 function rhIller(){const M=MG(),m={};M.tumu().forEach(o=>{const k=nrm(o.il);if(k&&!m[k])m[k]=o.il;});return Object.entries(m).sort((a,b)=>a[1].localeCompare(b[1],'tr'));}
 function rhDef(){if(rhIl){const M=MG(),L=M.tumu().filter(x=>nrm(x.il)===rhIl).sort((a,b)=>String(a.yer).localeCompare(String(b.yer),'tr'));return {t:`${esc((L[0]||{}).il||'')} · ${L.length} mağaza`,L};}
@@ -5408,7 +5516,7 @@ function render(){
   {const g=giris();D.role=g&&g.tip==='bs'?'bs':g&&g.tip==='depo'?'depo':g&&g.tip==='pm'?'pm':'magaza';if(g&&g.tip==='bs'&&(D.bsAd!==g.ad||D.bsBolge!==(g.bolge||''))){D.bsAd=g.ad;D.bsBolge=g.bolge||'';save();}if(g&&g.tip==='pm'&&D.pmAd!==g.ad){D.pmAd=g.ad;save();}}
   document.querySelectorAll('[data-icrole]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.icrole===D.role));
   const el=$('icBody');let h='';
-  if(ui.page==='rehber'){h+=rehberPage();}else if(ui.page==='kurum'){h+=kurumPage();}else if(ui.page==='kayit'){h+=kayitPage();}else
+  if(ui.page==='rehber'){h+=rehberPage();}else if(ui.page==='kurum'){h+=kurumPage();}else if(ui.page==='kayit'){h+=kayitPage();}else if(ui.page==='yuk'){h+=yukPage();}else if(ui.page==='mgyeni'){h+=mgyPage();}else
   if(D.role==='pm'){
     if(ui.page==='pmchat'){const k=ui.id,p=bsPeople().find(x=>nrm(x.ad)===k)||{ad:'BS'};if(!$('icView').hidden)markPm(k);
       h+=head(esc(p.ad),true)+`<div class="box"><p class="hint" style="margin:0">Bölge sorumlusu${p.bolge?' · '+esc(p.bolge):''}</p>${pmChat(k)}</div>`;}
@@ -5423,7 +5531,7 @@ function render(){
       h+=`<div class="box"><h2>Bölge sorumlularım</h2><ul class="ic-stores">${P.map(p=>{const k=nrm(p.ad),L=D.pmMsg[k]||[],l=L[L.length-1],u=pmUnreadOf(k).length;return `<li data-pmbs="${esc(k)}"><div class="ic-av">${esc(p.ad[0])}</div><div class="ic-sm"><b>${esc(p.ad)}</b><small>${esc((p.bolge||'Bölge sorumlusu')+(p.mg?' · '+p.mg+' mağaza':''))}${l?'<br>'+esc((l.from==='pm'?'Sen: ':'')+l.text):''}</small></div>${u?`<span class="ic-unread">${u}</span>`:'<span class="ic-go">›</span>'}</li>`;}).join('')}</ul></div>`;}
   }else if(D.role==='depo'){
     if(ui.page==='ik'){h+=ikPage();}else if(ui.page==='ikv'){const x=D.ise.find(y=>y.id===ui.id);if(!x){ui={page:'ik'};return render();}h+=iseView(x,true);}else{
-    h+=kayitRowBox()+ikRowBox();
+    h+=kayitRowBox()+yukRowBox()+mgyRowBox()+ikRowBox();
     const A=D.sevk.filter(x=>x.tarih>=today()).sort((a,b)=>(a.tarih+a.saat).localeCompare(b.tarih+b.saat)),nT=A.filter(x=>x.tarih===today()).length,nY=A.filter(x=>x.tarih===dstr(1)).length;
     dpSel=dpSel.filter(id=>D.stores.some(x=>x.id===id));
     h+=`<div class="ic-kpi"><div><b>${nT}</b><span>Bugün araç</span></div><div><b>${nY}</b><span>Yarın araç</span></div><div><b>${D.stores.length}</b><span>Mağaza</span></div></div>`;
@@ -5441,7 +5549,7 @@ function render(){
       {const I=ist(),ft=st.reduce((a,s)=>a+fire7(s.id,s.name).t,0),K=[I.skt?`<div><b>${sk}/${st.length}</b><span>Sabah SKT</span></div>`:'',I.rapor?`<div><b>${rp}/${st.length}</b><span>Akşam raporu</span></div>`:'',`<div><b>${open}</b><span>Açık talep</span></div>`,`<div><b>${Math.round(ft/1000).toLocaleString('tr-TR')}<small style="font-size:.6em"> bin ₺</small></b><span>Fire 7 gün</span></div>`].filter(Boolean);h+=`<div class="ic-kpi${K.length>3?' k4':''}" style="grid-template-columns:repeat(${K.length},1fr)">${K.join('')}</div>`;}
       h+=`<div class="ic-acts"><button type="button" class="btn primary" data-icgo="new">+ Talep gönder</button><button type="button" class="btn" data-icgo="svnew">Savunma iste</button></div>`;
       {const k=nrm(giris().ad),Lp=(D.pmMsg[k]||[]).slice(-1)[0],up=pmUnreadOf(k).length;h+=`<div class="box ic-bsrow" data-pmbs="${esc(k)}"><div class="ic-av pm">PM</div><div class="ic-sm"><b>PM · ${esc(pmName())}</b><small>${Lp?esc((Lp.from==='bs'?'Sen: ':'')+Lp.text):'Yöneticinle birebir sohbet'}</small></div>${up?`<span class="ic-unread">${up}</span>`:'<span class="ic-go">›</span>'}</div>`;}
-      h+=kayitRowBox();
+      h+=kayitRowBox()+yukRowBox();
       {const L=D.bsgrup[D.bsgrup.length-1],u=bsUnread().length;h+=`<div class="box ic-bsrow" data-icgo="bsgrup"><div class="ic-av gm">${GRP_IC}</div><div class="ic-sm"><b>BS grubu</b><small>${L?esc(L.from.split(' ')[0]+': '+L.text):'Diğer bölge sorumlularıyla sohbet'}</small></div>${u?`<span class="ic-unread">${u}</span>`:'<span class="ic-go">›</span>'}</div>`;}
       const SV=D.savunma.slice().sort((a,b)=>(!!a.sonuc-!!b.sonuc)||b.at.localeCompare(a.at)),svWait=SV.filter(x=>!x.sonuc).length;
       h+=`<div class="ic-seg bs-seg"><button type="button" data-bstab="m" aria-pressed="${bsTab==='m'}">Mağazalar</button><button type="button" data-bstab="t" aria-pressed="${bsTab==='t'}">Talepler${open?` <em>${open}</em>`:''}</button><button type="button" data-bstab="s" aria-pressed="${bsTab==='s'}">Savunmalar${svWait?` <em>${svWait}</em>`:''}</button></div>`;
@@ -5520,18 +5628,18 @@ function render(){
     }
   }else{
     const me=D.stores[0];
-    if(isStaff()&&!['svans','grup','izin'].includes(ui.page))ui.page='grup';
+    if(isStaff()&&!['svans','grup','izin','yuk'].includes(ui.page))ui.page='grup';
     if(['ise','isen','isev'].includes(ui.page)&&!canIse())ui.page='home';
     if(ui.page==='ise'){h+=isePage();}else if(ui.page==='isen'){h+=iseNewPage();}else if(ui.page==='isev'){const x=D.ise.find(y=>y.id===ui.id&&y.store==='me');if(!x){ui={page:'ise'};return render();}h+=iseView(x,false);}else
     if(ui.page==='izin'){h+=izPage();}else if(ui.page==='zyv'){const z=D.ziyaret.find(x=>x.id===ui.id);if(z){if(!$('icView').hidden&&!z.goruldu){z.goruldu=new Date().toISOString();save();}h+=zView(z);}else{ui.page='home';return render();}}else
     if(ui.page==='grup'){if(!$('icView').hidden)markGrup();
-      h+=(isStaff()?svAlerts()+sevkBox('me')+izRowBox():head('Mağaza grubu',true))+`<div class="box"><h2>${esc(myName())} grubu</h2><p class="hint" style="margin:2px 0 0">${staffOf('me').map(p=>esc(p.ad)).join(', ')||'Mağaza çalışanları'} · BS bu grubu görmez</p>${grupList()}</div>`+(isStaff()?svMine():'');
+      h+=(isStaff()?svAlerts()+sevkBox('me')+izRowBox()+yukRowBox():head('Mağaza grubu',true))+`<div class="box"><h2>${esc(myName())} grubu</h2><p class="hint" style="margin:2px 0 0">${staffOf('me').map(p=>esc(p.ad)).join(', ')||'Mağaza çalışanları'} · BS bu grubu görmez</p>${grupList()}</div>`+(isStaff()?svMine():'');
     }else if(ui.page==='home'){
       const L=myReqs(),u=unreadFor('me'),wait=L.filter(r=>!answered(r,'me')).length;
       h+=svAlerts();
       {const I=ist(),K=[`<div><b>${wait}</b><span>Yanıt bekleyen</span></div>`,I.skt?`<div><b>${myMskt()?'✓':'✗'}</b><span>Sabah SKT</span></div>`:'',I.rapor?`<div><b>${myRapor()?'✓':'✗'}</b><span>Akşam raporu</span></div>`:''].filter(Boolean);h+=`<div class="ic-kpi" style="grid-template-columns:repeat(${K.length},1fr)">${K.join('')}</div>`;}
       h+=`<div class="box ic-bsrow" data-icgo="grup"><div class="ic-av gm">${GRP_IC}</div><div class="ic-sm"><b>Mağaza grubu</b><small>${esc((D.grup.slice(-1)[0]||{}).from?D.grup.slice(-1)[0].from+': '+(D.grup.slice(-1)[0].share?'BS paylaşımı · '+D.grup.slice(-1)[0].share.title:D.grup.slice(-1)[0].text):'Çalışanlarla sohbet')}</small></div>${grupUnread().length?`<span class="ic-unread">${grupUnread().length}</span>`:'<span class="ic-go">›</span>'}</div>`;
-      h+=izRowBox()+iseRowBox();
+      h+=izRowBox()+iseRowBox()+yukRowBox();
       {const z=lastZ('me');if(z){const sk=zSkor(z.puan);h+=`<div class="box ic-bsrow" data-zyv="${z.id}"><div class="ic-av zy ${zCls(sk)}">%${sk}</div><div class="ic-sm"><b>Son mağaza ziyareti</b><small>${fmtD(z.at.slice(0,10))} · ${esc(z.bs)}${z.not?' · '+esc(z.not):''}</small></div><span class="ic-go">›</span></div>`;}}
       h+=`<div class="box ic-bsrow" data-icgo="chat"><div class="ic-av bs">BS</div><div class="ic-sm"><b>Bölge sorumlusu</b><small>${esc(((D.messages.me||[]).slice(-1)[0]||{}).text||'Mesaj yaz')}</small></div>${u?`<span class="ic-unread">${u}</span>`:'<span class="ic-go">›</span>'}</div>`;
       h+=`<div class="box"><h2>Gelen talepler</h2>${L.length?`<label class="rq-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="icQ" type="search" autocomplete="off" placeholder="Talep ara: başlık, ürün, kod, tarih" value="${esc(ui.q||'')}"></label>`:''}<ul class="ic-reqs" id="icReqL">${reqLis(L,ui.q)}</ul></div>`;
@@ -5644,6 +5752,7 @@ $('icView').addEventListener('click',async e=>{
     if(!bas)return V.toast('Tarihi seç.');if(bit<bas)return V.toast('Bitiş, başlangıçtan önce olamaz.');
     const p=staffOf('me').find(x=>(g.empId&&x.id===g.empId)||nrm(x.ad)===nrm(g.ad));
     D.izin.push({id:uid(),kisiId:g.empId||(p&&p.id)||null,ad:g.ad,unvan:g.unvan,tur,bas,bit,kimle:tur==='T'?f.kimle:'',not:(f.not||'').trim(),at:new Date().toISOString(),durum:'bek'});save();ui={page:'izin',form:{}};render();V.toast(tur==='T'?'Takas talebin MS ve MSY\'ye gönderildi.':'İzin talebin MS ve MSY\'ye gönderildi.');return;}
+  if(yukClick(t)||mgyClick(t))return;
   if((b=t.closest('[data-kyok],[data-kyred]'))){const o=KYa().get(),id=b.dataset.kyok||b.dataset.kyred,r=o.list.find(x=>x.id===id),ok=!!b.dataset.kyok;if(!r||!kyYetki())return;
     const g=giris();r.durum=ok?'onay':'red';r.karar={by:g.ad,rol:g.tip==='bs'?'BS':'İK',at:new Date().toISOString()};KYa().save(o);render();if(window.__renderHome)window.__renderHome();
     V.toast(ok?`${r.ad} onaylandı; artık ${r.sicil} sicil numarasıyla girebilir.`:`${r.ad} kaydı reddedildi.`);return;}
@@ -5703,11 +5812,11 @@ $('icView').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ic
 /* --- bildirimler: liste, tek tek ya da toplu silme (silinenler D.dismissed içinde tutulur) --- */
 function notifs(){const g=giris();if(!g)return [];const dis=D.dismissed||{},L=[],bs=g.tip==='bs';
   const kyN=()=>{if(kyYetki())kyBek().forEach(r=>L.push({k:'ky:'+r.id,t:`Kayıt onayı: ${r.ad}`,d:`${KISA[r.unvan]||r.unvan||''} · ${r.magaza||''}`,at:r.at,go:{page:'kayit'}}));};
-  if(g.tip==='depo'){kyN();D.ise.filter(x=>x.durum==='ik').forEach(x=>L.push({k:'ik:'+x.id+':'+x.gonder,t:`İşe giriş dosyası: ${x.ad}`,d:S(x.store).name+' · '+evN(x)+'/'+EV.length+' evrak',at:x.gonder||x.at,go:{page:'ikv',id:x.id}}));return L.filter(x=>!dis[x.k]).sort((a,b)=>b.at.localeCompare(a.at));}
+  if(g.tip==='depo'){kyN();yukN(L);D.ise.filter(x=>x.durum==='ik').forEach(x=>L.push({k:'ik:'+x.id+':'+x.gonder,t:`İşe giriş dosyası: ${x.ad}`,d:S(x.store).name+' · '+evN(x)+'/'+EV.length+' evrak',at:x.gonder||x.at,go:{page:'ikv',id:x.id}}));return L.filter(x=>!dis[x.k]).sort((a,b)=>b.at.localeCompare(a.at));}
   const pmN=k=>{const u=pmUnreadOf(k);if(u.length){const last=u[u.length-1],p=bsPeople().find(x=>nrm(x.ad)===k);L.push({k:'pm:'+k+':'+last.at,t:g.tip==='pm'?`${p?p.ad:'BS'}: ${u.length} yeni mesaj`:`PM'den ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'pmchat',id:k},seen:(g.tip==='pm'?'pm:':'pmbs:')+k});}};
   const bgN=()=>{const bu=bsUnread();if(bu.length){const last=bu[bu.length-1];L.push({k:'bg:'+last.at,t:`BS grubu: ${bu.length} yeni mesaj`,d:last.from+': '+last.text,at:last.at,go:{page:'bsgrup'},seen:bsgKey()});}};
   if(g.tip==='pm'){bsPeople().forEach(p=>pmN(nrm(p.ad)));bgN();}
-  else if(bs){pmN(nrm(g.ad));kyN();
+  else if(bs){pmN(nrm(g.ad));kyN();yukN(L);mgyN(L);
     const lim=new Date(Date.now()-2*864e5).toISOString();D.requests.forEach(r=>{const R=D.responses[r.id]||{},ids=Object.keys(R);if(!ids.length)return;const last=ids.map(id=>R[id].at).sort().pop();if(last<lim)return;const n=r.to.filter(id=>R[id]).length;L.push({k:'a:'+r.id+':'+n,t:n>=r.to.length?`${r.title}: tüm mağazalar dönüş yaptı`:`${r.title}: ${n}/${r.to.length} mağaza dönüş yaptı`,d:'Son dönüş: '+S(ids.sort((a,b)=>R[a].at.localeCompare(R[b].at)).pop()).name,at:last,go:{page:'req',id:r.id}});});
     D.stores.forEach(s=>{const M=(D.messages[s.id]||[]).filter(m=>m.from==='magaza'),seen=(D.seen||{})['bs:'+s.id]||'',u=M.filter(m=>m.at>seen);if(u.length){const last=u[u.length-1];L.push({k:'m:'+s.id+':'+last.at,t:`${s.name}: ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'store',id:s.id},seen:'bs:'+s.id});}});
     bgN();
@@ -5724,6 +5833,7 @@ function notifs(){const g=giris();if(!g)return [];const dis=D.dismissed||{},L=[]
     {const v=vdGunu();if(v)L.push({k:'vdg:'+v.w+':'+today(),t:v.t,d:v.d,at:new Date(new Date().setHours(8,0,0,0)).toISOString(),go:{tab:'v'},red:v.gec});}
     if(canOnay())D.ziyaret.filter(z=>z.store==='me'&&!z.goruldu&&z.at>new Date(Date.now()-3*864e5).toISOString()).forEach(z=>L.push({k:'zy:'+z.id,t:`BS ziyaret formu: %${zSkor(z.puan)}`,d:fmtD(z.at.slice(0,10))+' · '+z.bs,at:z.at,go:{page:'zyv',id:z.id}}));
     D.izin.filter(x=>x.tur==='T'&&x.durum==='bek'&&x.kimle&&giris()&&nrm(x.kimle)===nrm(giris().ad)).forEach(x=>L.push({k:'izt:'+x.id,t:`${x.ad} seninle vardiya takası istiyor`,d:izTarih(x)+' · MS/MSY onayına gitti',at:x.at,go:{page:'izin'}}));
+    yukN(L);
     izBekl().forEach(x=>L.push({k:'iz:'+x.id,t:`${x.ad} izin istiyor`,d:IZT[x.tur]+' · '+izTarih(x),at:x.at,go:{page:'izin'}}));
     D.izin.filter(x=>izMine(x)&&x.durum!=='bek').forEach(x=>L.push({k:'izk:'+x.id,t:x.durum==='onay'?'İzin talebin onaylandı':'İzin talebin reddedildi',d:IZT[x.tur]+' · '+izTarih(x)+' · '+x.karar.by,at:x.karar.at,go:{page:'izin'},red:x.durum==='red'}));
     D.savunma.filter(isMine).forEach(s=>{if(!s.cevap)L.push({k:'sv:'+s.id,t:'Savunman isteniyor',d:s.olay+' · son gün '+fmtD(s.son),at:s.at,go:{page:'svans',id:s.id},red:true});else if(s.sonuc)L.push({k:'svs:'+s.id,t:'Savunma sonucu',d:s.sonuc.karar,at:s.sonuc.at,go:{page:'svans',id:s.id}});});
