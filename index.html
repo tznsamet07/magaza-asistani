@@ -3471,7 +3471,7 @@ function setTab(t){
   }else if(t==='c'&&document.body.classList.contains('giris-depo')){
     const ikG=(window.__giris&&window.__giris()||{}).unvan==='İnsan kaynakları';h.firstChild.textContent=ikG?'İnsan kaynakları':'Sevkiyat';$('subtitle').textContent=ikG?'Kayıt onayı, yükselme sınavı, yeni mağaza':'Mağazalara gidecek araçlar: plaka, saat, şoför';
   }else if(t==='c'&&document.body.classList.contains('giris-pm')){
-    h.firstChild.textContent='İletişim';$('subtitle').textContent='Bölge sorumlularıyla sohbet ve duyuru';
+    const un=(window.__giris&&window.__giris()||{}).unvan;h.firstChild.textContent='İletişim';$('subtitle').textContent=un==='GM'?'Bölge müdürleriyle sohbet':un==='BM'?'PM\'lerle ve genel müdürlükle sohbet':'BS\'lerle ve bölge müdürüyle sohbet';
   }else if(t==='c'){
     const stf=document.body.dataset.role==='staff'&&!document.body.classList.contains('yk-c');h.firstChild.textContent=stf?'Mağaza grubu':'İletişim';
     $('subtitle').textContent=stf?'Mağaza çalışanlarıyla sohbet':'Mağaza ⇄ bölge sorumlusu: talep, yanıt, sohbet';
@@ -4959,7 +4959,8 @@ function render(){
   const S=window.__icSum?window.__icSum():null,now=new Date(),mins=now.getHours()*60+now.getMinutes();
   let st='';
   if(S&&pm){
-    st=stat(S.pmU?false:true,'BS mesajları',S.pmU?`${S.pmU} yeni mesaj`:'Yeni mesaj yok')+stat(S.bsg?false:true,'BS grubu',S.bsg?`${S.bsg} yeni mesaj`:'Yeni mesaj yok');
+    const ku=g.unvan==='GM'?'gm':g.unvan==='BM'?'bm':'pm';
+    st=ku==='pm'?stat(S.pmU?false:true,'BS mesajları',S.pmU?`${S.pmU} yeni mesaj`:'Yeni mesaj yok')+stat(S.bsg?false:true,'BS grubu',S.bsg?`${S.bsg} yeni mesaj`:'Yeni mesaj yok')+(S.ustU?stat(false,'Bölge müdürü',`${S.ustU} yeni mesaj`):''):stat(S.ustU?false:true,ku==='gm'?'Bölge müdürleri':'PM ve GM mesajları',S.ustU?`${S.ustU} yeni mesaj`:'Yeni mesaj yok');
   }else if(S&&dp){
     st=(S.ikB?stat(false,'İşe giriş dosyası',`${S.ikB} dosya kontrol bekliyor`):'')+stat(null,'Bugünkü sevkiyat',S.sevkBs?`${S.sevkBs} araç planlandı`:'Bugün için araç girilmedi')+stat(null,'Yarınki sevkiyat',S.sevkYarin?`${S.sevkYarin} araç planlandı`:'Henüz araç girilmedi');
   }else if(S&&bs){
@@ -4970,7 +4971,7 @@ function render(){
     else st=sk+(S.vdGun?stat(S.vdGun.gec?false:null,S.vdGun.t,S.vdGun.d):'')+(S.izB?stat(false,'İzin / takas',`${S.izB} talep onayını bekliyor`):'')+(S.iseEk?stat(false,'İşe giriş evrakı',`${S.iseEk} dosyada eksik var`):'')+(S.ist.skt?stat(S.mskt?true:mins>9*60+15?false:null,'Sabah SKT dönüşü',S.mskt?'Gönderildi':'09.15\'e kadar'):'')+(S.ist.rapor?stat(S.rapor?true:null,'Akşam raporu',S.rapor?'Gönderildi':'Akşam BS\'ye gönderilecek'):'')+stat(S.wait?false:true,'BS talepleri',S.wait?`${S.wait} talep yanıt bekliyor`:'Bekleyen yok')+(S.sv?stat(false,'Savunma',`${S.sv} savunma isteniyor`):'');
   }
   const stf=document.body.dataset.role==='staff'&&!document.body.classList.contains('yk-c');
-  const T=(pm?TILES.pm:dp?TILES.depo:bs?TILES.bs:stf?TILES.magaza.map(x=>x[0]==='c'?['c','Mağaza grubu','Çalışanlarla sohbet']:x):[TILES.magaza[0],['c:grup','Mağaza grubu','Çalışanlarla sohbet'],...TILES.magaza.slice(1)]).filter(([k])=>shown(BTN[k.split(':')[0]])&&(k!=='c:ise'||(g&&['MS','MSY'].includes(g.unvan)))&&(k!=='c:kayit'||(window.__kayit&&window.__kayit.yetkili()))&&(!dp||(window.__ikMi(g)?k!=='c':!['c:ik','c:kayit','c:yuk','c:mgyeni'].includes(k))));
+  const T=(pm?(['GM','BM'].includes(g.unvan)?TILES.pm.filter(x=>x[0]!=='c:bsgrup').map(x=>x[0]==='c'?(g.unvan==='GM'?['c','Bölge müdürleri','Bölge müdürleriyle birebir sohbet']:['c','PM\'lerim','PM\'lerle ve GM ile birebir sohbet']):x):TILES.pm):dp?TILES.depo:bs?TILES.bs:stf?TILES.magaza.map(x=>x[0]==='c'?['c','Mağaza grubu','Çalışanlarla sohbet']:x):[TILES.magaza[0],['c:grup','Mağaza grubu','Çalışanlarla sohbet'],...TILES.magaza.slice(1)]).filter(([k])=>shown(BTN[k.split(':')[0]])&&(k!=='c:ise'||(g&&['MS','MSY'].includes(g.unvan)))&&(k!=='c:kayit'||(window.__kayit&&window.__kayit.yetkili()))&&(!dp||(window.__ikMi(g)?k!=='c':!['c:ik','c:kayit','c:yuk','c:mgyeni'].includes(k))));
   $('homeBody').innerHTML=`<div class="box hm-hero"><div class="hm-logo" aria-hidden="true"></div><div><p class="hm-hi">${selam()}${ad?', '+esc(ad):''}</p><h2>BİM Mağaza Portalı</h2><p class="hm-sub">${pm?(g.unvan==='GM'?'Genel müdürlük':g.unvan==='BM'?'Bölge müdürü':'PM')+(g.bolge?' · '+esc(g.bolge):''):dp?'Depo'+(g.depo?' · '+esc(g.depo):''):bs?'Bölge sorumlusu'+(g.bolge?' · '+esc(g.bolge):''):esc((g&&g.magaza)||'')+(()=>{const o=g&&window.__mg&&window.__mg.bul(g.magaza);return o?' · '+esc(o.yer):'';})()}</p></div></div>
   ${(()=>{const F=window.__icFeed?window.__icFeed():[];return F.length?`<div class="box hm-feed"><h2>Son gelenler</h2><ul>${F.map(x=>`<li data-hmnt="${esc(x.k)}"><i class="${x.red?'red':''}"></i><span><b>${esc(x.t)}</b><small>${esc(x.d||'')}</small></span><em>${esc(x.w)}</em></li>`).join('')}</ul>${F.n>F.length?`<button type="button" class="linkbtn" data-hmall>Tümünü gör (${F.n})</button>`:''}</div>`:'';})()}
   ${st?`<div class="box"><h2>Bugün</h2><div class="hm-today">${st}</div></div>`:''}
@@ -5093,7 +5094,8 @@ if(!Array.isArray(D.bsgrup)){D.bsgrup=[{from:'Murat Kaya',bolge:'Kumluca bölges
 /* PM: BS'lerin yöneticisi. BS'lerle birebir sohbet eder, BS grubuna da yazar. */
 const PM_DEF='Kemal Arslan';
 if(!D.pmMsg){D.pmMsg={[nrm('Murat Kaya')]:[{from:'bs',text:'Hocam Kumluca\'da iki mağazada personel eksiği var, bu hafta destek alabilir miyiz?',at:isoAt(9,10,0)}],[nrm('Selin Aydın')]:[{from:'pm',text:'Selin Hanım, Kaş bölgesinin ay sonu raporunu cuma günü bekliyorum.',at:isoAt(10,30,-1)},{from:'bs',text:'Tamam hocam, cuma öğlene kadar gönderirim.',at:isoAt(10,48,-1)}]};save();}
-const pmName=()=>{const g=giris();return g&&g.tip==='pm'?g.ad:(D.pmAd||PM_DEF);};
+const pmAd=()=>!D.pmAd||['Nihat Öz','Selim Aktaş'].includes(D.pmAd)?PM_DEF:D.pmAd;
+const pmName=()=>{const g=giris();return g&&g.tip==='pm'&&!['GM','BM'].includes(g.unvan)?g.ad:pmAd();};
 function bsPeople(){return [{ad:D.bsAd||'Ali Yıldırım',bolge:D.bsBolge||'Finike bölgesi',mg:D.stores.length},...BSLER];}
 function pmUnreadOf(k){const g=giris();if(!g)return [];const L=D.pmMsg[k]||[],pmSide=g.tip==='pm',seen=(D.seen||{})[(pmSide?'pm:':'pmbs:')+k]||'';return L.filter(m=>m.from===(pmSide?'bs':'pm')&&m.at>seen);}
 function markPm(k){const g=giris();D.seen=D.seen||{};D.seen[(g&&g.tip==='pm'?'pm:':'pmbs:')+k]=new Date().toISOString();save();}
@@ -5105,6 +5107,34 @@ function pmChat(k){const g=giris(),pmSide=g&&g.tip==='pm',L=D.pmMsg[k]||[];
   return `<div class="ic-chat" id="icChat">${L.map(m=>{const mine=(m.from==='pm')===pmSide;return `<div class="ic-msg ${mine?'me':'them'}"><div>${esc(m.text)}</div><small>${when(m.at)}</small></div>`;}).join('')||'<p class="hint" style="text-align:center;margin:20px 0">Henüz mesaj yok. İlk mesajı sen yaz.</p>'}</div>
   ${kilitli()?kilitBar():`<div class="ic-send"><input id="icMsg" autocomplete="off" placeholder="Mesaj yaz…" aria-label="Mesaj"><button type="button" class="btn primary" id="icMsgGo" data-icchat="pm:${k}" aria-label="Gönder">➤</button></div>`}`;}
 function pmSim(k,from){if(kilitli())return;if(Math.random()<.25)return;setTimeout(()=>{(D.pmMsg[k]=D.pmMsg[k]||[]).push({from,text:from==='pm'?['Tamam, takip ediyorum.','Teşekkürler, bilgim oldu.','Uygundur.','Yarın konuşalım.'][rnd(0,3)]:['Tamam hocam.','Hemen ilgileniyorum.','Bilgi için teşekkürler.','Akşama dönüş yaparım.'][rnd(0,3)],at:new Date().toISOString()});save();if(!$('icView').hidden&&ui.page==='pmchat')render();else updBell();},2500+rnd(0,2500));}
+/* Kademe zinciri: GM ↔ BM ↔ PM ↔ BS ↔ mağaza. Herkes yalnız bir üstü ve bir altıyla yazışır; BM, BS'ye PM üzerinden ulaşır. */
+const kad=()=>{const g=giris();if(!g||g.tip!=='pm')return '';return g.unvan==='GM'?'gm':g.unvan==='BM'?'bm':'pm';};
+const GM_AD='Selim Aktaş',BM_AD='Nihat Öz';
+const PMLER=()=>[{ad:pmAd(),bolge:'Antalya Bölge Müdürlüğü',bs:bsPeople().length},{ad:'Hülya Şen',bolge:'Antalya Bölge Müdürlüğü',bs:YAPI.bmBs-bsPeople().length}];
+const BMLER=()=>[{ad:BM_AD,bolge:'Antalya Bölge Müdürlüğü'},{ad:'Cem Yalçın',bolge:'İzmir Bölge Müdürlüğü'},{ad:'Aylin Tekin',bolge:'Ankara Bölge Müdürlüğü'}];
+if(!D.ust){D.ust={['bm:'+nrm(PM_DEF)]:[{from:'ust',text:'Kemal Bey, bölgenin ekim fire özetini perşembe toplantısına hazırlar mısınız?',at:isoAt(9,0,-1)},{from:'alt',text:'Hazırlıyorum Nihat Bey, BS\'lerden dönüşleri topluyorum.',at:isoAt(9,25,-1)}],['gm:'+nrm(BM_AD)]:[{from:'ust',text:'Bölge müdürleri toplantısı pazartesi 14.00\'te, bölge özetlerinizi getirin.',at:isoAt(16,0,-1)}]};save();}
+/* üstümle sohbet anahtarı: PM için 'bm:<ben>', BM için 'gm:<ben>' */
+const ustKey=()=>{const k=kad(),g=giris();return k==='pm'?'bm:'+nrm(g.ad):k==='bm'?'gm:'+nrm(g.ad):'';};
+const ustSide=key=>{const k=kad();return (k==='bm'&&key.startsWith('bm:'))||(k==='gm'&&key.startsWith('gm:'))?'ust':'alt';};
+function ustUnread(key){const side=ustSide(key),seen=(D.seen||{})['ust:'+side+':'+key]||'';return (D.ust[key]||[]).filter(m=>m.from!==side&&m.at>seen);}
+function markUst(key){D.seen=D.seen||{};D.seen['ust:'+ustSide(key)+':'+key]=new Date().toISOString();save();}
+function altlar(){const k=kad();return k==='bm'?PMLER().map(p=>({...p,key:'bm:'+nrm(p.ad),rol:'PM'})):k==='gm'?BMLER().map(p=>({...p,key:'gm:'+nrm(p.ad),rol:'BM'})):[];}
+function ustKisi(){const k=kad();return k==='pm'?{ad:BM_AD,rol:'BM',t:'Bölge müdürü'}:k==='bm'?{ad:GM_AD,rol:'GM',t:'Genel müdürlük'}:null;}
+function ustTumU(){const k=ustKey();return (k?ustUnread(k).length:0)+altlar().reduce((a,p)=>a+ustUnread(p.key).length,0);}
+function ustRow(){const u=ustKisi(),key=ustKey();if(!u)return '';const L=(D.ust[key]||[]).slice(-1)[0],n=ustUnread(key).length;
+  return `<div class="box ic-bsrow" data-ust="${esc(key)}"><div class="ic-av pm">${u.rol}</div><div class="ic-sm"><b>${u.rol} · ${esc(u.ad)}</b><small>${L?esc((L.from==='alt'?'Sen: ':'')+L.text):'Yöneticinle birebir sohbet'}</small></div>${n?`<span class="ic-unread">${n}</span>`:'<span class="ic-go">›</span>'}</div>`;}
+function ustChat(key){const side=ustSide(key),L=D.ust[key]||[];
+  return `<div class="ic-chat" id="icChat">${L.map(m=>`<div class="ic-msg ${m.from===side?'me':'them'}"><div>${esc(m.text)}</div><small>${when(m.at)}</small></div>`).join('')||'<p class="hint" style="text-align:center;margin:20px 0">Henüz mesaj yok. İlk mesajı sen yaz.</p>'}</div>
+  ${kilitli()?kilitBar():`<div class="ic-send"><input id="icMsg" autocomplete="off" placeholder="Mesaj yaz…" aria-label="Mesaj"><button type="button" class="btn primary" id="icMsgGo" data-icchat="ust:${esc(key)}" aria-label="Gönder">➤</button></div>`}`;}
+function ustKimi(key){const u=ustKisi();if(key===ustKey()&&u)return {ad:u.ad,t:u.t};const p=altlar().find(x=>x.key===key);return p?{ad:p.ad,t:(p.rol==='PM'?'PM':'Bölge müdürü')+' · '+p.bolge}:{ad:'',t:''};}
+function ustSim(key,from){if(kilitli())return;if(Math.random()<.25)return;setTimeout(()=>{(D.ust[key]=D.ust[key]||[]).push({from,text:['Tamam, takip ediyorum.','Bilgim oldu, teşekkürler.','Uygundur.','Toplantıda konuşalım.'][rnd(0,3)],at:new Date().toISOString()});save();if(!$('icView').hidden&&ui.page==='ust')render();else updBell();},2500+rnd(0,2500));}
+function ustPage(){const k=kad(),A=altlar(),u=ustKisi();let h='';
+  h+=`<div class="ic-kpi"><div><b>${k==='gm'?YAPI.trBm:YAPI.bmPm}</b><span>${k==='gm'?'Bölge müdürlüğü':'PM'}</span></div><div><b>${(k==='gm'?YAPI.tr:YAPI.bmMg).toLocaleString('tr-TR')}</b><span>Mağaza</span></div><div><b>${ustTumU()}</b><span>Yeni mesaj</span></div></div>`;
+  h+=`<details class="box sect yp-box"><summary><h2>Kurum yapısı</h2></summary>${kurumIc(bsPeople(),bsPeople().reduce((a,p)=>a+(p.mg||0),0))}</details>`;
+  if(u)h+=ustRow();
+  h+=`<div class="box"><h2>${k==='gm'?'Bölge müdürlerim':'PM\'lerim'}</h2><p class="hint" style="margin:2px 0 0">${k==='gm'?'Bölgelere bölge müdürleri üzerinden ulaşırsın.':'Bölge sorumlularına ve mağazalara PM\'ler üzerinden ulaşırsın.'}</p><ul class="ic-stores">${A.map(p=>{const L=(D.ust[p.key]||[]).slice(-1)[0],n=ustUnread(p.key).length;return `<li data-ust="${esc(p.key)}"><div class="ic-av">${esc(p.ad[0])}</div><div class="ic-sm"><b>${esc(p.ad)}</b><small>${esc(p.rol==='PM'?`PM · ${p.bs} bölge sorumlusu`:p.bolge)}${L?'<br>'+esc((L.from==='ust'?'Sen: ':'')+L.text):''}</small></div>${n?`<span class="ic-unread">${n}</span>`:'<span class="ic-go">›</span>'}</li>`;}).join('')}</ul></div>`;
+  return h;}
+window.__kad=kad;
 /* İzin talepleri: çalışan ister, MS ya da MSY onaylar (kendi talebini kendisi onaylayamaz) */
 const IZT={B:'Haftalık izin (B)',Y:'Yıllık izin',M:'Mazeret izni',R:'Rapor',T:'Vardiya takası'};
 if(!Array.isArray(D.izin)){const P=staffOf('me').filter(p=>p.unvan!=='MS'&&p.unvan!=='MSY'),p=P[0]||{id:null,ad:'İklim',unvan:'PER'};D.izin=[{id:uid(),kisiId:p.id,ad:p.ad,unvan:p.unvan,tur:'B',bas:dstr(3),bit:dstr(3),not:'Kardeşimin düğünü var, o gün izin alabilir miyim?',at:isoAt(18,20,-1),durum:'bek'}];save();}
@@ -5474,7 +5504,7 @@ const zCls=n=>n>=85?'ok':n>=65?'mid':'bad';
 function fire7(id,name){if(id==='me'){const lim=dstr(-6),L=((V.state().skt||{}).fire||[]).filter(x=>String(x.at||'').slice(0,10)>=lim);const t=L.reduce((a,x)=>a+(x.price!=null?x.price*(x.qty||1):0),0);if(L.length)return {t,ex:false};}
   let h=0;for(const c of String(name||id)+today())h=(h*31+c.charCodeAt(0))%9973;return {t:600+h%2400,ex:true};}
 function bsgKey(){const g=giris();return 'bsg:'+nrm(g&&g.ad);}
-function bsUnread(){const g=giris();if(!g||(g.tip!=='bs'&&g.tip!=='pm'))return [];const me=nrm(g.ad),seen=(D.seen||{})[bsgKey()]||'';return D.bsgrup.filter(m=>nrm(m.from)!==me&&m.at>seen);}
+function bsUnread(){const g=giris();if(!g||(g.tip!=='bs'&&kad()!=='pm'))return [];const me=nrm(g.ad),seen=(D.seen||{})[bsgKey()]||'';return D.bsgrup.filter(m=>nrm(m.from)!==me&&m.at>seen);}
 function markBs(){D.seen=D.seen||{};D.seen[bsgKey()]=new Date().toISOString();save();}
 function bsList(){const g=giris(),me=nrm(g&&g.ad);
   return `<div class="ic-chat" id="icChat">${D.bsgrup.map(m=>{const mine=nrm(m.from)===me;return `<div class="ic-msg ${mine?'me':'them'}">${mine?'':`<b class="gm-who">${esc(m.from)} <small>${esc(m.bolge||'BS')}</small></b>`}<div>${esc(m.text)}</div><small>${when(m.at)}</small></div>`;}).join('')||'<p class="hint" style="text-align:center;margin:20px 0">Henüz mesaj yok.</p>'}</div>
@@ -5608,12 +5638,16 @@ function respTable(r){const R=D.responses[r.id]||{},rows=[];
 function reqTable(r){const T=respTable(r);if(!(ui.page==='req'&&ui.id===r.id&&ui.sel))return T;const names=ui.sel.map(id=>S(id).name);return {cols:T.cols,rows:T.rows.filter(rw=>names.includes(rw[0]))};}
 /* --- ekranlar --- */
 function render(){
-  {const g=giris();D.role=g&&g.tip==='bs'?'bs':g&&g.tip==='depo'?'depo':g&&g.tip==='pm'?'pm':'magaza';if(g&&g.tip==='bs'&&(D.bsAd!==g.ad||D.bsBolge!==(g.bolge||''))){D.bsAd=g.ad;D.bsBolge=g.bolge||'';save();}if(g&&g.tip==='pm'&&D.pmAd!==g.ad){D.pmAd=g.ad;save();}}
+  {const g=giris();D.role=g&&g.tip==='bs'?'bs':g&&g.tip==='depo'?'depo':g&&g.tip==='pm'?'pm':'magaza';if(g&&g.tip==='bs'&&(D.bsAd!==g.ad||D.bsBolge!==(g.bolge||''))){D.bsAd=g.ad;D.bsBolge=g.bolge||'';save();}if(g&&g.tip==='pm'&&!['GM','BM'].includes(g.unvan)&&D.pmAd!==g.ad){D.pmAd=g.ad;save();}}
   document.querySelectorAll('[data-icrole]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.icrole===D.role));
   const el=$('icBody');let h='';
   if(ui.page==='rehber'){h+=rehberPage();}else if(ui.page==='kurum'){h+=kurumPage();}else if(ui.page==='kayit'){h+=kayitPage();}else if(ui.page==='yuk'){h+=yukPage();}else if(ui.page==='mgyeni'){h+=mgyPage();}else
-  if(D.role==='pm'){
-    if(ui.page==='pmchat'){const k=ui.id,p=bsPeople().find(x=>nrm(x.ad)===k)||{ad:'BS'};if(!$('icView').hidden)markPm(k);
+  if(D.role==='pm'&&kad()!=='pm'){
+    if(ui.page==='ust'&&ui.id){const key=ui.id,p=ustKimi(key);if(!$('icView').hidden)markUst(key);h+=head(esc(p.ad),true)+`<div class="box"><p class="hint" style="margin:0">${esc(p.t)}</p>${ustChat(key)}</div>`;}
+    else{ui={page:'home'};h+=ustPage();}
+  }else if(D.role==='pm'){
+    if(ui.page==='ust'&&ui.id){const key=ui.id,p=ustKimi(key);if(!$('icView').hidden)markUst(key);h+=head(esc(p.ad),true)+`<div class="box"><p class="hint" style="margin:0">${esc(p.t)}</p>${ustChat(key)}</div>`;}
+    else if(ui.page==='pmchat'){const k=ui.id,p=bsPeople().find(x=>nrm(x.ad)===k)||{ad:'BS'};if(!$('icView').hidden)markPm(k);
       h+=head(esc(p.ad),true)+`<div class="box"><p class="hint" style="margin:0">Bölge sorumlusu${p.bolge?' · '+esc(p.bolge):''}</p>${pmChat(k)}</div>`;}
     else if(ui.page==='bsgrup'){if(!$('icView').hidden)markBs();
       h+=head('BS grubu',true)+`<div class="box"><h2>Bölge sorumluları</h2><p class="hint" style="margin:2px 0 0">${esc([pmName()+' (PM)',...bsPeople().map(p=>p.ad)].join(', '))} · Mağazalar bu grubu görmez</p>${bsList()}</div>`;}
@@ -5621,6 +5655,7 @@ function render(){
       const nm=P.reduce((a,p)=>a+(p.mg||0),0),f=n=>n.toLocaleString('tr-TR');
       h+=`<div class="ic-kpi"><div><b>${P.length}</b><span>Bölge sorumlusu</span></div><div><b>${nm}</b><span>Mağaza</span></div><div><b>${tot}</b><span>Yeni mesaj</span></div></div>`;
       h+=`<details class="box sect yp-box"><summary><h2>Kurum yapısı</h2></summary>${kurumIc(P,nm)}</details>`;
+      h+=ustRow();
       h+=`<div class="box ic-bsrow" data-icgo="bsgrup"><div class="ic-av gm">${GRP_IC}</div><div class="ic-sm"><b>BS grubu</b><small>${Lg?esc(Lg.from.split(' ')[0]+': '+Lg.text):'Tüm BS\'lere duyuru ve sohbet'}</small></div>${bu?`<span class="ic-unread">${bu}</span>`:'<span class="ic-go">›</span>'}</div>`;
       if(window.__grafBolge)h+=window.__grafBolge(P);
       h+=`<div class="box"><h2>Bölge sorumlularım</h2><ul class="ic-stores">${P.map(p=>{const k=nrm(p.ad),L=D.pmMsg[k]||[],l=L[L.length-1],u=pmUnreadOf(k).length;return `<li data-pmbs="${esc(k)}"><div class="ic-av">${esc(p.ad[0])}</div><div class="ic-sm"><b>${esc(p.ad)}</b><small>${esc((p.bolge||'Bölge sorumlusu')+(p.mg?' · '+p.mg+' mağaza':''))}${l?'<br>'+esc((l.from==='pm'?'Sen: ':'')+l.text):''}</small></div>${u?`<span class="ic-unread">${u}</span>`:'<span class="ic-go">›</span>'}</li>`;}).join('')}</ul></div>`;}
@@ -5778,7 +5813,7 @@ function notify(r){const title=`BS'den yeni ${TYPES[r.type].toLocaleLowerCase('t
 function newForm(){return {type:'duyuru',title:'',body:'',itemsTxt:'',cols:'Ürün kodu, Ürün adı, Adet, Not',to:D.stores.map(s=>s.id),files:[]};}
 function readForm(){const f=ui.form;if(!f)return;const g=id=>$(id)&&$(id).value;if($('icT'))f.title=g('icT');if($('icB'))f.body=g('icB');if($('icItems'))f.itemsTxt=g('icItems');if($('icCols'))f.cols=g('icCols');if($('icFoto'))f.foto=$('icFoto').checked;}
 function parseItems(t){return String(t||'').split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{const m=l.match(/\b(\d{3,14})\b/);return {code:m?m[1]:'',name:(m?l.replace(m[0],' '):l).replace(/[;:|\t,\-–]+/g,' ').replace(/\s+/g,' ').trim()};}).filter(x=>x.code||x.name);}
-function sendMsg(id){if(kilitli()){render();return;}if(id.startsWith('pm:')){const k=id.slice(3),t=$('icMsg').value.trim();if(!t)return;const g=giris(),side=g.tip==='pm'?'pm':'bs';(D.pmMsg[k]=D.pmMsg[k]||[]).push({from:side,text:t,at:new Date().toISOString()});markPm(k);save();render();$('icMsg').focus();pmSim(k,side==='pm'?'bs':'pm');return;}if(id==='bsgrup'){const t=$('icMsg').value.trim();if(!t)return;const g=giris();D.bsgrup.push({from:g.ad,bolge:g.tip==='pm'?'PM':g.bolge||'',text:t,at:new Date().toISOString()});markBs();save();render();$('icMsg').focus();bsSim();return;}if(id==='grup'){const t=$('icMsg').value.trim();if(!t)return;const g=giris();D.grup.push({from:g.ad,unvan:g.unvan,text:t,at:new Date().toISOString()});markGrup();save();render();$('icMsg').focus();grupSim();return;}const t=$('icMsg').value.trim();if(!t)return;(D.messages[id]=D.messages[id]||[]).push({from:D.role==='bs'?'bs':'magaza',text:t,at:new Date().toISOString()});save();render();$('icMsg').focus();if(D.role==='bs')simReply(id);}
+function sendMsg(id){if(kilitli()){render();return;}if(id.startsWith('ust:')){const key=id.slice(4),t=$('icMsg').value.trim();if(!t)return;const side=ustSide(key);(D.ust[key]=D.ust[key]||[]).push({from:side,text:t,at:new Date().toISOString()});markUst(key);save();render();$('icMsg').focus();ustSim(key,side==='ust'?'alt':'ust');return;}if(id.startsWith('pm:')){const k=id.slice(3),t=$('icMsg').value.trim();if(!t)return;const g=giris(),side=g.tip==='pm'?'pm':'bs';(D.pmMsg[k]=D.pmMsg[k]||[]).push({from:side,text:t,at:new Date().toISOString()});markPm(k);save();render();$('icMsg').focus();pmSim(k,side==='pm'?'bs':'pm');return;}if(id==='bsgrup'){const t=$('icMsg').value.trim();if(!t)return;const g=giris();D.bsgrup.push({from:g.ad,bolge:g.tip==='pm'?'PM':g.bolge||'',text:t,at:new Date().toISOString()});markBs();save();render();$('icMsg').focus();bsSim();return;}if(id==='grup'){const t=$('icMsg').value.trim();if(!t)return;const g=giris();D.grup.push({from:g.ad,unvan:g.unvan,text:t,at:new Date().toISOString()});markGrup();save();render();$('icMsg').focus();grupSim();return;}const t=$('icMsg').value.trim();if(!t)return;(D.messages[id]=D.messages[id]||[]).push({from:D.role==='bs'?'bs':'magaza',text:t,at:new Date().toISOString()});save();render();$('icMsg').focus();if(D.role==='bs')simReply(id);}
 
 $('icView').addEventListener('input',e=>{if(e.target.id==='bsQ'){bsQ=e.target.value;const u=$('bsReqL');if(u)u.innerHTML=bsReqLis(bsQ);return;}if(e.target.id!=='icQ')return;ui.q=e.target.value;const u=$('icReqL');if(u)u.innerHTML=reqLis(myReqs(),ui.q);});
 $('icView').addEventListener('click',async e=>{
@@ -5865,6 +5900,7 @@ $('icView').addEventListener('click',async e=>{
     x.durum=ok?'onay':'red';x.karar={by:giris().ad,at:new Date().toISOString(),not};const pl=ok?planIsle(x):0;save();render();
     V.toast(ok?`${x.ad}: ${x.tur==='T'?'takas':'izin'} onaylandı.${pl?' Vardiya planı güncellendi.':x.tur==='M'?'':' Bu hafta için plan yok; plan oluşturulunca dikkate al.'}`:`${x.ad}: ${x.tur==='T'?'takas':'izin'} reddedildi.`);return;}
   if((b=t.closest('[data-izdel]'))){if(!await window.askConfirm('İzin talebin geri çekilsin mi?','Geri çek'))return;D.izin=D.izin.filter(y=>y.id!==b.dataset.izdel);save();render();return;}
+  if((b=t.closest('[data-ust]'))){ui={page:'ust',id:b.dataset.ust};render();window.scrollTo({top:0});return;}
   if((b=t.closest('[data-pmbs]'))){ui={page:'pmchat',id:b.dataset.pmbs};render();window.scrollTo({top:0});return;}
   if((b=t.closest('[data-dpst]'))){const id=b.dataset.dpst;dpSel=dpSel.includes(id)?dpSel.filter(y=>y!==id):[...dpSel,id];const keepV={};['skT','skS','skP','skD','skN'].forEach(id=>{if($(id))keepV[id]=$(id).value;});render();Object.keys(keepV).forEach(id=>{if($(id))$(id).value=keepV[id];});return;}
   if((b=t.closest('[data-bstab]'))){bsTab=b.dataset.bstab;render();return;}
@@ -5917,7 +5953,8 @@ function notifs(){const g=giris();if(!g)return [];const dis=D.dismissed||{},L=[]
   if(g.tip==='depo'){kyN();yukN(L);D.ise.filter(x=>isIk()&&x.durum==='ik').forEach(x=>L.push({k:'ik:'+x.id+':'+x.gonder,t:`İşe giriş dosyası: ${x.ad}`,d:S(x.store).name+' · '+evN(x)+'/'+EV.length+' evrak',at:x.gonder||x.at,go:{page:'ikv',id:x.id}}));return L.filter(x=>!dis[x.k]).sort((a,b)=>b.at.localeCompare(a.at));}
   const pmN=k=>{const u=pmUnreadOf(k);if(u.length){const last=u[u.length-1],p=bsPeople().find(x=>nrm(x.ad)===k);L.push({k:'pm:'+k+':'+last.at,t:g.tip==='pm'?`${p?p.ad:'BS'}: ${u.length} yeni mesaj`:`PM'den ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'pmchat',id:k},seen:(g.tip==='pm'?'pm:':'pmbs:')+k});}};
   const bgN=()=>{const bu=bsUnread();if(bu.length){const last=bu[bu.length-1];L.push({k:'bg:'+last.at,t:`BS grubu: ${bu.length} yeni mesaj`,d:last.from+': '+last.text,at:last.at,go:{page:'bsgrup'},seen:bsgKey()});}};
-  if(g.tip==='pm'){bsPeople().forEach(p=>pmN(nrm(p.ad)));bgN();}
+  const ustN=key=>{const u=ustUnread(key);if(u.length){const last=u[u.length-1],p=ustKimi(key);L.push({k:'ust:'+key+':'+last.at,t:`${p.ad}: ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'ust',id:key},seen:'ust:'+ustSide(key)+':'+key});}};
+  if(g.tip==='pm'){if(ustKey())ustN(ustKey());altlar().forEach(p=>ustN(p.key));if(kad()==='pm'){bsPeople().forEach(p=>pmN(nrm(p.ad)));bgN();}}
   else if(bs){pmN(nrm(g.ad));kyN();yukN(L);mgyN(L);
     const lim=new Date(Date.now()-2*864e5).toISOString();D.requests.forEach(r=>{const R=D.responses[r.id]||{},ids=Object.keys(R);if(!ids.length)return;const last=ids.map(id=>R[id].at).sort().pop();if(last<lim)return;const n=r.to.filter(id=>R[id]).length;L.push({k:'a:'+r.id+':'+n,t:n>=r.to.length?`${r.title}: tüm mağazalar dönüş yaptı`:`${r.title}: ${n}/${r.to.length} mağaza dönüş yaptı`,d:'Son dönüş: '+S(ids.sort((a,b)=>R[a].at.localeCompare(R[b].at)).pop()).name,at:last,go:{page:'req',id:r.id}});});
     D.stores.forEach(s=>{const M=(D.messages[s.id]||[]).filter(m=>m.from==='magaza'),seen=(D.seen||{})['bs:'+s.id]||'',u=M.filter(m=>m.at>seen);if(u.length){const last=u[u.length-1];L.push({k:'m:'+s.id+':'+last.at,t:`${s.name}: ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'store',id:s.id},seen:'bs:'+s.id});}});
@@ -5988,7 +6025,7 @@ $('icBody').addEventListener('change',e=>{if(e.target.id!=='rhIl')return;rhIl=e.
 $('icBody').addEventListener('input',e=>{if(e.target.id==='rhQ'){const M=MG();if(!M)return;const q=e.target.value.trim();let t,L,more=false;if(q){const A=M.ara(q,41,true);more=A.length>40;L=A.slice(0,40);t=L.length?`${more?'40+':L.length} sonuç`:'Bu aramayla mağaza bulunamadı.';}else{const d=rhDef();t=d.t;more=d.L.length>40;L=d.L.slice(0,40);}$('rhT').innerHTML=t;$('rhL').innerHTML=rhRows(L);$('rhMore').hidden=!more;return;}if(e.target.id==='ikQ'){const q=nrm(e.target.value);document.querySelectorAll('#ikL [data-ikv]').forEach(li=>{li.hidden=!!q&&!li.dataset.q.includes(q);});return;}if(e.target.id!=='dpQ')return;const q=nrm(e.target.value);let n=0;document.querySelectorAll('#dpPick [data-dpst]').forEach(b=>{const ok=!q||nrm(b.textContent+' '+(b.dataset.q||'')).includes(q);b.hidden=!ok;if(ok)n++;});$('dpNone').hidden=n>0;});
 window.__renderIc=reset=>{if(reset)ui={page:'home'};D.stores[0].name=myName();ykApply();drawYk();istApply();drawIst();render();};
 ykApply();drawYk();istApply();drawIst();
-window.__icSum=()=>{const I=ist(),n=D.stores.length,nx=canSevk()?sevkOf('me')[0]:null;return {n,vdGun:vdGunu(),sevk:nx?`${gunAd(nx.tarih)} ${nx.saat} · ${nx.plaka}${durak(nx).length>1?` · ${durak(nx).indexOf('me')+1}. sıradasın (${durak(nx).length} mağaza)`:''}`:null,sevkBs:D.sevk.filter(x=>x.tarih===today()).length,sevkYarin:D.sevk.filter(x=>x.tarih===dstr(1)).length,grup:grupUnread().length,staff:isStaff(),ist:I,pmU:(giris()&&giris().tip==='pm')?bsPeople().reduce((a,p)=>a+pmUnreadOf(nrm(p.ad)).length,0):0,bsg:bsUnread().length,sk:D.stores.filter(s=>msktOf(s.id)).length,rp:D.stores.filter(s=>raporOf(s.id)).length,open:D.requests.filter(r=>r.to.some(id=>!answered(r,id))).length,
+window.__icSum=()=>{const I=ist(),n=D.stores.length,nx=canSevk()?sevkOf('me')[0]:null;return {n,vdGun:vdGunu(),sevk:nx?`${gunAd(nx.tarih)} ${nx.saat} · ${nx.plaka}${durak(nx).length>1?` · ${durak(nx).indexOf('me')+1}. sıradasın (${durak(nx).length} mağaza)`:''}`:null,sevkBs:D.sevk.filter(x=>x.tarih===today()).length,sevkYarin:D.sevk.filter(x=>x.tarih===dstr(1)).length,grup:grupUnread().length,staff:isStaff(),ist:I,ustU:(giris()&&giris().tip==='pm')?ustTumU():0,pmU:(kad()==='pm')?bsPeople().reduce((a,p)=>a+pmUnreadOf(nrm(p.ad)).length,0):0,bsg:bsUnread().length,sk:D.stores.filter(s=>msktOf(s.id)).length,rp:D.stores.filter(s=>raporOf(s.id)).length,open:D.requests.filter(r=>r.to.some(id=>!answered(r,id))).length,
   svWait:D.savunma.filter(s=>!s.cevap).length,svNew:D.savunma.filter(s=>s.cevap&&!s.sonuc).length,mskt:!!myMskt(),rapor:!!myRapor(),wait:myReqs().filter(r=>!answered(r,'me')).length,sv:D.savunma.filter(s=>isMine(s)&&!s.cevap).length,izB:izBekl().length,ikB:isIk()?D.ise.filter(x=>x.durum==='ik').length:0,iseEk:canIse()?D.ise.filter(x=>x.store==='me'&&x.durum==='eksik').length:0};};
 window.__icGo=p=>{if(window.__setTab)window.__setTab('c');ui={page:p,id:null,form:p==='new'?newForm():p==='svnew'?svForm():p==='izin'?{}:null};render();};
 // giriş yapınca: bekleyen savunma ya da talep varsa bildirim
