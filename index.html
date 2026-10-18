@@ -1059,6 +1059,35 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
 /* Uygulama ikonu (sade56) */
 .auth-logo,.hm-logo{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2286 102 340 322%22%3E %3Cpath d=%22M96 162a50 50 0 0 1 50-50h220a50 50 0 0 1 50 50v150a50 50 0 0 1-50 50H226l-64 52v-52h-16a50 50 0 0 1-50-50z%22 fill=%22%23fff%22/%3E %3Cpath d=%22M146 178q0-22 22-22h176q22 0 22 22v18H146z%22 fill=%22%23FFC72C%22/%3E %3Cg fill=%22%23FFC72C%22%3E%3Cpath d=%22M146 196h44v4a22 22 0 0 1-44 0z%22/%3E%3Cpath d=%22M234 196h44v4a22 22 0 0 1-44 0z%22/%3E%3Cpath d=%22M322 196h44v4a22 22 0 0 1-44 0z%22/%3E%3C/g%3E %3Cg fill=%22%23F2A900%22%3E%3Cpath d=%22M190 196h44v4a22 22 0 0 1-44 0z%22/%3E%3Cpath d=%22M278 196h44v4a22 22 0 0 1-44 0z%22/%3E%3C/g%3E %3Cpath d=%22M162 226h188v86a14 14 0 0 1-14 14H176a14 14 0 0 1-14-14z%22 fill=%22%231C6A47%22/%3E %3Crect x=%22230%22 y=%22254%22 width=%2252%22 height=%2272%22 rx=%227%22 fill=%22%23fff%22/%3E %3Crect x=%22180%22 y=%22244%22 width=%2236%22 height=%2234%22 rx=%226%22 fill=%22%23BFE3CF%22/%3E%3Crect x=%22296%22 y=%22244%22 width=%2236%22 height=%2234%22 rx=%226%22 fill=%22%23BFE3CF%22/%3E %3C/svg%3E")!important;background-size:72% auto!important;background-position:center 55%!important;background-repeat:no-repeat!important}
 .tema-bim .auth-logo,.tema-bim .hm-logo{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2286 102 340 322%22%3E %3Cpath d=%22M96 162a50 50 0 0 1 50-50h220a50 50 0 0 1 50 50v150a50 50 0 0 1-50 50H226l-64 52v-52h-16a50 50 0 0 1-50-50z%22 fill=%22%23fff%22/%3E %3Cpath d=%22M146 178q0-22 22-22h176q22 0 22 22v18H146z%22 fill=%22%23FFC72C%22/%3E %3Cg fill=%22%23FFC72C%22%3E%3Cpath d=%22M146 196h44v4a22 22 0 0 1-44 0z%22/%3E%3Cpath d=%22M234 196h44v4a22 22 0 0 1-44 0z%22/%3E%3Cpath d=%22M322 196h44v4a22 22 0 0 1-44 0z%22/%3E%3C/g%3E %3Cg fill=%22%23F2A900%22%3E%3Cpath d=%22M190 196h44v4a22 22 0 0 1-44 0z%22/%3E%3Cpath d=%22M278 196h44v4a22 22 0 0 1-44 0z%22/%3E%3C/g%3E %3Cpath d=%22M162 226h188v86a14 14 0 0 1-14 14H176a14 14 0 0 1-14-14z%22 fill=%22%23C40E18%22/%3E %3Crect x=%22230%22 y=%22254%22 width=%2252%22 height=%2272%22 rx=%227%22 fill=%22%23fff%22/%3E %3Crect x=%22180%22 y=%22244%22 width=%2236%22 height=%2234%22 rx=%226%22 fill=%22%23FFD6D8%22/%3E%3Crect x=%22296%22 y=%22244%22 width=%2236%22 height=%2234%22 rx=%226%22 fill=%22%23FFD6D8%22/%3E %3C/svg%3E")!important}
+
+/* SKT 2: sabah turu, sevkiyat girişi, fire raporu, kim ne yaptı */
+.skt-go{grid-template-columns:1.6fr 1fr}.skt-go #sGoSeri{grid-column:1/-1;min-height:46px;font-size:15px}
+#turBox h2{margin:0}
+.tur-bar{height:10px;background:var(--off);border-radius:99px;overflow:hidden;margin:12px 0 4px}
+.tur-bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .25s}
+.tur-p{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted)}
+#turList .si.chk{opacity:.62;border-left-color:var(--green)}
+#turList .si.chk .si-date small{color:var(--green)}
+.tur-end{margin-top:12px;display:grid;gap:8px}
+.tur-end .btn{width:100%;min-height:48px;font-weight:800}
+.tur-ok{background:color-mix(in srgb,var(--green) 12%,transparent);border-radius:10px;padding:10px 12px;font-weight:700;color:var(--ink)}
+.seri-ban{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--morning);color:var(--morning-ink);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-weight:700}
+.seri-ban .btn{flex:none}
+.fper{display:flex;gap:6px;margin:4px 0 6px}
+.fper button{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:8px 12px;font:inherit;font-weight:700;font-size:14px;color:var(--ink)}
+.fper button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.fwarn{background:var(--danger-bg);border:1px solid color-mix(in srgb,var(--danger) 35%,transparent);border-radius:10px;padding:10px 12px;margin:8px 0}
+.fwarn b{color:var(--danger)}.fwarn ul{margin:6px 0 0;padding-left:18px}.fwarn li{margin:2px 0}
+.lg-day{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:12px 0 4px}
+.lg{list-style:none;margin:0;padding:0}.lg li{display:grid;grid-template-columns:48px 1fr;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
+.lg li time{color:var(--muted);font-variant-numeric:tabular-nums}.lg li b{font-weight:800}
+.lg-who{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.lg-who span{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px;font-weight:700}
+body[data-role="staff"] #logBox{display:none}
+#fireAlert{background:color-mix(in srgb,#E0A21B 16%,var(--panel));border-color:#E0A21B}
+:root.tema-bim .tur-ok{background:color-mix(in srgb,var(--ok) 14%,transparent)}
+:root.tema-bim .tur-bar i{background:var(--ok)}
+:root.tema-bim #turList .si.chk{border-left-color:var(--ok)}:root.tema-bim #turList .si.chk .si-date small{color:var(--ok)}
 </style>
 </head>
 <body>
@@ -1275,12 +1304,17 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
 </div>
 <section id="sktView" class="skt" hidden>
   <div class="salert" id="sAlert" role="alert" hidden></div>
-  <div class="salert" id="fireAlert" role="alert" hidden style="background:#FFF4D6;border-color:#E0A21B"></div>
+  <div class="salert" id="fireAlert" role="alert" hidden></div>
   <div class="skt-sum" id="sktSum"></div>
-  <div class="skt-go"><button type="button" class="btn primary" id="sGoScan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 8v8M11 8v8M14 8v8M17 8v8"/></svg>Barkod okut</button><button type="button" class="btn" id="sGoAdd">Elle ekle</button></div>
+  <div class="box mskt" id="turBox" style="margin-top:12px">
+    <div class="mskt-head"><div><h2>Sabah SKT turu</h2><p class="hint" id="turInfo" style="margin:2px 0 0"></p></div><span class="mskt-badge" id="turBadge"></span></div>
+    <div id="turBody"></div>
+  </div>
+  <div class="skt-go"><button type="button" class="btn primary" id="sGoScan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 8v8M11 8v8M14 8v8M17 8v8"/></svg>Barkod okut</button><button type="button" class="btn" id="sGoAdd">Elle ekle</button><button type="button" class="btn" id="sGoSeri">Sevkiyat girişi (art arda ekle)</button></div>
 
   <details class="box sect" id="sktAddBox">
     <summary><h2>Ürün ekle</h2></summary>
+    <div class="seri-ban" id="sSeri" hidden><span id="sSeriT"></span><button type="button" class="btn small" id="sSeriEnd">Bitir</button></div>
     <div class="sf">
       <label>Barkod
         <input id="sBar" inputmode="numeric" autocomplete="off" placeholder="Barkod numarası">
@@ -1329,13 +1363,23 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
   </div>
 
   <details class="box sect" id="fBox">
-    <summary><h2>Aylık fire raporu</h2></summary>
-    <div class="fnav"><button type="button" id="fPrev" aria-label="Önceki ay">‹</button><b id="fMonth" aria-live="polite"></b><button type="button" id="fNext" aria-label="Sonraki ay">›</button></div>
+    <summary><h2>Fire raporu</h2></summary>
+    <div class="fper" role="group" aria-label="Dönem"><button type="button" data-fper="hafta" aria-pressed="false">Haftalık</button><button type="button" data-fper="ay" aria-pressed="true">Aylık</button></div>
+    <div class="fnav"><button type="button" id="fPrev" aria-label="Önceki dönem">‹</button><b id="fMonth" aria-live="polite"></b><button type="button" id="fNext" aria-label="Sonraki dönem">›</button></div>
     <div class="skt-sum" id="fSum"></div>
+    <div id="fWarn"></div>
+    <div id="fTop"></div>
     <div id="fBreak"></div>
     <ul class="slist" id="fList"></ul>
     <div class="simp-act" style="margin-top:10px"><button type="button" class="btn small" id="fShare">Raporu paylaş</button><button type="button" class="btn small" id="fCopy">Excel için kopyala</button></div>
     <p class="hint" style="margin:6px 0 0">“Excel için kopyala” tabloyu kopyalar; Excel'de ya da Google E-Tablolar'da bir hücreye yapıştırınca sütunlara ayrılır.</p>
+  </details>
+
+  <details class="box sect" id="logBox">
+    <summary><h2>Kim ne yaptı</h2></summary>
+    <p class="hint" style="margin:0 0 4px">Son 7 gün: ürün ekleme, raftan kaldırma, satış, indirim ve sabah turu. Sadece müdür ve yardımcısı görür.</p>
+    <div id="logWho" class="lg-who"></div>
+    <div id="logList"></div>
   </details>
 
   <details class="box sect" id="sCatBox">
@@ -1426,7 +1470,7 @@ body:not(.giris-bs):not(.giris-depo):not(.giris-pm) .tabs .tab-more{position:abs
   <div class="box" id="rpHead">
     <h2>Bugünün özeti</h2>
     <div class="sf">
-      <div class="srow2"><label>Tarih<input type="date" id="rpDate"></label><label>Mağaza<input id="rpStore" autocomplete="off" placeholder="Örn. Bağyaka - Finike"></label></div>
+      <div class="srow2"><label>Tarih<input type="date" id="rpDate"></label><label>Mağaza<input id="rpStore" autocomplete="off" placeholder="Örn. BAĞYAKA - FİNİKE K700"></label></div>
       <div class="srow2" id="rpCiroRow"><label>Ciro (₺)<input id="rpCiro" inputmode="numeric" placeholder="₺"></label><label>Müşteri<input id="rpMus" inputmode="numeric"></label></div>
     </div>
   </div>
@@ -2976,6 +3020,9 @@ const itemLeft=it=>leftText(daysLeft(remDate(it)),offOf(it));
 const dateLabel=it=>offOf(it)>0?`${fmtDate(remDate(it))} akşamı`:fmtDate(it.date);
 function fmtDate(ds){return new Date(ds+'T12:00:00').toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});}
 const uid=()=>Math.random().toString(36).slice(2,9);
+// Kim ne yaptı: her işlem yapan kişinin adıyla kaydedilir
+const who=()=>{try{const g=window.__giris&&window.__giris();return (g&&g.ad)||'';}catch(e){return '';}};
+function logla(t,ad,q){if(!Array.isArray(S().log))S().log=[];S().log.push({at:new Date().toISOString(),by:who(),t,ad:ad||'',q:q||0});if(S().log.length>500)S().log.splice(0,S().log.length-500);}
 
 function counts(){
   const act=S().items.filter(i=>!i.done);
@@ -2986,7 +3033,7 @@ function renderBadge(){
   b.hidden=!n;b.textContent=n;
 }
 function render(){
-  renderBadge();
+  renderBadge();if(typeof renderTur==='function')renderTur();
   const c=counts();
   const late=S().items.filter(i=>!i.done&&status(i)==='exp');
   const maxLate=late.reduce((m,i)=>Math.max(m,-daysLeft(remDate(i))),0);
@@ -3001,7 +3048,7 @@ function render(){
   list.sort((a,b)=>filter==='done'?(b.doneAt||'').localeCompare(a.doneAt||''):remDate(a).localeCompare(remDate(b)));
   const row=it=>{
     const st=it.done?'':status(it),off=offOf(it);
-    const meta=[off>0?`SKT ${fmtDate(it.date)}`:'',grp(it.group).id!=='genel'?grp(it.group).name:'',it.barcode,it.shelf,it.qty>1?it.qty+' adet':''].filter(Boolean).map(esc).join(', ');
+    const meta=[off>0?`SKT ${fmtDate(it.date)}`:'',grp(it.group).id!=='genel'?grp(it.group).name:'',it.barcode,it.shelf,it.qty>1?it.qty+' adet':'',it.by?'Ekleyen: '+it.by:''].filter(Boolean).map(esc).join(', ');
     return `<li class="si ${st}"><div class="si-main"><b>${esc(it.name||'Adsız ürün')}${it.disc?'<span class="stag">İndirimde</span>':''}</b><small>${meta||'&nbsp;'}</small></div>
       <div class="si-date"><b>${dateLabel(it)}</b><small>${it.done?(it.soldOut?'Satıldı':'Kaldırıldı'):itemLeft(it)}</small></div>
       <div class="si-act">${it.done
@@ -3057,13 +3104,14 @@ function add(){
   const w=$('sWarn').value===''?null:Math.max(0,parseInt($('sWarn').value,10)||0);
   const qty=Math.max(1,parseInt($('sQty').value,10)||1);
   const pr=parsePrice($('sPrice').value);
-  const it={id:uid(),barcode:bc,name:name||(S().catalog[bc]&&S().catalog[bc].name)||'',date,group:$('sGroup').value||'genel',qty,shelf:$('sShelf').value.trim(),warn:w,price:pr,done:false,disc:false,added:new Date().toISOString()};
-  S().items.push(it);
+  const it={id:uid(),barcode:bc,name:name||(S().catalog[bc]&&S().catalog[bc].name)||'',date,group:$('sGroup').value||'genel',qty,shelf:$('sShelf').value.trim(),warn:w,price:pr,done:false,disc:false,added:new Date().toISOString(),by:who()};
+  S().items.push(it);logla('ekle',it.name||it.barcode,qty);
   if(bc)S().catalog[bc]={name:it.name,warn:w,shelf:it.shelf,group:it.group,price:pr!=null?pr:(S().catalog[bc]&&S().catalog[bc].price!=null?S().catalog[bc].price:null),used:(S().catalog[bc]&&S().catalog[bc].used||0)+1,last:new Date().toISOString()};
   save();
   V.toast(`${it.name||'Ürün'} eklendi: ${itemLeft(it).toLocaleLowerCase('tr-TR')}.`);
   ['sBar','sName','sDate','sShelf','sWarn','sPrice'].forEach(k=>$(k).value='');$('sQty').value=1;$('sGroup').value='genel';lastFilled='';showKnown(null);preview();
-  render();renderCat();$('sBar').focus();
+  render();renderCat();
+  if(seri){seri.n++;seriBan();if(seri.cam)startScan();else $('sBar').focus();}else $('sBar').focus();
 }
 
 /* --- günlük hatırlatma --- */
@@ -3438,6 +3486,7 @@ $('tabC').addEventListener('click',()=>setTab('c'));
 $('moreMenu').addEventListener('click',e=>{if(e.target.closest('.more-list button'))$('moreMenu').open=false;});
 document.addEventListener('click',e=>{const m=$('moreMenu');if(m.open&&!m.contains(e.target))m.open=false;});
 $('sAdd').addEventListener('click',add);
+$('sDate').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();add();}});
 $('sScan').addEventListener('click',startScan);
 $('sGoScan').addEventListener('click',()=>{$('sktAddBox').open=true;$('sktAddBox').scrollIntoView({behavior:'smooth',block:'start'});if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&('BarcodeDetector' in window))startScan();else $('sPhotoBtn').click();});
 $('sGoAdd').addEventListener('click',()=>{$('sktAddBox').open=true;$('sktAddBox').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>$('sBar').focus(),250);});
@@ -3462,7 +3511,7 @@ $('sList').addEventListener('click',async e=>{
   const a=b.dataset.act;
   if(a==='done'){openRemove(it);return;}
   if(a==='sold'){openRemove(it,'sold');return;}
-  if(a==='disc'){it.disc=!it.disc;}
+  if(a==='disc'){it.disc=!it.disc;logla(it.disc?'indirim':'indirimkalk',it.name||it.barcode,it.qty);}
   if(a==='del'){if(!await askConfirm(`${it.name||'Bu ürün'} listeden silinsin mi?`))return;S().items=S().items.filter(i=>i!==it);}
   save();render();
 });
@@ -3514,7 +3563,8 @@ function openRemove(it,mode){
 }
 // Satış: adedi düşer, fire raporuna girmez; "Kaldırılan / satılan" listesinden geri alınabilir
 function sellFrom(it,q,at){
-  S().sold.push({id:uid(),itemId:it.id,at,name:it.name,barcode:it.barcode,group:it.group,shelf:it.shelf,date:it.date,qty:q});
+  if(status(it)!=='ok')turMark(it.id,'sold');
+  S().sold.push({id:uid(),itemId:it.id,at,name:it.name,barcode:it.barcode,group:it.group,shelf:it.shelf,date:it.date,qty:q,by:who()});logla('sat',it.name||it.barcode,q);
   it.qty=Math.max(0,(it.qty||1)-q);
   if(it.qty<=0){it.qty=0;it.done=true;it.soldOut=true;it.doneAt=at;}
 }
@@ -3537,25 +3587,26 @@ $('fOk').addEventListener('click',()=>{
   const it=fItem;if(!it)return;
   const max=Math.max(1,it.qty||1),q=Math.min(max,Math.max(1,parseInt($('fQty').value,10)||1)),p=parsePrice($('fPrice').value);
   const at=new Date().toISOString();
-  if(fMode==='sold'){sellFrom(it,q,at);save();closeRemove();render();
+  if(fMode==='sold'){sellFrom(it,q,at);save();closeRemove();render();renderTur();renderLog();
     V.toast(it.done?`${it.name||'Ürün'} satıldı, listeden düştü.`:`${q} adet satıldı, ${it.qty} adet takipte kaldı.`);return;}
-  S().fire.push({id:uid(),itemId:it.id,at,name:it.name,barcode:it.barcode,group:it.group,shelf:it.shelf,date:it.date,qty:q,price:p,reason:$('fReason').value});
+  if(status(it)!=='ok')turMark(it.id,'rm');
+  S().fire.push({id:uid(),itemId:it.id,at,name:it.name,barcode:it.barcode,group:it.group,shelf:it.shelf,date:it.date,qty:q,price:p,reason:$('fReason').value,by:who()});logla('kaldir',it.name||it.barcode,q);
   it.qty=max-q;
   if(it.qty<=0){it.qty=0;it.done=true;it.doneAt=at;}
   if(p!=null&&it.barcode&&S().catalog[it.barcode])S().catalog[it.barcode].price=p;
-  save();closeRemove();render();renderFire();renderReasons();renderBatches();
+  save();closeRemove();render();renderFire();renderReasons();renderBatches();renderTur();renderLog();
   V.toast(it.done?`${it.name||'Ürün'} raftan kaldırıldı, fire raporuna eklendi.`:`${q} adet kaldırıldı, ${it.qty} adet takipte kaldı.`);
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('fDlg').hidden)closeRemove();});
 
 function fireRow(r,withUndo){
   const at=new Date(r.at),t=r.price!=null?r.price*r.qty:null;
-  const meta=[`${r.qty} adet`,r.reason,grp(r.group).id!=='genel'?grp(r.group).name:'',r.shelf,`SKT ${fmtDate(r.date)}`].filter(Boolean).map(esc).join(', ');
+  const meta=[`${r.qty} adet`,r.reason,grp(r.group).id!=='genel'?grp(r.group).name:'',r.shelf,`SKT ${fmtDate(r.date)}`,r.by?'Kaldıran: '+r.by:''].filter(Boolean).map(esc).join(', ');
   return `<li class="fr"><div><b>${esc(r.name||r.barcode||'Ürün')}</b><small>${meta}</small><small>${at.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} ${at.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</small></div><div class="amt">${t!=null?TL(t):'-'}</div>${withUndo?`<div class="acts"><button type="button" data-fundo="${r.id}">Geri al</button></div>`:''}</li>`;
 }
 function soldRow(r){
   const at=new Date(r.at);
-  const meta=[`${r.qty} adet`,'Satıldı',r.shelf,`SKT ${fmtDate(r.date)}`].filter(Boolean).map(esc).join(', ');
+  const meta=[`${r.qty} adet`,'Satıldı',r.shelf,`SKT ${fmtDate(r.date)}`,r.by?'İşaretleyen: '+r.by:''].filter(Boolean).map(esc).join(', ');
   return `<li class="fr"><div><b>${esc(r.name||r.barcode||'Ürün')}<span class="stag sold">Satıldı</span></b><small>${meta}</small><small>${at.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} ${at.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</small></div><div class="amt">-</div><div class="acts"><button type="button" data-sundo="${r.id}">Geri al</button></div></li>`;
 }
 function renderFireList(q){
@@ -3654,20 +3705,37 @@ let fYm=(()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+
 const MONTHS_TR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 const ymLabel=ym=>{const [y,m]=ym.split('-').map(Number);return `${MONTHS_TR[m-1]} ${y}`;};
 const ymLocal=iso=>{const d=new Date(iso);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');};
-function monthRecs(){return S().fire.filter(r=>ymLocal(r.at)===fYm).sort((a,b)=>a.at.localeCompare(b.at));}
+// Dönem: hafta (Pazartesi başlar) ya da ay
+let fPer='ay',fWk=(()=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-(d.getDay()+6)%7);return ymdL(d);})();
+const wkEnd=w=>{const d=new Date(w+'T12:00:00');d.setDate(d.getDate()+6);return ymdL(d);};
+function perLabel(){if(fPer==='ay')return ymLabel(fYm);const a=new Date(fWk+'T12:00:00'),b=new Date(wkEnd(fWk)+'T12:00:00');
+  return a.getMonth()===b.getMonth()?`${a.getDate()}-${b.getDate()} ${MONTHS_TR[b.getMonth()]} ${b.getFullYear()}`:`${a.getDate()} ${MONTHS_TR[a.getMonth()]} - ${b.getDate()} ${MONTHS_TR[b.getMonth()]} ${b.getFullYear()}`;}
+function inPer(r){if(fPer==='ay')return ymLocal(r.at)===fYm;const k=ymdL(new Date(r.at));return k>=fWk&&k<=wkEnd(fWk);}
+function monthRecs(){return S().fire.filter(inPer).sort((a,b)=>a.at.localeCompare(b.at));}
+// Son 30 günde 3 ya da daha çok kez fire olan ürünler: sipariş azaltılabilir
+function orderWarn(){const lim=Date.now()-30*864e5,m=new Map();
+  for(const r of S().fire){if(new Date(r.at).getTime()<lim)continue;const k=r.barcode||r.name;if(!k)continue;const o=m.get(k)||{ad:r.name||r.barcode,n:0,qty:0,tl:0};o.n++;o.qty+=r.qty;if(r.price!=null)o.tl+=r.price*r.qty;m.set(k,o);}
+  return [...m.values()].filter(o=>o.n>=3).sort((a,b)=>b.n-a.n||b.qty-a.qty);}
 function sums(recs){const qty=recs.reduce((a,r)=>a+r.qty,0),priced=recs.filter(r=>r.price!=null);return {n:recs.length,qty,tl:priced.reduce((a,r)=>a+r.price*r.qty,0),unpriced:recs.length-priced.length};}
 function groupBy(recs,keyFn){const m=new Map();for(const r of recs){const k=keyFn(r)||'-';const o=m.get(k)||{qty:0,tl:0};o.qty+=r.qty;if(r.price!=null)o.tl+=r.price*r.qty;m.set(k,o);}return [...m.entries()].sort((a,b)=>b[1].qty-a[1].qty);}
 function renderFire(){
-  $('fMonth').textContent=ymLabel(fYm);
+  $('fMonth').textContent=perLabel();
+  document.querySelectorAll('[data-fper]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.fper===fPer));
+  const ow=orderWarn();
+  $('fWarn').innerHTML=ow.length?`<div class="fwarn"><b>Sipariş uyarısı</b><div class="hint" style="margin:2px 0 0">Son 30 günde 3 ya da daha çok kez fire oldu. Siparişi azaltmayı düşün.</div><ul>${ow.slice(0,8).map(o=>`<li>${esc(o.ad)}: ${o.n} kez, ${o.qty} adet${o.tl?`, ${TL(o.tl)}`:''}</li>`).join('')}</ul></div>`:'';
   const recs=monthRecs(),t=sums(recs);
-  $('fSum').innerHTML=`<div><b>${t.n}</b><span>Kalem</span></div><div><b>${t.qty}</b><span>Adet</span></div><div class="exp"><b style="font-size:${t.tl>=10000?'20px':'24px'}">${TL(t.tl)}</b><span>Tutar</span></div>`;
+  $('fSum').innerHTML=`<div><b>${t.n}</b><span>Kalem</span></div><div><b>${t.qty}</b><span>Adet</span></div><div class="exp"><b style="font-size:${t.tl>=10000?'17px':t.tl>=100?'19px':'24px'}">${TL(t.tl)}</b><span>Tutar</span></div>`;
   const tbl=(title,rows)=>rows.length?`<table class="fbreak"><thead><tr><th>${title}</th><th>Adet</th><th>Tutar</th></tr></thead><tbody>${rows.map(([k,o])=>`<tr><td>${esc(k)}</td><td>${o.qty}</td><td>${o.tl?TL(o.tl):'-'}</td></tr>`).join('')}</tbody></table>`:'';
+  const top=groupBy(recs,r=>r.name||r.barcode).slice(0,10);
+  $('fTop').innerHTML=top.length?tbl('En çok fire olan ürünler',top):'';
   $('fBreak').innerHTML=recs.length?tbl('Grup',groupBy(recs,r=>grp(r.group).name))+tbl('Sebep',groupBy(recs,r=>r.reason))+(recs.some(r=>r.shelf)?tbl('Reyon',groupBy(recs,r=>r.shelf||'Belirtilmemiş')):'')
     +(t.unpriced?`<p class="hint" style="margin:4px 0 0">${t.unpriced} kalemde fiyat yazılmadığı için tutara katılmadı.</p>`:''):'';
-  $('fList').innerHTML=recs.length?recs.slice().reverse().map(r=>fireRow(r,false)).join(''):`<li class="sempty">${ymLabel(fYm)} için fire kaydı yok.</li>`;
+  $('fList').innerHTML=recs.length?recs.slice().reverse().map(r=>fireRow(r,false)).join(''):`<li class="sempty">${perLabel()} için fire kaydı yok.</li>`;
 }
-$('fPrev').addEventListener('click',()=>{const [y,m]=fYm.split('-').map(Number);const d=new Date(y,m-2,1);fYm=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderFire();});
-$('fNext').addEventListener('click',()=>{const [y,m]=fYm.split('-').map(Number);const d=new Date(y,m,1);fYm=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderFire();});
+$('fBox').querySelector('.fper').addEventListener('click',e=>{const b=e.target.closest('[data-fper]');if(!b)return;fPer=b.dataset.fper;renderFire();});
+const wkShift=n=>{const d=new Date(fWk+'T12:00:00');d.setDate(d.getDate()+7*n);fWk=ymdL(d);renderFire();};
+$('fPrev').addEventListener('click',()=>{if(fPer==='hafta')return wkShift(-1);const [y,m]=fYm.split('-').map(Number);const d=new Date(y,m-2,1);fYm=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderFire();});
+$('fNext').addEventListener('click',()=>{if(fPer==='hafta')return wkShift(1);const [y,m]=fYm.split('-').map(Number);const d=new Date(y,m,1);fYm=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderFire();});
 async function shareText(text,title,okMsg){
   try{if(navigator.share){await navigator.share({title,text});return;}}catch(e){if(e&&e.name==='AbortError')return;}
   try{await navigator.clipboard.writeText(text);V.toast(okMsg);}
@@ -3675,19 +3743,22 @@ async function shareText(text,title,okMsg){
 }
 $('fShare').addEventListener('click',()=>{
   const recs=monthRecs(),t=sums(recs);
-  if(!recs.length){V.toast('Bu ay fire kaydı yok.');return;}
+  if(!recs.length){V.toast(fPer==='ay'?'Bu ay fire kaydı yok.':'Bu hafta fire kaydı yok.');return;}
   const d2=iso=>new Date(iso).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit'});
-  const lines=[`FİRE RAPORU: ${ymLabel(fYm)}`,`Toplam: ${t.n} kalem, ${t.qty} adet${t.tl?`, ${TL(t.tl)}`:''}`,'',
+  const ow=orderWarn(),top=groupBy(recs,r=>r.name||r.barcode).slice(0,10);
+  const lines=[`FİRE RAPORU (${fPer==='ay'?'aylık':'haftalık'}): ${perLabel()}`,`Toplam: ${t.n} kalem, ${t.qty} adet${t.tl?`, ${TL(t.tl)}`:''}`,'',
+    'En çok fire olan ürünler:',...top.map(([k,o])=>`- ${k}: ${o.qty} adet${o.tl?`, ${TL(o.tl)}`:''}`),'',
+    ...(ow.length?['Sipariş uyarısı (son 30 günde 3+ kez fire):',...ow.map(o=>`- ${o.ad}: ${o.n} kez, ${o.qty} adet`),'']:[]),
     'Gruplara göre:',...groupBy(recs,r=>grp(r.group).name).map(([k,o])=>`- ${k}: ${o.qty} adet${o.tl?`, ${TL(o.tl)}`:''}`),'',
     'Sebebe göre:',...groupBy(recs,r=>r.reason).map(([k,o])=>`- ${k}: ${o.qty} adet${o.tl?`, ${TL(o.tl)}`:''}`),'',
     'Ürünler:',...recs.map(r=>`${d2(r.at)} ${r.name||r.barcode}: ${r.qty} adet${r.price!=null?`, ${TL(r.price*r.qty)}`:''} (${r.reason})`)];
-  shareText(lines.join('\n'),`Fire raporu ${ymLabel(fYm)}`,'Rapor panoya kopyalandı.');
+  shareText(lines.join('\n'),`Fire raporu ${perLabel()}`,'Rapor panoya kopyalandı.');
 });
 $('fCopy').addEventListener('click',()=>{
-  const recs=monthRecs();if(!recs.length){V.toast('Bu ay fire kaydı yok.');return;}
+  const recs=monthRecs();if(!recs.length){V.toast(fPer==='ay'?'Bu ay fire kaydı yok.':'Bu hafta fire kaydı yok.');return;}
   const num=n=>n==null?'':String(n).replace('.',',');
-  const rows=[['Tarih','Ürün','Barkod','Grup','Reyon','SKT','Adet','Birim fiyat','Tutar','Sebep'].join('\t'),
-    ...recs.map(r=>[new Date(r.at).toLocaleDateString('tr-TR'),r.name||'',r.barcode?'="'+r.barcode+'"':'',grp(r.group).name,r.shelf||'',new Date(r.date+'T12:00:00').toLocaleDateString('tr-TR'),r.qty,num(r.price),r.price!=null?num(Math.round(r.price*r.qty*100)/100):'',r.reason].join('\t'))];
+  const rows=[['Tarih','Ürün','Barkod','Grup','Reyon','SKT','Adet','Birim fiyat','Tutar','Sebep','Kaldıran'].join('\t'),
+    ...recs.map(r=>[new Date(r.at).toLocaleDateString('tr-TR'),r.name||'',r.barcode?'="'+r.barcode+'"':'',grp(r.group).name,r.shelf||'',new Date(r.date+'T12:00:00').toLocaleDateString('tr-TR'),r.qty,num(r.price),r.price!=null?num(Math.round(r.price*r.qty*100)/100):'',r.reason,r.by||''].join('\t'))];
   (async()=>{try{await navigator.clipboard.writeText(rows.join('\n'));V.toast(`${recs.length} satır kopyalandı. Excel'de bir hücreye yapıştır.`);}
     catch(e){shareText(rows.join('\n'),'Fire raporu (tablo)','Tablo panoya kopyalandı.');}})();
 });
@@ -3695,7 +3766,116 @@ $('fCopy').addEventListener('click',()=>{
 $('sDefWarn').value=S().defWarn;
 $('sDefWarn').addEventListener('change',()=>{const v=Math.max(0,Math.min(365,parseInt($('sDefWarn').value,10)||0));S().defWarn=v;$('sDefWarn').value=v;save();render();sellVis();});
 
-fillGroups();renderGroups();renderBadge();renderCat();renderRemind();renderFire();renderReasons();renderFireDays();renderBatches();syncNative();
+/* --- sabah SKT turu: bugün bakılacak ürünler reyon reyon, bitince BS'ye bildirilir --- */
+let seri=null;
+const TUR_DL=9*60+15;
+const hm=iso=>new Date(iso).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+const bsWants=()=>{try{return !window.__ist||window.__ist().skt!==false;}catch(e){return true;}};
+function turRead(){return (S().tur&&S().tur[todayStr()])||{c:{}};}
+function turDay(){const t=todayStr();if(!S().tur||typeof S().tur!=='object')S().tur={};if(!S().tur[t])S().tur[t]={c:{}};return S().tur[t];}
+function turMark(id,s){turDay().c[id]={s,at:new Date().toISOString(),by:who()};}
+// 14 günden eski tur kayıtları silinir
+(()=>{if(!S().tur)return;const lim=shiftDate(todayStr(),14);Object.keys(S().tur).forEach(k=>{if(k<lim)delete S().tur[k];});})();
+function turItems(){const c=turRead().c;return S().items.filter(i=>(!i.done&&status(i)!=='ok')||c[i.id]);}
+const shelfOf=it=>it.shelf||(grp(it.group).id!=='genel'?grp(it.group).name:'')||'Reyonu belirtilmemiş';
+function turSum(){const c=turRead().c,l=turItems(),f=s=>l.filter(i=>c[i.id]&&c[i.id].s===s);
+  return {n:l.length,kal:f('rm').length,sat:f('sold').length,ok:f('ok').length,rmNames:f('rm').map(i=>i.name||i.barcode)};}
+function renderTur(){
+  const box=$('turBox');if(!box)return;
+  const d=turRead(),c=d.c,list=turItems(),n=list.length,k=list.filter(i=>c[i.id]).length,bs=bsWants();
+  const now=new Date(),mins=now.getHours()*60+now.getMinutes();
+  box.classList.remove('done','late','wait');
+  let badge,info;
+  if(d.done){box.classList.add('done');badge='Bitti';info=`Bugün ${hm(d.done.at)} bitirildi${d.done.by?` (${d.done.by})`:''}.${bs?' BS\'ye bildirildi.':''}`;}
+  else if(mins<=TUR_DL){box.classList.add('wait');const r=TUR_DL-mins;badge=bs?(r>=60?`${Math.floor(r/60)} sa ${r%60} dk`:`${r} dk kaldı`):`${k}/${n}`;info=bs?'Bugün bakılacak ürünleri kontrol et, 09.15\'e kadar bitir. Bitince BS\'ye kendiliğinden bildirilir.':'Bugün bakılacak ürünleri reyon reyon kontrol et.';}
+  else{box.classList.add(bs?'late':'wait');badge=bs?'Gecikti':`${k}/${n}`;info=bs?'09.15 geçti, tur henüz bitmedi.':'Bugün bakılacak ürünleri reyon reyon kontrol et.';}
+  $('turBadge').textContent=badge;$('turInfo').textContent=info;
+  const fin=bs?'Turu bitir, BS\'ye bildir':'Turu bitir';
+  let h='';
+  if(d.done){
+    const s=d.done;
+    h+=`<div class="tur-ok" style="margin-top:12px">✓ ${s.n?`${s.n} ürüne bakıldı: ${s.kal} kaldırıldı, ${s.sat} satılmış, ${s.ok} rafta.`:'Bugün bakılacak ürün yoktu, kontrol yapıldı.'}</div>
+      <div class="simp-act" style="margin-top:8px"><button type="button" class="btn small" data-tu="share">WhatsApp grubuna paylaş</button><button type="button" class="btn small" data-tu="reopen">Turu yeniden aç</button></div>`;
+  }
+  const open=list.filter(i=>!c[i.id]);
+  if(!d.done||open.length){
+    if(!n){
+      h+=`<p class="hint" style="margin:10px 0 0">Bugün raftan kalkacak ya da yaklaşan ürün yok.</p><div class="tur-end"><button type="button" class="btn primary" data-tu="end">Kontrol yapıldı, ${bs?'BS\'ye bildir':'kaydet'}</button></div>`;
+    }else{
+      if(d.done)h+=`<p class="hint" style="margin:10px 0 0">Tur bittikten sonra ${open.length} ürün daha listeye düştü.</p>`;
+      h+=`<div class="tur-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${k}"><i style="width:${Math.round(k/n*100)}%"></i></div><div class="tur-p"><span>${k} / ${n} ürün kontrol edildi</span><span>${n-k?`${n-k} kaldı`:'Hepsi bitti'}</span></div>`;
+      const by=new Map();list.slice().sort((a,b)=>remDate(a).localeCompare(remDate(b))).forEach(i=>{const s=shelfOf(i);if(!by.has(s))by.set(s,[]);by.get(s).push(i);});
+      const keys=[...by.keys()].sort((a,b)=>(a==='Reyonu belirtilmemiş')-(b==='Reyonu belirtilmemiş')||a.localeCompare(b,'tr'));
+      const row=it=>{const m=c[it.id],st=status(it);
+        const meta=[it.barcode,it.qty>1?it.qty+' adet':'',it.disc?'İndirimde':''].filter(Boolean).map(esc).join(', ');
+        if(m)return `<li class="si chk"><div class="si-main"><b>${esc(it.name||'Adsız ürün')}</b><small>${meta||'&nbsp;'}</small></div><div class="si-date"><b>✓</b><small>${m.s==='rm'?'Kaldırıldı':m.s==='sold'?'Satılmış':'Rafta, kontrol edildi'}</small></div>${m.s==='ok'?`<div class="si-act"><small style="color:var(--muted);align-self:center">${m.by?esc(m.by)+', ':''}${hm(m.at)}</small><button type="button" data-tu="undo" data-id="${it.id}">Geri al</button></div>`:''}</li>`;
+        return `<li class="si ${st}"><div class="si-main"><b>${esc(it.name||'Adsız ürün')}</b><small>${meta||'&nbsp;'}</small></div><div class="si-date"><b>${dateLabel(it)}</b><small>${itemLeft(it)}</small></div><div class="si-act">${st==='exp'
+          ?`<button type="button" class="go" data-tu="rm" data-id="${it.id}">Raftan kaldırıldı</button><button type="button" class="sold" data-tu="sold" data-id="${it.id}">Rafta yok, satılmış</button>`
+          :`<button type="button" class="go" data-tu="ok" data-id="${it.id}">Baktım, rafta</button><button type="button" data-tu="rm" data-id="${it.id}">Raftan kaldırıldı</button>${it.disc?'':`<button type="button" data-tu="disc" data-id="${it.id}">İndirime alındı</button>`}`}</div></li>`;};
+      h+=`<ul class="slist" id="turList">${keys.map(s=>{const L=by.get(s),kk=L.filter(i=>c[i.id]).length;return `<li class="shead" style="color:var(--ink)">${esc(s)} <span style="color:var(--muted)">(${kk}/${L.length})</span></li>`+L.map(row).join('');}).join('')}</ul>`;
+      h+=`<div class="tur-end"><button type="button" class="btn primary" data-tu="end"${k<n?' disabled':''}>${k<n?`Bitirmek için ${n-k} ürüne daha bak`:fin}</button></div>`;
+    }
+  }
+  $('turBody').innerHTML=h;
+}
+function turText(){
+  const d=turRead(),s=d.done||turSum(),ab=V.state().ab||{},g=(window.__giris&&window.__giris())||{},st=ab.msLast||ab.store||g.magaza||'',now=new Date();
+  const L=[`${st?st+' - ':''}${now.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})}`,'Sabah SKT kontrolü yapıldı ✅'];
+  if(s.n){L.push(`${s.n} ürüne bakıldı: ${s.kal} kaldırıldı, ${s.sat} satılmış, ${s.ok} rafta.`);if(s.rmNames&&s.rmNames.length)L.push('Kaldırılanlar: '+s.rmNames.join(', '));}
+  return L.join('\n');
+}
+function turFinish(){
+  const t=todayStr(),d=turDay(),s=turSum(),at=new Date().toISOString(),bs=bsWants();
+  d.done={at,by:who(),...s};
+  if(bs){const st=V.state();st.ab=st.ab||{};const ab=st.ab;ab.mskt=ab.mskt||{};const g=(window.__giris&&window.__giris())||{};
+    ab.mskt[t]={store:ab.msLast||ab.store||g.magaza||'',at,by:who(),tur:{n:s.n,kal:s.kal,sat:s.sat,ok:s.ok}};}
+  logla('turbitir','',s.n);save();renderTur();renderLog();
+  V.toast(bs?'Tur bitti, BS\'ye bildirildi. İstersen WhatsApp grubuna da paylaş.':'Tur bitti, kaydedildi.');
+}
+$('turBox').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-tu]');if(!b||b.disabled)return;const a=b.dataset.tu;
+  if(a==='end'){turFinish();return;}
+  if(a==='share'){shareText(turText(),'Sabah SKT kontrolü','Mesaj kopyalandı; WhatsApp grubuna yapıştır.');return;}
+  if(a==='reopen'){if(!await askConfirm('Tur yeniden açılsın mı? BS\'ye giden bildirim yerinde kalır.'))return;delete turDay().done;save();renderTur();return;}
+  const it=S().items.find(i=>i.id===b.dataset.id);if(!it)return;
+  if(a==='rm'){openRemove(it);return;}
+  if(a==='sold'){openRemove(it,'sold');return;}
+  if(a==='ok'){turMark(it.id,'ok');logla('kontrol',it.name||it.barcode,it.qty);}
+  if(a==='disc'){it.disc=true;turMark(it.id,'ok');logla('indirim',it.name||it.barcode,it.qty);}
+  if(a==='undo'){delete turDay().c[it.id];}
+  save();render();renderLog();
+});
+setInterval(()=>{if(!$('sktView').hidden)renderTur();},30000);
+
+/* --- sevkiyat girişi: art arda okut, tarih seç, kaydet --- */
+function seriBan(){const on=!!seri;$('sSeri').hidden=!on;$('sAdd').textContent=on?'Kaydet, sıradaki':'Listeye ekle';
+  if(on)$('sSeriT').textContent=seri.n?`Sevkiyat girişi: ${seri.n} ürün eklendi`:'Sevkiyat girişi: okut, tarihi seç, kaydet.';}
+$('sGoSeri').addEventListener('click',()=>{
+  const cam=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&('BarcodeDetector' in window));
+  if(!seri)seri={n:0,cam};seriBan();
+  $('sktAddBox').open=true;$('sktAddBox').scrollIntoView({behavior:'smooth',block:'start'});
+  if(cam){if(!scanning)startScan();}else setTimeout(()=>$('sBar').focus(),250);
+  V.toast('Sevkiyat girişi: her üründe barkodu okut, tarihi seç, “Kaydet, sıradaki”ye bas. Bitince “Bitir”.');
+});
+$('sSeriEnd').addEventListener('click',()=>{stopScan();const n=seri?seri.n:0;if(n)logla('seri','',n);seri=null;seriBan();save();renderLog();
+  V.toast(n?`Sevkiyat girişi bitti: ${n} ürün eklendi.`:'Sevkiyat girişi kapatıldı.');});
+
+/* --- kim ne yaptı (müdür ve yardımcısı görür) --- */
+const LG={ekle:'ekledi',kaldir:'raftan kaldırdı',sat:'satıldı diye düştü',indirim:'indirime aldı',indirimkalk:'indirimden çıkardı',kontrol:'baktı, rafta',turbitir:'sabah turunu bitirdi',seri:'sevkiyat girişi yaptı'};
+function renderLog(){
+  if(!$('logList'))return;
+  const lim=Date.now()-7*864e5,L=(S().log||[]).filter(x=>new Date(x.at).getTime()>=lim).slice().reverse();
+  const cnt=new Map();L.forEach(x=>{const k=x.by||'Adı yok';cnt.set(k,(cnt.get(k)||0)+1);});
+  $('logWho').innerHTML=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<span>${esc(k)}: ${n} işlem</span>`).join('');
+  if(!L.length){$('logList').innerHTML='<p class="hint">Son 7 günde kayıt yok. Ürün eklendikçe, kaldırıldıkça burada kimin yaptığı görünür.</p>';return;}
+  const t=todayStr(),y=shiftDate(t,1),days=new Map();
+  L.forEach(x=>{const k=ymdL(new Date(x.at));if(!days.has(k))days.set(k,[]);days.get(k).push(x);});
+  $('logList').innerHTML=[...days.entries()].map(([k,xs])=>`<div class="lg-day">${k===t?'Bugün':k===y?'Dün':dLabel(k)}</div><ul class="lg">${xs.map(x=>{
+    const v=LG[x.t]||x.t,cnt=x.t==='turbitir'||x.t==='seri';
+    return `<li><time>${hm(x.at)}</time><span><b>${esc(x.by||'Adı yok')}</b>: ${cnt?`${v}${x.q?` (${x.q} ürün)`:''}`:`${esc(x.ad||'Ürün')}${x.q?` (${x.q} adet)`:''} ${v}`}</span></li>`;}).join('')}</ul>`).join('');
+}
+
+fillGroups();renderGroups();renderBadge();renderCat();renderRemind();renderFire();renderReasons();renderFireDays();renderBatches();renderTur();renderLog();syncNative();
 setTab(['s','a','k','g','b','c'].includes(V.state().tab)?V.state().tab:'v');
 if(dueNow())setTimeout(checkReminder,500);
 else{const c=counts();if(c.exp+c.soon>0&&V.state().tab!=='s')setTimeout(()=>V.toast(`SKT: ${c.exp+c.soon} ürün kontrol bekliyor.`),600);}
