@@ -956,6 +956,8 @@ body.giris-lock>.sms-demo:not([hidden]){display:flex!important}.sms-demo[hidden]
 .hm-st.ok i{background:#1E8A4A;color:#fff}.hm-st.no i{background:#E5484D;color:#fff}
 .hm-st.go{cursor:pointer;-webkit-tap-highlight-color:transparent}.hm-st.go:active{filter:brightness(.95)}.hm-go{font-style:normal;margin-left:auto;align-self:center;color:var(--muted);font-size:20px;line-height:1}.hm-st>div{flex:1;min-width:0}
 .ic-msg.rp>div{white-space:pre-wrap;font-size:13.5px;line-height:1.4}.ic-rp{margin:0 0 4px;font-size:12px;font-weight:700;opacity:.85}
+.vd-next{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,#E0A21B 16%,var(--panel));color:var(--ink);border:1px solid #E0A21B}.vd-next p{margin:0;flex:1 1 240px;font-size:14px;line-height:1.4}.vd-next .btn{flex:1 1 auto;white-space:nowrap}
+body[data-role=staff] #vdNext,body.giris-gt #vdNext{display:none!important}
 .hm-st b{display:block;font-size:14px}.hm-st small{display:block;color:var(--muted);font-size:12px;margin-top:1px;line-height:1.3}
 .hm-q{font-size:18px;margin:22px 4px 10px}
 .hm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
@@ -1316,6 +1318,7 @@ body[data-role="staff"] #logBox{display:none}
   </aside>
 
   <main>
+    <div class="vd-next" id="vdNext" hidden></div>
     <section class="sheet" id="sheet"></section>
   </main>
 </div>
@@ -1911,10 +1914,7 @@ function initFixed(){
   $('araciOn').addEventListener('change',()=>{state.araciOn=$('araciOn').checked;save();renderSheet();});
   ['araciMEnd','araciEStart'].forEach(k=>{$(k).value=state[k];$(k).addEventListener('change',()=>{state[k]=$(k).value;save();renderSheet();});});
   $('weekStart').value=state.weekStart||'';
-  $('weekStart').addEventListener('change',()=>{
-    save();const w=$('weekStart').value;state.weekStart=w;
-    if(w){if(!state.schedules[w])state.schedules[w]={};state.schedule=state.schedules[w];}else state.schedule={};
-    mDay=null;save();renderSheet();});
+  $('weekStart').addEventListener('change',()=>setWeek($('weekStart').value));
 }
 $('empList').addEventListener('input',ev=>{
   const w=ev.target.closest('.emp');if(!w)return;const f=ev.target.dataset.f;
@@ -2473,7 +2473,19 @@ function monthBlock(emps){
       `</tbody></table></div>${emps.some(e=>r[e.id].assumed)?`<p class="hint" style="margin:6px 0 0">* Ayın uygulamada kaydı olmayan geçmiş günleri normal çalışılmış (günde ${fmt(Math.round(tgt/new Date(y,m,0).getDate()*100)/100)} saat) sayıldı. Gerçek saat farklıysa “Uygulama dışı saat”e o günlerin toplamını yaz.</p>`:''}<p class="hint" style="margin:6px 0 0">Bu ay uygulamada kayıtlı tüm haftaların toplamı (bu haftanın planı dahil). Uygulamayı kullanmadan önce çalışılan saatleri “Uygulama dışı saat”e yaz.</p></div>`;
   }).join('');
 }
+/* Hafta değiştir: hafta seçicisi, vardiya günü uyarısı ve "gelecek haftaya geç" düğmesi aynı yolu kullanır */
+function setWeek(w){save();state.weekStart=w;$('weekStart').value=w||'';
+  if(w){if(!state.schedules[w])state.schedules[w]={};state.schedule=state.schedules[w];}else state.schedule={};
+  mDay=null;save();renderSheet();}
+const ymdOf=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function nextMon(){const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7)+7);return ymdOf(d);}
+function renderNext(){const el=$('vdNext');if(!el)return;const wd=(new Date().getDay()+6)%7,n=nextMon(),W=state.schedules[n],dolu=!!W&&Object.values(W).some(r=>Array.isArray(r)&&r.some(c=>c&&c.k));
+  const show=wd>=3&&state.weekStart!==n&&!dolu;el.hidden=!show;if(!show)return;
+  const f=x=>new Date(x+'T12:00:00').toLocaleDateString('tr-TR',{day:'numeric',month:'long'}),e=new Date(n+'T12:00:00');e.setDate(e.getDate()+6);
+  el.innerHTML=`<p><b>Gelecek haftanın planı boş (${f(n)} – ${f(ymdOf(e))}).</b> Şu an başka bir haftaya bakıyorsun; önce o haftaya geç, sonra Plan oluştur'a bas.</p><button type="button" class="btn primary" id="vdNextGo">Gelecek haftaya geç</button>`;}
+document.addEventListener('click',e=>{if(e.target.closest('#vdNextGo')){setWeek(nextMon());window.scrollTo({top:0});toast('Gelecek hafta açıldı. Şimdi Plan oluştur\'a bas.');}});
 function renderSheet(){
+  renderNext();
   const sheet=$('sheet');const emps=sorted();
   grpOv=leaveGroups(state.schedule,emps);
   const wn=weekNo();
@@ -2911,7 +2923,7 @@ function dayHours(ds){
   return any?h:null;
 }
 const isHolidayDate=ds=>(state.holidays||[]).some(h=>h.d===ds);
-window.__vardiya={state:()=>state,save,toast,renderSheet,esc,dayHours,isHolidayDate,staffCount:()=>sorted().length,staffHours:ym=>sorted().reduce((a,e)=>a+monthTargetFor(e,ym),0),monthTargetOf:ym=>monthTargetOf(ym)};
+window.__vardiya={state:()=>state,save,toast,renderSheet,setWeek,esc,dayHours,isHolidayDate,staffCount:()=>sorted().length,staffHours:ym=>sorted().reduce((a,e)=>a+monthTargetFor(e,ym),0),monthTargetOf:ym=>monthTargetOf(ym)};
 })();
 </script>
 <script>
@@ -4979,7 +4991,7 @@ function render(){
   }else if(S){
     const sk=S.sevk?stat(null,'Sevkiyat',S.sevk,'c'):'';
     if(S.staff)st=sk+(S.sv?stat(false,'Savunma',`${S.sv} savunma isteniyor`,'c'):'');
-    else st=sk+(S.vdGun?stat(S.vdGun.gec?false:null,S.vdGun.t,S.vdGun.d,'v'):'')+(S.izB?stat(false,'İzin / takas',`${S.izB} talep onayını bekliyor`,'c:izin'):'')+(S.iseEk?stat(false,'İşe giriş evrakı',`${S.iseEk} dosyada eksik var`,'c:ise'):'')+(S.ist.skt?stat(S.mskt?true:mins>9*60+15?false:null,'Sabah SKT dönüşü',S.mskt?'Gönderildi':'09.15\'e kadar','b'):'')+(S.ist.rapor?stat(S.rapor?true:null,'Akşam raporu',S.rapor?'Gönderildi':'Akşam BS\'ye gönderilecek','b'):'')+stat(S.wait?false:true,'BS talepleri',S.wait?`${S.wait} talep yanıt bekliyor`:'Bekleyen yok','c')+(S.sv?stat(false,'Savunma',`${S.sv} savunma isteniyor`,'c'):'');
+    else st=sk+(S.vdGun?stat(S.vdGun.gec?false:null,S.vdGun.t,S.vdGun.d,'v:'+S.vdGun.w):'')+(S.izB?stat(false,'İzin / takas',`${S.izB} talep onayını bekliyor`,'c:izin'):'')+(S.iseEk?stat(false,'İşe giriş evrakı',`${S.iseEk} dosyada eksik var`,'c:ise'):'')+(S.ist.skt?stat(S.mskt?true:mins>9*60+15?false:null,'Sabah SKT dönüşü',S.mskt?'Gönderildi':'09.15\'e kadar','b'):'')+(S.ist.rapor?stat(S.rapor?true:null,'Akşam raporu',S.rapor?'Gönderildi':'Akşam BS\'ye gönderilecek','b'):'')+stat(S.wait?false:true,'BS talepleri',S.wait?`${S.wait} talep yanıt bekliyor`:'Bekleyen yok','c')+(S.sv?stat(false,'Savunma',`${S.sv} savunma isteniyor`,'c'):'');
   }
   const stf=document.body.dataset.role==='staff'&&!document.body.classList.contains('yk-c');
   const T=(pm?(['GM','BM'].includes(g.unvan)?TILES.pm.filter(x=>x[0]!=='c:bsgrup').map(x=>x[0]==='c'?(g.unvan==='GM'?['c','Bölge müdürleri','Bölge müdürleriyle birebir sohbet']:['c','PM\'lerim','PM\'lerle ve GM ile birebir sohbet']):x):TILES.pm):dp?TILES.depo:bs?TILES.bs:stf?TILES.magaza.map(x=>x[0]==='c'?['c','Mağaza grubu','Çalışanlarla sohbet']:x):[TILES.magaza[0],['c:grup','Mağaza grubu','Çalışanlarla sohbet'],...TILES.magaza.slice(1)]).filter(([k])=>shown(BTN[k.split(':')[0]])&&(k!=='c:ise'||(g&&['MS','MSY'].includes(g.unvan)))&&(k!=='c:kayit'||(window.__kayit&&window.__kayit.yetkili()))&&(!dp||(window.__ikMi(g)?k!=='c':!['c:ik','c:kayit','c:yuk','c:mgyeni'].includes(k))));
@@ -4990,7 +5002,7 @@ function render(){
     return G.map(([gl,L])=>`<h2 class="hm-q">${gl}</h2><div class="hm-grid">${L.map(tile).join('')}</div>`).join('');})()}`;
 }
 $('homeBody').addEventListener('click',e=>{const f=e.target.closest('[data-hmnt]');if(f&&window.__icOpenNt){window.__icOpenNt(f.dataset.hmnt);return;}if(e.target.closest('[data-hmall]')){$('bellBtn').click();return;}const b=e.target.closest('[data-hm]');if(!b)return;const [t,p,...r]=b.dataset.hm.split(':');
-  if(t==='c'&&window.__icGo&&(p||b.classList.contains('hm-st')))window.__icGo(p||'home',r.join(':')||null);else window.__setTab(t);window.scrollTo({top:0});});
+  if(t==='c'&&window.__icGo&&(p||b.classList.contains('hm-st')))window.__icGo(p||'home',r.join(':')||null);else{window.__setTab(t);if(t==='v'&&p&&window.__vdHafta)window.__vdHafta(p);}window.scrollTo({top:0});});
 window.__renderHome=render;
 })();
 </script>
@@ -5343,6 +5355,8 @@ setInterval(()=>vdKontrol(),20000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)vdKontrol(true);});
 document.addEventListener('click',e=>{if(e.target.closest('.tabbar button,[role="tab"],[data-hm],#moreSheet button'))setTimeout(()=>vdKontrol(),50);},true);
 setTimeout(()=>vdKontrol(),800);
+function vdHafta(w){if(!w||!V.setWeek)return;const st=V.state();if(st.weekStart!==w){V.setWeek(w);V.toast(`${wkAd(w)} haftası açıldı. Plan oluştur'a bas.`);}}
+window.__vdHafta=vdHafta;
 function vdSatir(c){return `${esc(c.ad)} · ${fmtD(c.gun)}: ${esc(c.from)} → ${esc(c.to)}`;}
 function vdBox(id){const L=D.vd.filter(x=>x.store===id).sort((a,b)=>b.at.localeCompare(a.at)).slice(0,4);if(!L.length)return '';
   return `<div class="box"><h2>Vardiya değişiklikleri</h2><ul class="vd-list">${L.map(x=>`<li><b>${x.tip==='yaz'?'Haftalık vardiya yazıldı':'Vardiya değişti'} · ${wkAd(x.w)}</b>${x.L.map(c=>`<span>${vdSatir(c)}</span>`).join('')}<small>${esc(x.by)} · ${when(x.at)}</small></li>`).join('')}</ul></div>`;}
@@ -5985,7 +5999,7 @@ function notifs(){const g=giris();if(!g)return [];const dis=D.dismissed||{},L=[]
     const M=(D.messages.me||[]).filter(m=>m.from==='bs'),seen=(D.seen||{})['mg:me']||'',u=M.filter(m=>m.at>seen);
     if(u.length){const last=u[u.length-1];L.push({k:'m:me:'+last.at,t:`BS'den ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'chat'},seen:'mg:me'});}
     }
-    {const v=vdGunu();if(v)L.push({k:'vdg:'+v.w+':'+today(),t:v.t,d:v.d,at:new Date(new Date().setHours(8,0,0,0)).toISOString(),go:{tab:'v'},red:v.gec});}
+    {const v=vdGunu();if(v)L.push({k:'vdg:'+v.w+':'+today(),t:v.t,d:v.d,at:new Date(new Date().setHours(8,0,0,0)).toISOString(),go:{tab:'v',week:v.w},red:v.gec});}
     if(canOnay())D.ziyaret.filter(z=>z.store==='me'&&!z.goruldu&&z.at>new Date(Date.now()-3*864e5).toISOString()).forEach(z=>L.push({k:'zy:'+z.id,t:`BS ziyaret formu: %${zSkor(z.puan)}`,d:fmtD(z.at.slice(0,10))+' · '+z.bs,at:z.at,go:{page:'zyv',id:z.id}}));
     D.izin.filter(x=>x.tur==='T'&&x.durum==='bek'&&x.kimle&&giris()&&nrm(x.kimle)===nrm(giris().ad)).forEach(x=>L.push({k:'izt:'+x.id,t:`${x.ad} seninle vardiya takası istiyor`,d:izTarih(x)+' · MS/MSY onayına gitti',at:x.at,go:{page:'izin'}}));
     yukN(L);
@@ -6002,13 +6016,13 @@ function drawNt(){const L=notifs();
 function openNt(){if(!giris())return;$('ntDlg').hidden=false;drawNt();}
 $('bellBtn').addEventListener('click',openNt);
 window.__icFeed=()=>{const L=notifs(),F=L.slice(0,3).map(x=>({k:x.k,t:x.t,d:x.d,red:x.red,w:when(x.at)}));F.n=L.length;return F;};
-window.__icOpenNt=k=>{const x=notifs().find(y=>y.k===k);if(!x)return;dismiss([x]);if(x.go.tab){$('ntDlg').hidden=true;window.__setTab(x.go.tab);window.scrollTo({top:0});return;}if(window.__setTab)window.__setTab('c');const r=x.go.page==='ans'&&D.requests.find(q=>q.id===x.go.id);
+window.__icOpenNt=k=>{const x=notifs().find(y=>y.k===k);if(!x)return;dismiss([x]);if(x.go.tab){$('ntDlg').hidden=true;window.__setTab(x.go.tab);vdHafta(x.go.week);window.scrollTo({top:0});return;}if(window.__setTab)window.__setTab('c');const r=x.go.page==='ans'&&D.requests.find(q=>q.id===x.go.id);
   ui=r?{page:'ans',id:r.id,form:{items:r.items.map(()=>({st:'',qty:null})),rows:[],done:null,reason:'',files:[]}}:x.go.page==='sv'?{...x.go,form:{karar:'',not:''}}:{...x.go};render();window.scrollTo({top:0});};
 $('ntDlg').addEventListener('click',async e=>{const t=e.target;let b;
   if(t===$('ntDlg')||t.id==='ntClose'){$('ntDlg').hidden=true;return;}
   if((b=t.closest('[data-ntdel]'))){const x=notifs().find(y=>y.k===b.dataset.ntdel);if(x)dismiss([x]);updBell();if(D.role&&!$('icView').hidden)render();return;}
   if(t.id==='ntAll'){const L=notifs();if(!L.length)return;if(!await window.askConfirm(`${L.length} bildirimin hepsi silinsin mi?`,'Tümünü sil'))return;dismiss(L);const n=$('icNote');if(n)n.hidden=true;updBell();if(!$('icView').hidden)render();else updBell();if(window.__renderHome&&!$('homeView').hidden)window.__renderHome();V.toast('Bildirimler silindi.');return;}
-  if((b=t.closest('[data-ntgo]'))){const x=notifs().find(y=>y.k===b.dataset.ntgo);if(!x)return;$('ntDlg').hidden=true;dismiss([x]);if(x.go.tab){$('ntDlg').hidden=true;window.__setTab(x.go.tab);window.scrollTo({top:0});return;}if(window.__setTab)window.__setTab('c');const r=x.go.page==='ans'&&D.requests.find(q=>q.id===x.go.id);
+  if((b=t.closest('[data-ntgo]'))){const x=notifs().find(y=>y.k===b.dataset.ntgo);if(!x)return;$('ntDlg').hidden=true;dismiss([x]);if(x.go.tab){$('ntDlg').hidden=true;window.__setTab(x.go.tab);vdHafta(x.go.week);window.scrollTo({top:0});return;}if(window.__setTab)window.__setTab('c');const r=x.go.page==='ans'&&D.requests.find(q=>q.id===x.go.id);
     ui=r?{page:'ans',id:r.id,form:{items:r.items.map(()=>({st:'',qty:null})),rows:[],done:null,reason:'',files:[]}}:x.go.page==='sv'?{...x.go,form:{karar:'',not:''}}:{...x.go};render();window.scrollTo({top:0});return;}
 });
 /* --- personel yetkileri: BS her mağaza için personelin hangi bölümleri göreceğini açıp kapatır --- */
