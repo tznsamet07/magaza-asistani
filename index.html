@@ -826,6 +826,13 @@ body{-webkit-font-smoothing:antialiased}
 .ky-st.ok{border-left-color:var(--ok,var(--green));background:color-mix(in srgb,var(--ok,var(--green)) 12%,var(--panel))}.ky-st.no{border-left-color:var(--danger);background:var(--danger-bg)}
 .yk-f{display:grid;gap:8px;margin-top:10px;padding:10px;border-radius:12px;background:var(--bg)}
 .yk-puan{margin:6px 0 0;font-size:14px}.yk-puan b{font-size:18px}.yk-puan.gecti b{color:var(--ok,var(--green))}.yk-puan.kaldi b{color:var(--danger)}
+.imz-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.imz{border:1.5px dashed var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-height:120px;justify-content:center}
+.imz.ok{border-style:solid;border-color:color-mix(in srgb,var(--ok,var(--green)) 50%,var(--line))}
+.imz-l{font-size:12px;font-weight:800;color:var(--muted)}.imz img{width:100%;max-height:60px;object-fit:contain;background:#fff;border-radius:6px}.imz small{font-size:11px;color:var(--muted)}.imz .imz-yok{font-size:12px}
+.imz .btn.small{padding:6px 8px;font-size:13px}
+.imz-c{width:100%;height:auto;aspect-ratio:5/2;background:#fff;border:1.5px solid var(--line);border-radius:12px;touch-action:none;display:block}
+@media (max-width:380px){.imz-grid{grid-template-columns:1fr 1fr}}
 .iz-list{list-style:none;margin:8px 0 0;padding:0}.iz-row{padding:12px 0;border-top:1px solid var(--line)}.iz-row:first-child{border-top:0}
 .iz-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.iz-top b{display:block}.iz-top b small{color:var(--muted);font-weight:600}.iz-top>div>small{color:var(--muted);font-size:13px}
 .iz-not{margin:6px 0 0;font-size:14px}.iz-act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -5309,7 +5316,7 @@ function evRead(file){return new Promise(res=>{const fr=new FileReader();fr.oner
   if(/^image\//.test(file.type)&&!/svg|gif/.test(file.type)){fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1200/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);const d=c.toDataURL('image/jpeg',.6);res({name:file.name.replace(/\.[^.]+$/,'')+'.jpg',type:'image/jpeg',size:Math.round(d.length*.75),data:d});};im.onerror=()=>res(null);im.src=fr.result;};}
   else{if(file.size>ATT_MAX){res({err:file.name});return;}fr.onload=()=>res({name:file.name,type:file.type||'application/octet-stream',size:file.size,data:fr.result});}
   fr.readAsDataURL(file);});}
-function iseInit(){if(!Array.isArray(D.ise)){const sv=D.sevk.find(x=>x.store==='s3');D.ise=[{id:uid(),store:'s3',ad:'Yusuf Çetin',unvan:'PER',bas:dstr(4),by:'AKÇAY O583 MS',at:isoAt(16,20,-1),docs:Object.fromEntries(EV.map(([k,l])=>[k,[evFoto(l)].filter(Boolean)])),durum:'ik',gonder:isoAt(16,40,-1),kontrol:{},asil:sv?{plaka:sv.plaka,tarih:sv.tarih,saat:sv.saat,durum:'yolda'}:null}];save();}}
+function iseInit(){if(!Array.isArray(D.ise)){const sv=D.sevk.find(x=>x.store==='s3');D.ise=[{id:uid(),store:'s3',ad:'Yusuf Çetin',unvan:'PER',bas:dstr(4),by:'AKÇAY O583 MS',at:isoAt(16,20,-1),docs:Object.fromEntries(EV.map(([k,l])=>[k,[evFoto(l)].filter(Boolean)])),durum:'ik',gonder:isoAt(16,40,-1),kontrol:{},asil:sv?{plaka:sv.plaka,tarih:sv.tarih,saat:sv.saat,durum:'yolda'}:null}];save();}imzaSeed();}
 const canIse=()=>canOnay();
 const isIk=()=>{const g=giris();return !!g&&g.tip==='depo';};
 const evN=x=>EV.filter(([k])=>(x.docs[k]||[]).length).length;
@@ -5334,12 +5341,14 @@ function iseView(x,ik){const edit=!ik&&['taslak','eksik'].includes(x.durum),n=ev
   h+=`<div class="box"><div class="gf-head"><h2 style="margin:0">${esc(x.ad)}</h2>${isChip(x)}</div><p class="hint" style="margin:4px 0 0">${UNVAN[x.unvan]||''} · ${esc(S(x.store).name)} · İşe başlama ${fmtD(x.bas)}${x.sicil?' · <b>Sicil '+esc(x.sicil)+'</b>':''}</p>
     ${x.durum==='eksik'&&x.ikNot?`<p class="ev-not"><b>İK notu:</b> ${esc(x.ikNot)}</p>`:''}${x.durum==='tamam'?`<p class="ev-ok">✓ İK onayladı${x.store==='me'?'; çalışan listesine eklendi, bu sicille giriş yapabilir':''}.</p>`:''}</div>`;
   h+=`<div class="box"><div class="gf-head"><h2 style="margin:0">Evraklar</h2><span class="hint" style="margin:0">${n}/${EV.length}</span></div><ul class="ev-list">${EV.map(([k,l])=>evItem(x,k,l,edit,ik&&x.durum==='ik')).join('')}</ul><p class="kvkk">🔒 Sadece MS, MSY ve İK görür.</p></div>`;
+  h+=imzaBox(x,ik);
+  if(ik)h+=`<div class="box"><h2>Çıktı</h2><p class="hint" style="margin:4px 0 8px">Kapak sayfası, tüm evraklar ve imzalar tek PDF'te. Açıp yazdırıp dosyaya koyabilirsin.</p><button type="button" class="btn primary" id="isePdf" style="width:100%">İmzalı PDF'i indir</button></div>`;
   // asıl evraklar
   if(ik){h+=`<div class="box"><h2>Asıl evraklar</h2><p class="hint" style="margin:4px 0 0">${asilTxt(x.asil)}</p>${x.asil&&x.asil.durum!=='ulasti'?`<button type="button" class="btn" data-asilok="${x.id}" style="width:100%;margin-top:8px">Asıllar depoya ulaştı</button>`:''}</div>`;
     if(x.durum==='ik'){const K=x.kontrol||{},all=EV.every(([k])=>K[k]===true),any=EV.some(([k])=>K[k]===false),sug=String(Math.max(104560,...(V.state().employees||[]).map(e=>Number(e.sicil)||0),...D.ise.map(y=>Number(y.sicil)||0))+1);
       h+=`<div class="box rp-send"><label>Mağazaya not (eksik varsa)<textarea id="ikNot" class="simp" rows="2" placeholder="Örn. Sağlık raporu imzasız, yeniden çekin">${esc((ui.form||{}).not||'')}</textarea></label>
       ${any?`<button type="button" class="btn" id="ikEksik" style="width:100%">Eksikleri mağazaya bildir</button>`:''}
-      ${all?`<label>Sicil numarası<input id="ikSicil" inputmode="numeric" value="${sug}"></label><button type="button" class="btn primary" id="ikOk" style="width:100%">Onayla ve sicil ver</button>`:`<p class="hint" style="margin:0">Her evrakı Uygun ya da Eksik diye işaretle. Hepsi uygunsa sicil verirsin.</p>`}</div>`;}
+      ${all?`<label>Sicil numarası<input id="ikSicil" inputmode="numeric" value="${sug}"></label>${(x.imza||{}).ik?'':'<p class="hint" style="margin:0">Onaylamadan önce yukarıdan İK olarak imzala.</p>'}<button type="button" class="btn primary" id="ikOk" style="width:100%">Onayla ve sicil ver</button>`:`<p class="hint" style="margin:0">Her evrakı Uygun ya da Eksik diye işaretle. Hepsi uygunsa sicil verirsin.</p>`}</div>`;}
   }else{
     const nx=sevkOf('me');
     h+=`<div class="box"><h2>Asıl evraklar</h2><p class="hint" style="margin:4px 0 8px">İmzalı asılları hangi sevkiyat aracıyla gönderiyorsun?</p>${x.asil&&x.asil.durum==='ulasti'?`<p class="ev-ok">✓ ${asilTxt(x.asil)}</p>`:`<div class="ic-pick">${nx.map(v=>`<button type="button" data-asil="${v.id}" aria-pressed="${!!x.asil&&x.asil.plaka===v.plaka&&x.asil.tarih===v.tarih}">${gunAd(v.tarih)} ${esc(v.saat)} · ${esc(v.plaka)}</button>`).join('')||'<span class="hint">Planlı sevkiyat yok.</span>'}</div>`}</div>`;
@@ -5349,6 +5358,75 @@ function ikPage(){const L=ikList(),bek=L.filter(x=>x.durum==='ik').length;let h=
   h+=`<div class="box"><label class="rq-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="ikQ" type="search" autocomplete="off" placeholder="Ara: ad, mağaza, sicil"></label>
   <ul class="ic-reqs" id="ikL">${L.map(x=>`<li data-ikv="${x.id}" data-q="${esc(nrm(x.ad+' '+S(x.store).name+' '+(x.sicil||'')))}"><div><b>${esc(x.ad)} <small style="color:var(--muted);font-weight:600">${KISA[x.unvan]||''}</small></b><small>${esc(S(x.store).name)} · ${evN(x)}/${EV.length} evrak · ${x.asil&&x.asil.durum==='ulasti'?'asıllar depoda':x.asil?'asıllar yolda':'asıllar gönderilmedi'}</small></div>${isChip(x)}</li>`).join('')||'<li class="sempty">Henüz gelen dosya yok.</li>'}</ul></div>`;
   return h+`<p class="kvkk" style="text-align:center">🔒 Kişisel belgeler sadece İK ve ilgili mağazanın MS/MSY'sine görünür.</p>`;}
+/* İşe giriş imzaları: çalışan ve mağaza sorumlusu mağazada telefona parmakla imzalar, İK onaylarken imzalar.
+   İK, evrakları imzalarla birlikte tek PDF olarak indirip çıktı alır. */
+const IMZ=[['per','Çalışan'],['ms','Mağaza sorumlusu'],['ik','İnsan kaynakları']];
+function imzaSahte(seed){try{const c=document.createElement('canvas');c.width=600;c.height=200;const x=c.getContext('2d');x.strokeStyle='#1d3c8f';x.lineWidth=4;x.lineCap='round';x.beginPath();
+  let px=60,py=120;x.moveTo(px,py);for(let i=0;i<9;i++){const nx=px+45+((seed*7+i*13)%25),ny=60+((seed*11+i*29)%90);x.bezierCurveTo(px+15,py-50,nx-20,ny+50,nx,ny);px=nx;py=ny;}x.stroke();return c.toDataURL('image/png');}catch(e){return null;}}
+function imzaSeed(){const x=D.ise.find(y=>y.ad==='Yusuf Çetin'&&y.store==='s3');if(x&&!x.imza){x.imza={per:{ad:'Yusuf Çetin',at:isoAt(16,25,-1),data:imzaSahte(1)},ms:{ad:'AKÇAY O583 MS',at:isoAt(16,30,-1),data:imzaSahte(2)}};save();}}
+function imzaBox(x,ik){const I=x.imza||{},edit=!ik&&['taslak','eksik'].includes(x.durum);
+  const slot=([k,l])=>{const s=I[k],can=(k==='ik'?ik:edit&&k!=='ik');
+    return `<div class="imz ${s?'ok':''}"><div class="imz-l">${l}</div>${s?`<img src="${s.data}" alt="${esc(l)} imzası"><small>${esc(s.ad)} · ${when(s.at)}</small>${can?`<button type="button" class="linkbtn" data-imza="${k}">Yeniden imzala</button>`:''}`:can?`<button type="button" class="btn small" data-imza="${k}">✍️ İmzala</button>`:`<small class="imz-yok">${k==='ik'?'İK onaylarken imzalar':'İmzalanmadı'}</small>`}</div>`;};
+  return `<div class="box"><div class="gf-head"><h2 style="margin:0">İmzalar</h2><span class="hint" style="margin:0">${IMZ.filter(([k])=>I[k]).length}/3</span></div><p class="hint" style="margin:4px 0 0">${ik?'Evrakları kontrol edip imzala. Sonra imzalı PDF\'i indirip çıktı alabilirsin.':'Çalışan ve mağaza sorumlusu telefonda parmakla imzalar. İK\'ya göndermeden önce iki imza da gerekli.'}</p><div class="imz-grid">${IMZ.map(slot).join('')}</div></div>`;}
+/* imza penceresi */
+let imzK=null;
+function imzaAc(x,k){imzK={id:x.id,k};const g=giris(),def=k==='per'?x.ad:(g&&g.ad)||'';
+  let d=$('imzaDlg');if(!d){d=document.createElement('div');d.className='sdlg-wrap';d.id='imzaDlg';d.hidden=true;
+    d.innerHTML=`<div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="imzaT"><h2 id="imzaT">İmza</h2><p class="hint" id="imzaS" style="margin:0 0 8px"></p><div class="sf" style="margin-bottom:8px"><label>İmzalayan<input id="imzaAd" autocomplete="off"></label></div><canvas id="imzaC" class="imz-c" width="600" height="240" aria-label="İmza alanı"></canvas><p class="hint" style="margin:6px 0 0;text-align:center">Kutunun içine parmağınla imzanı at.</p><div class="sdlg-act" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:8px"><button type="button" class="btn" id="imzaTem">Temizle</button><button type="button" class="btn" id="imzaVz">Vazgeç</button><button type="button" class="btn primary" id="imzaOk">İmzayı kaydet</button></div></div>`;
+    document.body.appendChild(d);const c=$('imzaC'),cx=c.getContext('2d');let on=false,dirty=false;
+    const pt=e=>{const r=c.getBoundingClientRect();return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height];};
+    c.addEventListener('pointerdown',e=>{on=true;c.setPointerCapture(e.pointerId);const [a,b]=pt(e);cx.beginPath();cx.moveTo(a,b);e.preventDefault();});
+    c.addEventListener('pointermove',e=>{if(!on)return;const [a,b]=pt(e);cx.lineTo(a,b);cx.stroke();dirty=true;e.preventDefault();});
+    ['pointerup','pointercancel','pointerleave'].forEach(v=>c.addEventListener(v,()=>{on=false;}));
+    c._clr=()=>{cx.clearRect(0,0,c.width,c.height);cx.strokeStyle='#1d3c8f';cx.lineWidth=4;cx.lineCap='round';cx.lineJoin='round';dirty=false;};c._dirty=()=>dirty;
+    d.addEventListener('click',e=>{const t=e.target;
+      if(t.id==='imzaTem'){c._clr();return;}
+      if(t.id==='imzaVz'||t===d){d.hidden=true;return;}
+      if(t.id==='imzaOk'){if(!c._dirty()){V.toast('Önce imzanı at.');return;}const ad=($('imzaAd').value||'').trim();if(!ad){V.toast('İmzalayanın adını yaz.');$('imzaAd').focus();return;}
+        const y=D.ise.find(z=>z.id===imzK.id);if(!y){d.hidden=true;return;}y.imza=y.imza||{};y.imza[imzK.k]={ad,at:new Date().toISOString(),data:c.toDataURL('image/png')};save();d.hidden=true;render();V.toast('İmza kaydedildi.');}});}
+  $('imzaT').textContent=(IMZ.find(([a])=>a===k)||[])[1]+' imzası';$('imzaS').textContent=`${x.ad} · işe giriş evrakları`;$('imzaAd').value=def;$('imzaC')._clr();d.hidden=false;}
+/* imzalı PDF: her sayfa A4 resim (kapak + evraklar), kütüphanesiz */
+function pdfYap(pages){const enc=new TextEncoder(),parts=[],offs=[];let len=0;const push=v=>{const b=typeof v==='string'?enc.encode(v):v;parts.push(b);len+=b.length;};
+  const obj=(i,f)=>{offs[i]=len;push(`${i} 0 obj\n`);f();push('\nendobj\n');};const n=pages.length;
+  push('%PDF-1.4\n');obj(1,()=>push('<< /Type /Catalog /Pages 2 0 R >>'));obj(2,()=>push(`<< /Type /Pages /Kids [${pages.map((p,k)=>`${3+k*3} 0 R`).join(' ')}] /Count ${n} >>`));
+  pages.forEach((p,k)=>{const pi=3+k*3,bin=Uint8Array.from(atob(p.data.split(',')[1]),ch=>ch.charCodeAt(0)),cs=`q 595 0 0 842 0 0 cm /Im${k} Do Q`;
+    obj(pi,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im${k} ${pi+2} 0 R >> >> /Contents ${pi+1} 0 R >>`));
+    obj(pi+1,()=>push(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));
+    obj(pi+2,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bin.length} >>\nstream\n`);push(bin);push('\nendstream');});});
+  const xr=len,tot=3+n*3;let t=`xref\n0 ${tot}\n0000000000 65535 f \n`;for(let i=1;i<tot;i++)t+=String(offs[i]).padStart(10,'0')+' 00000 n \n';
+  push(t+`trailer\n<< /Size ${tot} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);return new Blob(parts,{type:'application/pdf'});}
+const imgYukle=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src;});
+async function isePdf(x){const W=1240,H=1754,I=x.imza||{},pages=[],olus=new Date();
+  const sig={};for(const [k] of IMZ)if(I[k])sig[k]=await imgYukle(I[k].data);
+  const docs=[];EV.forEach(([k,l])=>(x.docs[k]||[]).forEach((a,i,arr)=>docs.push({l:arr.length>1?`${l} (${i+1}/${arr.length})`:l,a})));
+  const N=1+docs.length,dt=iso=>new Date(iso).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const yeni=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,W,H);g.fillStyle='#111';g.textBaseline='alphabetic';return [c,g];};
+  const alt=(g,no)=>{g.fillStyle='#666';g.font='22px sans-serif';g.fillText(`${x.ad} · İşe giriş dosyası · ${S(x.store).name}`,80,H-50);const s=`Sayfa ${no}/${N}`;g.fillText(s,W-80-g.measureText(s).width,H-50);};
+  const imzaSatir=(g,y0,h,kucuk)=>{const w=(W-160-40)/3;IMZ.forEach(([k,l],i)=>{const x0=80+i*(w+20);g.strokeStyle='#bbb';g.lineWidth=2;g.strokeRect(x0,y0,w,h);g.fillStyle='#333';g.font=`bold ${kucuk?20:26}px sans-serif`;g.fillText(l,x0+14,y0+(kucuk?28:38));
+    const s=I[k];if(s&&sig[k]){const ih=h-(kucuk?70:110),iw=ih*3;g.drawImage(sig[k],x0+(w-Math.min(iw,w-20))/2,y0+(kucuk?34:50),Math.min(iw,w-20),ih);g.fillStyle='#444';g.font=`${kucuk?17:22}px sans-serif`;g.fillText(`${s.ad}`.slice(0,30),x0+14,y0+h-(kucuk?26:40));g.fillText(dt(s.at),x0+14,y0+h-(kucuk?6:14));}
+    else{g.fillStyle='#b00';g.font=`${kucuk?18:22}px sans-serif`;g.fillText('İmzalanmadı',x0+14,y0+h/2+10);}});};
+  // kapak
+  {const [c,g]=yeni();g.fillStyle='#D50F1A';g.fillRect(0,0,W,16);g.fillStyle='#111';g.font='bold 54px sans-serif';g.fillText('İşe Giriş Dosyası',80,140);
+    g.font='26px sans-serif';g.fillStyle='#555';g.fillText('Mağaza Asistanı · dijital imzalı evrak dökümü',80,186);
+    const rows=[['Adı soyadı',x.ad],['Görevi',UNVAN[x.unvan]||x.unvan||''],['Mağaza',S(x.store).name],['İşe başlama',fmtD(x.bas)],['Sicil',x.sicil||'Henüz verilmedi'],['Durum',ISD[x.durum][1]],['Hazırlayan',x.by||''],['İK\'ya gönderim',x.gonder?dt(x.gonder):'-'],['Döküm tarihi',dt(olus.toISOString())]];
+    let y=270;rows.forEach(([a,b])=>{g.fillStyle='#666';g.font='26px sans-serif';g.fillText(a,80,y);g.fillStyle='#111';g.font='bold 28px sans-serif';g.fillText(String(b).slice(0,48),380,y);y+=50;});
+    y+=20;g.fillStyle='#111';g.font='bold 32px sans-serif';g.fillText('Evraklar',80,y);y+=46;
+    EV.forEach(([k,l])=>{const n=(x.docs[k]||[]).length,ks=(x.kontrol||{})[k];g.font='26px sans-serif';g.fillStyle=n?'#1E8A4A':'#b00';g.fillText(n?'✓':'✗',80,y);g.fillStyle='#111';g.fillText(`${l}${n>1?` (${n} sayfa)`:''}`,120,y);if(ks!=null){g.fillStyle=ks?'#1E8A4A':'#b00';const s=ks?'İK: uygun':'İK: eksik';g.fillText(s,W-80-g.measureText(s).width,y);}y+=42;});
+    y+=30;g.fillStyle='#111';g.font='bold 32px sans-serif';g.fillText('İmzalar',80,y);imzaSatir(g,y+20,300,false);
+    g.fillStyle='#777';g.font='20px sans-serif';g.fillText('İmzalar uygulamada parmakla atılmış imza görüntüleridir; tarih ve saatleriyle kaydedilmiştir.',80,y+360);
+    alt(g,1);pages.push({w:W,h:H,data:c.toDataURL('image/jpeg',.82)});}
+  // evrak sayfaları
+  for(let i=0;i<docs.length;i++){const [c,g]=yeni(),{l,a}=docs[i];g.font='bold 34px sans-serif';g.fillText(l,80,100);g.fillStyle='#666';g.font='22px sans-serif';g.fillText(`${x.ad} · ${a.name}`,80,136);
+    const top=170,bot=H-330,img=/^image\//.test(a.type)?await imgYukle(a.data):null;
+    if(img){const k=Math.min((W-160)/img.width,(bot-top)/img.height);const w=img.width*k,h=img.height*k;g.drawImage(img,(W-w)/2,top,w,h);g.strokeStyle='#ddd';g.strokeRect((W-w)/2,top,w,h);}
+    else{g.fillStyle='#f3f3f3';g.fillRect(80,top,W-160,300);g.fillStyle='#333';g.font='26px sans-serif';g.fillText('Bu evrak dosya olarak eklendi (resim değil):',110,top+120);g.font='bold 26px sans-serif';g.fillText(a.name.slice(0,60),110,top+170);}
+    imzaSatir(g,H-300,190,true);alt(g,i+2);pages.push({w:W,h:H,data:c.toDataURL('image/jpeg',.82)});}
+  return pdfYap(pages);}
+async function isePdfIndir(x){V.toast('PDF hazırlanıyor…');const blob=await isePdf(x);
+  const name=`Ise giris ${x.ad} ${new Date().toLocaleDateString('tr-TR')}.pdf`.replace(/[\\\/:*?"<>|]/g,'-').replace(/[çÇğĞıİöÖşŞüÜ]/g,ch=>({ç:'c',Ç:'C',ğ:'g',Ğ:'G',ı:'i',İ:'I',ö:'o',Ö:'O',ş:'s',Ş:'S',ü:'u',Ü:'U'})[ch]);
+  window.__sonPdf=blob;
+  try{const f=new File([blob],name,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'İşe giriş dosyası'});return;}}catch(e){if(e&&e.name==='AbortError')return;}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},4000);V.toast('PDF indirildi. Açıp yazdırabilirsin.');}
 function ikRowBox(){const n=ikList().filter(x=>x.durum==='ik').length,y=D.ise.filter(x=>x.asil&&x.asil.durum==='yolda'&&x.durum!=='taslak').length;
   return `<div class="box ic-bsrow" data-icgo="ik"><div class="ic-av ise"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div><div class="ic-sm"><b>İşe giriş evrakları (İK)</b><small>${n?`${n} dosya kontrol bekliyor`:'Bekleyen dosya yok'}${y?` · ${y} dosyanın asılları yolda`:''}</small></div>${n?`<span class="ic-unread">${n}</span>`:'<span class="ic-go">›</span>'}</div>`;}
 /* Veri yükleme: portalın gerçek verileri (ürün/barkod, fiyat politikası, çalışanlar, unvanlar) Excel şablonuyla yüklenir.
@@ -5730,12 +5808,13 @@ $('icView').addEventListener('click',async e=>{
   if((b=t.closest('[data-evdel]'))){const x=D.ise.find(y=>y.id===ui.id),[k,i]=b.dataset.evdel.split(':');if(x){x.docs[k].splice(Number(i),1);save();const y=window.scrollY;render();window.scrollTo(0,y);}return;}
   if((b=t.closest('[data-asil]'))){const x=D.ise.find(y=>y.id===ui.id),v=D.sevk.find(y=>y.id===b.dataset.asil);if(x&&v){x.asil={plaka:v.plaka,tarih:v.tarih,saat:v.saat,durum:'yolda'};save();const y=window.scrollY;render();window.scrollTo(0,y);V.toast(`Asıllar ${v.plaka} aracıyla gidecek.`);}return;}
   if(t.id==='iseSend'){const x=D.ise.find(y=>y.id===ui.id);if(!x)return;const n=evN(x);if(n<EV.length){V.toast(`Eksik evrak var (${n}/${EV.length}).`);return;}
+    if(!((x.imza||{}).per&&(x.imza||{}).ms)){V.toast('Göndermeden önce çalışan ve mağaza sorumlusu imzalamalı.');const el=document.querySelector('.imz-grid');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});return;}
     if(x.durum==='eksik')(x.eksik||[]).forEach(k=>{delete x.kontrol[k];});x.durum='ik';x.gonder=new Date().toISOString();x.eksik=[];save();render();window.scrollTo({top:0});V.toast(x.asil?'Dosya İK\'ya gönderildi.':'Dosya İK\'ya gönderildi. Asılları hangi araçla göndereceğini seçmeyi unutma.');return;}
   if(t.id==='iseDel'){if(!await window.askConfirm('Bu dosya silinsin mi?','Sil'))return;D.ise=D.ise.filter(y=>y.id!==ui.id);save();ui={page:'ise'};render();return;}
   if((b=t.closest('[data-ikk]'))){const x=D.ise.find(y=>y.id===ui.id);if(!x)return;ui.form=ui.form||{};if($('ikNot'))ui.form.not=$('ikNot').value;x.kontrol=x.kontrol||{};x.kontrol[b.dataset.ikk]=b.dataset.ikv==='1';save();const y=window.scrollY;render();window.scrollTo(0,y);return;}
   if((b=t.closest('[data-asilok]'))){const x=D.ise.find(y=>y.id===b.dataset.asilok);if(x&&x.asil){x.asil.durum='ulasti';x.asil.at=new Date().toISOString();save();render();V.toast('Asıl evraklar teslim alındı.');}return;}
   if(t.id==='ikEksik'){const x=D.ise.find(y=>y.id===ui.id);if(!x)return;x.eksik=EV.filter(([k])=>(x.kontrol||{})[k]===false).map(([k])=>k);x.ikNot=($('ikNot').value||'').trim();x.durum='eksik';x.karar={by:giris().ad,at:new Date().toISOString()};save();ui={page:'ik'};render();window.scrollTo({top:0});V.toast(`${x.eksik.length} eksik evrak mağazaya bildirildi.`);return;}
-  if(t.id==='ikOk'){const x=D.ise.find(y=>y.id===ui.id);if(!x)return;const sc=($('ikSicil').value||'').replace(/\D/g,'');if(sc.length<3){V.toast('Sicil numarasını yaz.');return;}
+  if(t.id==='ikOk'){const x=D.ise.find(y=>y.id===ui.id);if(!x)return;if(!(x.imza||{}).ik){V.toast('Onaylamadan önce İK olarak imzala.');const el=document.querySelector('.imz-grid');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});return;}const sc=($('ikSicil').value||'').replace(/\D/g,'');if(sc.length<3){V.toast('Sicil numarasını yaz.');return;}
     if((V.state().employees||[]).some(e=>String(e.sicil||'')===sc)||D.ise.some(y=>y.sicil===sc)){V.toast('Bu sicil numarası kullanılıyor.');return;}
     x.sicil=sc;x.durum='tamam';x.karar={by:giris().ad,at:new Date().toISOString()};
     if(x.store==='me'){const st=V.state();st.employees.push({id:uid(),name:x.ad,role:x.unvan==='PART'?'PER':x.unvan,izin:'auto',araciOk:true,gender:'',sicil:sc});V.save();}
@@ -5753,6 +5832,8 @@ $('icView').addEventListener('click',async e=>{
     const p=staffOf('me').find(x=>(g.empId&&x.id===g.empId)||nrm(x.ad)===nrm(g.ad));
     D.izin.push({id:uid(),kisiId:g.empId||(p&&p.id)||null,ad:g.ad,unvan:g.unvan,tur,bas,bit,kimle:tur==='T'?f.kimle:'',not:(f.not||'').trim(),at:new Date().toISOString(),durum:'bek'});save();ui={page:'izin',form:{}};render();V.toast(tur==='T'?'Takas talebin MS ve MSY\'ye gönderildi.':'İzin talebin MS ve MSY\'ye gönderildi.');return;}
   if(yukClick(t)||mgyClick(t))return;
+  if((b=t.closest('[data-imza]'))){const x=D.ise.find(y=>y.id===ui.id);if(x)imzaAc(x,b.dataset.imza);return;}
+  if(t.id==='isePdf'){const x=D.ise.find(y=>y.id===ui.id);if(x)await isePdfIndir(x);return;}
   if((b=t.closest('[data-kyok],[data-kyred]'))){const o=KYa().get(),id=b.dataset.kyok||b.dataset.kyred,r=o.list.find(x=>x.id===id),ok=!!b.dataset.kyok;if(!r||!kyYetki())return;
     const g=giris();r.durum=ok?'onay':'red';r.karar={by:g.ad,rol:g.tip==='bs'?'BS':'İK',at:new Date().toISOString()};KYa().save(o);render();if(window.__renderHome)window.__renderHome();
     V.toast(ok?`${r.ad} onaylandı; artık ${r.sicil} sicil numarasıyla girebilir.`:`${r.ad} kaydı reddedildi.`);return;}
