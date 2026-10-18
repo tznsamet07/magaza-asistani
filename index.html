@@ -955,6 +955,7 @@ body.giris-lock>.sms-demo:not([hidden]){display:flex!important}.sms-demo[hidden]
 .hm-st i{font-style:normal;width:24px;height:24px;border-radius:999px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;background:var(--line);color:var(--muted)}
 .hm-st.ok i{background:#1E8A4A;color:#fff}.hm-st.no i{background:#E5484D;color:#fff}
 .hm-st.go{cursor:pointer;-webkit-tap-highlight-color:transparent}.hm-st.go:active{filter:brightness(.95)}.hm-go{font-style:normal;margin-left:auto;align-self:center;color:var(--muted);font-size:20px;line-height:1}.hm-st>div{flex:1;min-width:0}
+.ic-msg.rp>div{white-space:pre-wrap;font-size:13.5px;line-height:1.4}.ic-rp{margin:0 0 4px;font-size:12px;font-weight:700;opacity:.85}
 .hm-st b{display:block;font-size:14px}.hm-st small{display:block;color:var(--muted);font-size:12px;margin-top:1px;line-height:1.3}
 .hm-q{font-size:18px;margin:22px 4px 10px}
 .hm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
@@ -1481,7 +1482,8 @@ body[data-role="staff"] #logBox{display:none}
     <div class="sf" style="margin-top:10px">
       <label>Kontrol edilen mağaza<input id="msStore" autocomplete="off" placeholder="BS'nin söylediği mağaza"></label>
     </div>
-    <button type="button" class="btn primary" id="msSend" style="width:100%;margin-top:10px">SKT kontrolü yapıldı, gruba gönder</button>
+    <button type="button" class="btn primary" id="msSend" style="width:100%;margin-top:10px">SKT kontrolü yapıldı, BS'ye gönder</button>
+    <button type="button" class="btn" id="msWa" style="width:100%;margin-top:8px">WhatsApp'ta da paylaş</button>
   </div>
   <div class="box" id="rpHead">
     <h2>Bugünün özeti</h2>
@@ -1518,9 +1520,10 @@ body[data-role="staff"] #logBox{display:none}
     </div>
   </details>
   <div class="box rp-send">
-    <button type="button" class="btn primary" id="rpSend">Kaydet ve BS'ye gönder</button>
+    <button type="button" class="btn primary" id="rpSend">Kaydet ve portaldan BS'ye gönder</button>
+    <button type="button" class="btn" id="rpWa">WhatsApp'ta da paylaş</button>
     <button type="button" class="btn" id="rpSave">Sadece kaydet</button>
-    <p class="hint" style="margin:0">Ciro ve müşteri Ay başı sekmesindeki aylık tabloya da yazılır.</p>
+    <p class="hint" style="margin:0">Rapor BS'nin portalına mağaza sohbetinize düşer. WhatsApp'a da aynı metin gider. Ciro ve müşteri Ay başı sekmesindeki aylık tabloya da yazılır.</p>
   </div>
   </div>
   <div id="bsRc" class="bs-pane" hidden>
@@ -1542,7 +1545,8 @@ body[data-role="staff"] #logBox{display:none}
         <div class="hol-add" style="margin-top:10px"><input type="text" id="rcAddCode" inputmode="numeric" placeholder="Kod" aria-label="Ürün kodu" style="max-width:110px"><input type="text" id="rcAddName" placeholder="Ürün adı" aria-label="Ürün adı"><button type="button" class="btn small" id="rcAdd">Ekle</button></div>
       </div>
       <div class="box rp-send">
-        <button type="button" class="btn primary" id="rcSend">Dönüşü gruba gönder</button>
+        <button type="button" class="btn primary" id="rcSend">Dönüşü BS'ye gönder</button>
+        <button type="button" class="btn" id="rcWa">WhatsApp'ta da paylaş</button>
         <button type="button" class="btn" id="rcXlsx">Excel dosyası</button>
         <button type="button" class="btn" id="rcDel" style="color:var(--danger)">Listeyi sil</button>
       </div>
@@ -1551,7 +1555,7 @@ body[data-role="staff"] #logBox{display:none}
   <div id="bsCol" class="bs-pane" hidden>
     <div class="box" id="colHome">
       <h2>Bilgi toplama listeleri</h2>
-      <p class="hint">BS bir bilgi istediğinde (sayım, eksik ürün, kırık raf…) yeni bir liste aç, satırları doldur, Excel dosyası olarak gönder.</p>
+      <p class="hint">BS bir bilgi istediğinde (sayım, eksik ürün, kırık raf…) yeni bir liste aç, satırları doldur, BS'ye portaldan gönder. Excel ya da WhatsApp da olur.</p>
       <ul class="slist" id="colLists"></ul>
       <div class="sf" style="margin-top:10px">
         <label>Liste adı<input id="colTitle" autocomplete="off" placeholder="Örn. Eksik ürün sayımı"></label>
@@ -1571,8 +1575,9 @@ body[data-role="staff"] #logBox{display:none}
         <div class="simp-act" style="margin-top:10px"><button type="button" class="btn primary" id="colAdd">Ekle</button><button type="button" class="btn" id="colCancel" hidden>Vazgeç</button></div>
       </div>
       <div class="box rp-send">
-        <button type="button" class="btn primary" id="colXlsx">Excel dosyası olarak gönder</button>
-        <button type="button" class="btn" id="colShare">Metin olarak paylaş</button>
+        <button type="button" class="btn primary" id="colSend">Listeyi BS'ye gönder</button>
+        <button type="button" class="btn" id="colXlsx">Excel dosyası olarak gönder</button>
+        <button type="button" class="btn" id="colShare">WhatsApp'ta metin olarak paylaş</button>
         <button type="button" class="btn" id="colDel" style="color:var(--danger)">Listeyi sil</button>
       </div>
     </div>
@@ -4079,6 +4084,7 @@ $('cTable').addEventListener('click',e=>{const tr=e.target.closest('[data-cday]'
 $('cClose').addEventListener('click',()=>{$('cDlg').hidden=true;});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('cDlg').hidden)$('cDlg').hidden=true;});
 $('cWeights').addEventListener('change',e=>{const inp=e.target.closest('[data-cw]');if(!inp)return;const v=parseH(inp.value);if(v==null||v<0)return;C().weights[Number(inp.dataset.cw)]=v;V.save();renderCiro();});
+function portal(tur,key,text,ad){const r=window.__bsGonder?window.__bsGonder(tur,key,text):0;if(r)V.toast(r===2?`${ad} güncellendi; BS portalda yeni halini görür.`:`${ad} portaldan BS'ye gönderildi.`);return r;}
 async function out(text,title,msg){
   try{if(navigator.share){await navigator.share({title,text});return;}}catch(e){if(e&&e.name==='AbortError')return;}
   try{await navigator.clipboard.writeText(text);V.toast(msg);}catch(e){V.toast('Kopyalanamadı.');}
@@ -4165,7 +4171,8 @@ $('irsNone').addEventListener('change',()=>{if($('irsNone').checked){$('irsG').s
 $('rpStore').addEventListener('change',()=>{AB().store=$('rpStore').value.trim();V.save();});
 $('rpList').addEventListener('input',e=>{if(e.target.closest('[data-rpq]'))calcRep();});
 $('rpSave').addEventListener('click',()=>{saveRep();V.toast(`${rpI()}. gün kaydedildi.`);});
-$('rpSend').addEventListener('click',()=>{saveRep();out(repText(),'BS raporu','Rapor kopyalandı; WhatsApp\'ta BS\'ye yapıştır.');});
+$('rpSend').addEventListener('click',()=>{saveRep();if(!portal('rapor',$('rpDate').value||isoToday(),repText(),'Rapor'))out(repText(),'BS raporu','Rapor kopyalandı; WhatsApp\'ta BS\'ye yapıştır.');});
+$('rpWa').addEventListener('click',()=>{saveRep();out(repText(),'BS raporu','Rapor kopyalandı; WhatsApp\'ta BS\'ye yapıştır.');});
 $('rpAdd').addEventListener('click',()=>{
   const name=$('rpName').value.trim(),code=$('rpCode').value.trim(),price=parseP($('rpPrice').value);
   if(!name){V.toast('Ürün adını yaz.');$('rpName').focus();return;}
@@ -4244,9 +4251,9 @@ $('colTable').addEventListener('click',async e=>{const c=cur();if(!c)return;
   $('colForm').scrollIntoView({behavior:'smooth',block:'center'});});
 $('colDel').addEventListener('click',async()=>{const c=cur();if(!c)return;if(!await window.askConfirm(`“${c.title}” listesi silinsin mi?`,'Sil'))return;
   AB().collect=COL().filter(x=>x!==c);colId=null;V.save();colReset();renderCol();V.toast('Liste silindi.');});
-$('colShare').addEventListener('click',()=>{const c=cur();if(!c)return;
-  const L=[`${AB().store?AB().store+' - ':''}${c.title}`,'',c.cols.join(' | '),...c.rows.map(r=>c.cols.map((_,k)=>r[k]||'-').join(' | '))];
-  out(L.join('\n'),c.title,'Liste kopyalandı; WhatsApp\'ta yapıştır.');});
+const colText=c=>[`${AB().store?AB().store+' - ':''}${c.title}`,'',c.cols.join(' | '),...c.rows.map(r=>c.cols.map((_,k)=>r[k]||'-').join(' | '))].join('\n');
+$('colShare').addEventListener('click',()=>{const c=cur();if(!c)return;out(colText(c),c.title,'Liste kopyalandı; WhatsApp\'ta yapıştır.');});
+$('colSend').addEventListener('click',()=>{const c=cur();if(!c)return;if(!c.rows.length){V.toast('Listede satır yok.');return;}if(!portal('liste',c.id||c.title,colText(c),'Liste'))out(colText(c),c.title,'Liste kopyalandı; WhatsApp\'ta yapıştır.');});
 // Kütüphanesiz .xlsx: sıkıştırmasız ZIP içinde Office Open XML
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
@@ -4293,14 +4300,15 @@ function renderMs(){
   if(!$('msStore').value)$('msStore').value=(r&&r.store)||AB().msLast||AB().store||'';
   const box=$('msBox');box.classList.remove('done','late','wait');
   if(r){box.classList.add('done');$('msBadge').textContent='Gönderildi';$('msInfo').textContent=`Bugün ${new Date(r.at).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})} gönderildi: ${r.store||'-'}`;$('msSend').textContent='Tekrar gönder';}
-  else if(mins<=MS_DL){box.classList.add('wait');const k=MS_DL-mins;$('msBadge').textContent=k>=60?`${Math.floor(k/60)} sa ${k%60} dk`:`${k} dk kaldı`;$('msInfo').textContent='Her sabah 09.15\'e kadar gruba bildirilir.';$('msSend').textContent='SKT kontrolü yapıldı, gruba gönder';}
-  else{box.classList.add('late');$('msBadge').textContent='Gecikti';$('msInfo').textContent='09.15 geçti, bugün henüz gönderilmedi.';$('msSend').textContent='SKT kontrolü yapıldı, gruba gönder';}
+  else if(mins<=MS_DL){box.classList.add('wait');const k=MS_DL-mins;$('msBadge').textContent=k>=60?`${Math.floor(k/60)} sa ${k%60} dk`:`${k} dk kaldı`;$('msInfo').textContent='Her sabah 09.15\'e kadar gruba bildirilir.';$('msSend').textContent='SKT kontrolü yapıldı, BS\'ye gönder';}
+  else{box.classList.add('late');$('msBadge').textContent='Gecikti';$('msInfo').textContent='09.15 geçti, bugün henüz gönderilmedi.';$('msSend').textContent='SKT kontrolü yapıldı, BS\'ye gönder';}
 }
 $('msSend').addEventListener('click',()=>{
   const st=$('msStore').value.trim(),now=new Date();
   const txt=`${st?st+' - ':''}${now.getDate()} ${MON[now.getMonth()]} ${now.getFullYear()}\nSKT kontrolü yapıldı ✅`;
   msRec()[isoToday()]={store:st,at:now.toISOString()};AB().msLast=st;V.save();renderMs();
-  out(txt,'SKT kontrolü','Mesaj kopyalandı; WhatsApp grubuna yapıştır.');});
+  if(!portal('skt',isoToday(),txt,'SKT dönüşü'))out(txt,'SKT kontrolü','Mesaj kopyalandı; WhatsApp grubuna yapıştır.');});
+$('msWa').addEventListener('click',()=>{const st=$('msStore').value.trim(),now=new Date();out(`${st?st+' - ':''}${now.getDate()} ${MON[now.getMonth()]} ${now.getFullYear()}\nSKT kontrolü yapıldı ✅`,'SKT kontrolü','Mesaj kopyalandı; WhatsApp grubuna yapıştır.');});
 setInterval(()=>{if(!$('bsView').hidden)renderMs();},30000);
 // Uygulama 09.15'ten önce açılırsa ve bugün gönderilmediyse hatırlat
 setTimeout(()=>{const n=new Date(),m=n.getHours()*60+n.getMinutes();if(m>=6*60&&m<=MS_DL&&!msRec()[isoToday()]&&!(window.__ist&&!window.__ist().skt))V.toast(`Sabah SKT dönüşü: 09.15'e ${MS_DL-m} dk kaldı (BS sekmesi).`);},1500);
@@ -4344,7 +4352,8 @@ function rcText(c){const d=new Date(c.at),L=[`${AB().store?AB().store+' - ':''}$
   const n=c.items.filter(i=>!i.st).length;L.push('',n?`${n} ürün henüz kontrol edilmedi.`:'Tüm ürünler kontrol edildi ✅');return L.join('\n');}
 $('rcSend').addEventListener('click',async()=>{const c=rcCur();if(!c)return;const n=c.items.filter(i=>!i.st).length;
   if(n&&!await window.askConfirm(`${n} ürün işaretlenmedi. Yine de gönderilsin mi?`,'Gönder'))return;
-  c.sent=new Date().toISOString();V.save();out(rcText(c),c.title,'Dönüş kopyalandı; WhatsApp grubuna yapıştır.');});
+  c.sent=new Date().toISOString();V.save();if(!portal('iade',c.id||c.title,rcText(c),'Dönüş'))out(rcText(c),c.title,'Dönüş kopyalandı; WhatsApp grubuna yapıştır.');});
+$('rcWa').addEventListener('click',()=>{const c=rcCur();if(c)out(rcText(c),c.title,'Dönüş kopyalandı; WhatsApp grubuna yapıştır.');});
 $('rcXlsx').addEventListener('click',()=>{const c=rcCur();if(!c)return;
   const rows=c.items.map(it=>[it.code,it.name,(RCST.find(x=>x[0]===it.st)||[,'Kontrol edilmedi'])[1],it.qty!=null?String(it.qty):'']);
   const blob=xlsx(c.title,['Ürün kodu','Ürün adı','Durum','Adet'],rows),name=`${(AB().store?AB().store+' ':'')+c.title}.xlsx`.replace(/[\\\/:*?"<>|]/g,'-').replace(/[çÇğĞıİöÖşŞüÜ]/g,ch=>({ç:'c',Ç:'C',ğ:'g',Ğ:'G',ı:'i',İ:'I',ö:'o',Ö:'O',ş:'s',Ş:'S',ü:'u',Ü:'U'})[ch]);
@@ -5629,8 +5638,13 @@ function rehberPage(){const M=MG();if(!M)return head('Mağaza rehberi',true)+'<d
   return head('Mağaza rehberi',true)+`<div class="box"><p class="hint" style="margin:0">Listede ${M.tumSay().toLocaleString('tr-TR')} mağaza var · ${M.bolgeSay()} bölge · ${M.ilSay()} il</p><label class="rq-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="rhQ" type="search" autocomplete="off" placeholder="Şehir, ilçe, mağaza adı ya da kodu ara" aria-label="Mağaza ara"></label>
     <label class="rh-il">Göster<select id="rhIl"><option value="">Kendi bölgem</option>${rhIller().map(([k,v])=>`<option value="${esc(k)}"${rhIl===k?' selected':''}>${esc(v)}</option>`).join('')}</select></label><p class="gr-lbl" id="rhT" style="margin:12px 0 4px">${d.t}</p><ul class="rh-list" id="rhL">${rhRows(d.L.slice(0,40))}</ul><p class="hint" id="rhMore" style="margin:6px 0 0"${d.L.length>40?'':' hidden'}>İlk 40 mağaza gösteriliyor. Aramayla ya da il seçerek daralt.</p></div>`;}
 function head(title,back){return `<div class="box ic-head">${back?`<button type="button" class="btn small" data-icgo="home">‹ Geri</button>`:''}<h2>${title}</h2></div>`;}
+/* Akşam raporu portaldan: BS raporu sekmesindeki metin mağaza ⇄ BS sohbetine rapor kartı olarak düşer; aynı gün yeniden gönderilirse güncellenir. Mesai kilidi rapora uygulanmaz. */
+const BSK={rapor:'📋 Akşam raporu',skt:'✅ Sabah SKT dönüşü',iade:'📦 Kontrol / iade dönüşü',liste:'📊 Bilgi listesi'};
+window.__bsGonder=(tur,key,text)=>{const L=(D.messages.me=D.messages.me||[]),g=giris(),k=tur+':'+key,old=L.find(m=>m.rapor===k),at=new Date().toISOString();
+  if(old){old.text=text;old.at=at;old.guncel=true;L.splice(L.indexOf(old),1);L.push(old);}else L.push({from:'magaza',text,at,rapor:k,tur,by:g?g.ad:''});save();if(window.__renderIc)window.__renderIc();updBell();return old?2:1;};
+window.__rpPortal=(text,date)=>window.__bsGonder('rapor',date||today(),text);
 function bubbleList(id){const L=D.messages[id]||[],mine=D.role==='bs'?'bs':'magaza';
-  return `<div class="ic-chat" id="icChat">${L.length?L.map(m=>`<div class="ic-msg ${m.from===mine?'me':'them'}"><div>${esc(m.text)}</div><small>${m.from==='bs'?'BS':esc(S(id).name)} · ${when(m.at)}</small></div>`).join(''):'<p class="hint" style="text-align:center;margin:20px 0">Henüz mesaj yok.</p>'}</div>
+  return `<div class="ic-chat" id="icChat">${L.length?L.map(m=>`<div class="ic-msg ${m.from===mine?'me':'them'}${m.rapor?' rp':''}">${m.rapor?`<p class="ic-rp">${BSK[m.tur||'rapor']}${m.guncel?' · güncellendi':''}${m.by?' · '+esc(m.by):''}</p>`:''}<div>${esc(m.text)}</div><small>${m.from==='bs'?'BS':esc(S(id).name)} · ${when(m.at)}</small></div>`).join(''):'<p class="hint" style="text-align:center;margin:20px 0">Henüz mesaj yok.</p>'}</div>
   ${kilitli()?kilitBar():`<div class="ic-send"><input id="icMsg" autocomplete="off" placeholder="Mesaj yaz…" aria-label="Mesaj"><button type="button" class="btn primary" id="icMsgGo" data-icchat="${id}" aria-label="Gönder">➤</button></div>`}`;}
 function respTable(r){const R=D.responses[r.id]||{},rows=[];
   if(r.type==='kontrol'){r.to.forEach(id=>{const x=R[id];r.items.forEach((it,i)=>{const v=x&&x.items[i];rows.push([S(id).name,it.code,it.name,v?(RCST.find(z=>z[0]===v.st)||[,''])[1]:'Yanıt yok',v&&v.qty!=null?String(v.qty):'']);});});return {cols:['Mağaza','Ürün kodu','Ürün adı','Durum','Adet'],rows};}
@@ -5959,7 +5973,7 @@ function notifs(){const g=giris();if(!g)return [];const dis=D.dismissed||{},L=[]
   if(g.tip==='pm'){if(ustKey())ustN(ustKey());altlar().forEach(p=>ustN(p.key));if(kad()==='pm'){bsPeople().forEach(p=>pmN(nrm(p.ad)));bgN();}}
   else if(bs){pmN(nrm(g.ad));kyN();yukN(L);mgyN(L);
     const lim=new Date(Date.now()-2*864e5).toISOString();D.requests.forEach(r=>{const R=D.responses[r.id]||{},ids=Object.keys(R);if(!ids.length)return;const last=ids.map(id=>R[id].at).sort().pop();if(last<lim)return;const n=r.to.filter(id=>R[id]).length;L.push({k:'a:'+r.id+':'+n,t:n>=r.to.length?`${r.title}: tüm mağazalar dönüş yaptı`:`${r.title}: ${n}/${r.to.length} mağaza dönüş yaptı`,d:'Son dönüş: '+S(ids.sort((a,b)=>R[a].at.localeCompare(R[b].at)).pop()).name,at:last,go:{page:'req',id:r.id}});});
-    D.stores.forEach(s=>{const M=(D.messages[s.id]||[]).filter(m=>m.from==='magaza'),seen=(D.seen||{})['bs:'+s.id]||'',u=M.filter(m=>m.at>seen);if(u.length){const last=u[u.length-1];L.push({k:'m:'+s.id+':'+last.at,t:`${s.name}: ${u.length} yeni mesaj`,d:last.text,at:last.at,go:{page:'store',id:s.id},seen:'bs:'+s.id});}});
+    D.stores.forEach(s=>{const M=(D.messages[s.id]||[]).filter(m=>m.from==='magaza'),seen=(D.seen||{})['bs:'+s.id]||'',u=M.filter(m=>m.at>seen);if(u.length){const last=u[u.length-1];L.push({k:'m:'+s.id+':'+last.at,t:u.every(m=>m.rapor)?(u.length>1?`${s.name}: ${u.length} dönüş geldi`:`${s.name}: ${(BSK[last.tur||'rapor']||'').replace(/^\S+ /,'').toLocaleLowerCase('tr-TR')} geldi`):`${s.name}: ${u.length} yeni mesaj`,d:last.rapor?last.text.split('\n').filter(Boolean).slice(0,2).join(' · '):last.text,at:last.at,go:{page:'store',id:s.id},seen:'bs:'+s.id});}});
     bgN();
     const vlim=new Date(Date.now()-7*864e5).toISOString();D.vd.filter(x=>x.at>vlim).forEach(x=>L.push({k:'vd:'+x.id,t:`${S(x.store).name}: ${x.tip==='yaz'?'haftalık vardiya yazıldı':'vardiya değişti'}`,d:x.tip==='yaz'?wkAd(x.w)+' haftası':vdSatir(x.L[0]).replace(/&amp;/g,'&')+(x.L.length>1?` · +${x.L.length-1} değişiklik`:''),at:x.at,go:{page:'store',id:x.store},red:x.tip==='deg'}));
     D.savunma.filter(s=>s.cevap&&!s.sonuc).forEach(s=>L.push({k:'sva:'+s.id,t:`${s.ad} savunmasını gönderdi`,d:s.olay+' · '+S(s.store).name,at:s.cevap.at,go:{page:'sv',id:s.id}}));
