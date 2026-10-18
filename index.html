@@ -260,6 +260,9 @@ body.locked>:not(#auth):not(.toast):not(script){display:none!important}
 .ui .acts button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 8px;font:inherit;font-size:12px;font-weight:700;color:var(--ink)}
 body[data-role="staff"]:not(.tab-g) aside,body[data-role="staff"] #genBtn,body[data-role="staff"] #genMonthBtn,body[data-role="staff"] #clearBtn,body[data-role="staff"] #fitBtn,body[data-role="staff"]:not(.yk-a) #tabA,body[data-role="staff"]:not(.yk-b) #tabB,body[data-role="staff"]:not(.yk-s) #tabS,body[data-role="staff"] #moreMenu .more-list>:not(#printBtn),body[data-role="staff"] .month input,body[data-role="staff"] .month th:last-child,body[data-role="staff"] .month td:last-child{display:none!important}
 body[data-role="staff"] .layout{grid-template-columns:1fr}
+/* GT: vardiya planı ve ayarlar sadece görüntüleme */
+body.giris-gt:not(.tab-g) aside,body.giris-gt #genBtn,body.giris-gt #genMonthBtn,body.giris-gt #clearBtn,body.giris-gt #fitBtn,body.giris-gt #moreMenu .more-list>:not(#printBtn),body.giris-gt .month input,body.giris-gt .month th:last-child,body.giris-gt .month td:last-child,body.giris-gt aside>details:not(#temaBox):not(#hesapBox):not(#mgBox){display:none!important}
+body.giris-gt .layout{grid-template-columns:1fr}
 .tabs{display:flex;gap:6px;padding:0 clamp(16px,4vw,40px) 14px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:10px 18px;font:inherit;font-weight:700;font-size:15px;color:var(--ink);display:flex;gap:8px;align-items:center}
@@ -2795,7 +2798,7 @@ document.addEventListener('keydown',ev=>{if(!menu.hidden&&ev.key==='Escape')clos
 document.addEventListener('click',ev=>{if(!menu.hidden&&!menu.contains(ev.target)&&!ev.target.closest('.cell'))closeMenu(false);});
 let lastW=window.innerWidth;window.addEventListener('resize',()=>{if(window.innerWidth!==lastW){lastW=window.innerWidth;closeMenu(false);}});
 $('sheet').addEventListener('click',ev=>{
-  if(document.body.dataset.role==='staff'&&ev.target.closest('.cell[data-emp]')){toast('Vardiyayı sadece yönetici değiştirebilir.');return;}
+  if((document.body.dataset.role==='staff'||document.body.classList.contains('giris-gt'))&&ev.target.closest('.cell[data-emp]')){toast('Vardiyayı MS ve MSY değiştirir.');return;}
   const vb=ev.target.closest('.mtoggle button[data-view]');if(vb){state.mView=vb.dataset.view;save();renderSheet();return;}
   const dc=ev.target.closest('.dchip');if(dc){mDay=Number(dc.dataset.mday);renderSheet();const b=document.querySelector(`.dchip[data-mday="${mDay}"]`);if(b)b.focus();return;}
   const c=ev.target.closest('.cell[data-emp]');if(!c)return;ev.stopPropagation();
@@ -4809,7 +4812,7 @@ function mgKutu(g){const bx=$('mgBox');if(!bx)return;const M=window.__mg;if(!M||
 $('mgBox').addEventListener('click',e=>{if(e.target.id==='mgRehber'&&window.__icGo){window.__icGo('rehber');window.scrollTo({top:0});}});
 function apply(g){
   G=g;const b=document.body;b.classList.remove('giris-lock');$('giris').hidden=true;
-  b.classList.toggle('giris-bs',g.tip==='bs');b.classList.toggle('giris-depo',g.tip==='depo');b.classList.toggle('giris-pm',g.tip==='pm');
+  b.classList.toggle('giris-bs',g.tip==='bs');b.classList.toggle('giris-gt',g.tip==='magaza'&&g.unvan==='GT');b.classList.toggle('giris-depo',g.tip==='depo');b.classList.toggle('giris-pm',g.tip==='pm');
   if(window.__renderEmp)setTimeout(window.__renderEmp,0);
   b.dataset.role=g.tip==='pm'?'pm':g.tip==='depo'?'depo':g.tip==='bs'?'bs':(['MS','MSY','GT'].includes(g.unvan)?'admin':'staff');
   $('userbar').hidden=false;const un=$('userName');un.style.display='';const fn=String(g.ad||'').trim().split(/\s+/)[0];un.textContent=g.tip==='pm'?`${fn} · ${['GM','BM'].includes(g.unvan)?g.unvan:'PM'}`:g.tip==='depo'?`${fn} · ${g.unvan==='İnsan kaynakları'?'İK':'Depo'}`:g.tip==='bs'?`${fn} · BS`:`${fn} · ${KISA[g.unvan]||''}`;
