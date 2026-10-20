@@ -958,6 +958,8 @@ body.giris-lock>.sms-demo:not([hidden]){display:flex!important}.sms-demo[hidden]
 .ic-msg.rp>div{white-space:pre-wrap;font-size:13.5px;line-height:1.4}.ic-rp{margin:0 0 4px;font-size:12px;font-weight:700;opacity:.85}
 .vd-next{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,#E0A21B 16%,var(--panel));color:var(--ink);border:1px solid #E0A21B}.vd-next p{margin:0;flex:1 1 240px;font-size:14px;line-height:1.4}.vd-next .btn{flex:1 1 auto;white-space:nowrap}
 body[data-role=staff] #vdNext,body.giris-gt #vdNext{display:none!important}
+.gr-acik{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600;margin:2px 0 4px}.gr-acik input{margin-top:3px}.gr-acik small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px}
+.oto-row{display:grid;gap:4px;margin-top:12px;font-size:13px;font-weight:600;color:var(--muted)}
 .hm-st b{display:block;font-size:14px}.hm-st small{display:block;color:var(--muted);font-size:12px;margin-top:1px;line-height:1.3}
 .hm-q{font-size:18px;margin:22px 4px 10px}
 .hm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
@@ -1192,6 +1194,8 @@ body[data-role="staff"] #logBox{display:none}
     <details class="box sect" id="hesapBox" open><summary><h2>Hesap</h2></summary>
       <div class="hs-row"><div class="ic-av" id="hsAv">?</div><div class="ic-sm"><b id="hsAd"></b><small id="hsRol"></small></div></div>
       <button type="button" class="btn" id="hsCikis" style="width:100%;margin-top:12px">Çıkış yap / kullanıcı değiştir</button>
+      <label id="otoRow" class="oto-row" hidden>Otomatik çıkış<select id="otoSel" class="ssel"><option value="5">5 dakika işlem yoksa</option><option value="10">10 dakika işlem yoksa</option><option value="30">30 dakika işlem yoksa</option><option value="0">Kapalı</option></select></label>
+      <p class="hint" id="otoHint" style="margin:6px 0 0" hidden>Mağaza telefonu ortak kullanıldığı için bir süre dokunulmazsa çıkış yapılır; sonraki kişi kendi siciliyle girer.</p>
     </details>
     <details class="box sect" id="mgBox" open hidden><summary><h2 id="mgBoxT">Mağazam</h2></summary><div id="mgBody"></div></details>
     <details class="box sect" id="istBox" open><summary><h2>Mağazalardan istediklerim</h2></summary><div id="istBody"></div></details>
@@ -4738,6 +4742,7 @@ const KAYIT={'200118':{tip:'bs',ad:'Ali Yıldırım',bolge:'Finike bölgesi'},'2
 const AB=()=>{const s=V.state();s.ab=s.ab||{};return s.ab;};
 const IC_MG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></svg>';
 let G=null,step='sicil',sel=null,form={store:'',name:'',role:'PER',bolge:''},bek=null;
+let acikTut=false;document.addEventListener('change',e=>{if(e.target&&e.target.id==='grAcik')acikTut=e.target.checked;});
 /* Yeni çalışan kaydı: sicili listede olmayan kişi kayıt olur, insan kaynakları (İK) onaylar.
    İK isterse bölge sorumlularına (BS) da onay yetkisi verir. Sunumda aynı telefonda saklanır; gerçekte sunucuda tutulur. */
 const KYK='magaza-kayit';
@@ -4815,6 +4820,7 @@ function draw(){
       <div class="sf"><div class="gr-otp" role="group" aria-label="Doğrulama kodu">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" maxlength="1" data-otp="${i}" aria-label="${i+1}. hane"${i===0?' autocomplete="one-time-code"':''}>`).join('')}</div>
       <p class="gr-left" id="grLeft"></p>
       <p class="auth-err" id="grErr" role="alert"></p>
+      ${pend&&pend.tip==='magaza'?`<label class="check gr-acik"><input type="checkbox" id="grAcik"${acikTut?' checked':''}><span>Oturumu açık tut <small>Kendi telefonunsa işaretle; işlem yapmasan da çıkış yapılmaz.</small></span></label>`:''}
       <button type="button" class="btn primary" id="grGo" style="width:100%">Doğrula ve giriş yap</button>
       <button type="button" class="gr-again" id="grAgain" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/></svg>Kodu tekrar gönder</button></div>`;
   }
@@ -4833,7 +4839,7 @@ function mgKutu(g){const bx=$('mgBox');if(!bx)return;const M=window.__mg;if(!M||
     <div class="mg-btns">${o?`<a class="btn" href="${esc(M.harita(o))}" target="_blank" rel="noopener">Haritada aç</a>`:''}<button type="button" class="btn" id="mgRehber">Mağaza rehberi</button></div>`;bx.hidden=false;}
 $('mgBox').addEventListener('click',e=>{if(e.target.id==='mgRehber'&&window.__icGo){window.__icGo('rehber');window.scrollTo({top:0});}});
 function apply(g){
-  G=g;const b=document.body;b.classList.remove('giris-lock');$('giris').hidden=true;
+  G=g;const b=document.body;b.classList.remove('giris-lock');$('giris').hidden=true;otoCiz();
   b.classList.toggle('giris-bs',g.tip==='bs');b.classList.toggle('giris-gt',g.tip==='magaza'&&g.unvan==='GT');b.classList.toggle('giris-depo',g.tip==='depo');b.classList.toggle('giris-pm',g.tip==='pm');
   if(window.__renderEmp)setTimeout(window.__renderEmp,0);
   b.dataset.role=g.tip==='pm'?'pm':g.tip==='depo'?'depo':g.tip==='bs'?'bs':(['MS','MSY','GT'].includes(g.unvan)?'admin':'staff');
@@ -4859,10 +4865,10 @@ $('girisBody').addEventListener('click',e=>{const t=e.target;let b;
     if(c.length<6)return err('6 haneli kodu yaz.');
     if(!sms||Date.now()>sms.until)return err('Kodun süresi doldu, yeni kod iste.');
     if(c!==sms.code){sms.tries++;document.querySelectorAll('[data-otp]').forEach(i=>i.value='');document.querySelector('[data-otp]').focus();return err(sms.tries>=5?'Çok fazla hatalı deneme, yeni kod iste.':'Kod yanlış, tekrar dene.');}
-    const g={...pend,tel};const M=telMap();M[telKey(g)]=tel;try{localStorage.setItem(TKEY,JSON.stringify(M));}catch(x){}
+    const g={...pend,tel};if(g.tip==='magaza'&&$('grAcik')&&$('grAcik').checked)g.acik=true;const M=telMap();M[telKey(g)]=tel;try{localStorage.setItem(TKEY,JSON.stringify(M));}catch(x){}
     sms=null;clearInterval(tmr);$('smsDemo').hidden=true;
     if(g.yeni){const o=KY();o.list=o.list.filter(x=>x.sicil!==g.sicil);const r={id:Math.random().toString(36).slice(2,9),sicil:g.sicil,ad:g.ad,unvan:g.unvan,magaza:g.magaza,at:new Date().toISOString(),durum:'bek'};o.list.push(r);KYsave(o);bek=r;step='bekle';draw();return;}
-    put(g);apply(g);if(window.__icLogin)setTimeout(window.__icLogin,400);return;}
+    put(g);islem();apply(g);if(window.__icLogin)setTimeout(window.__icLogin,400);return;}
   if(t.id==='grGo'){keep();const err=m=>{$('grErr').textContent=m;};const sc=String(form.sicil||'').replace(/\D/g,'');if(sc.length<3)return err('Sicil numaranı yaz.');
     let g=bul(sc);
     if(!g&&sel!=='yeni'){const r=kyOf(sc);if(r&&r.durum!=='onay'){bek=r;step='bekle';draw();return;}sel='yeni';draw();if($('grStore'))$('grStore').focus();return;}
@@ -4876,11 +4882,28 @@ $('girisBody').addEventListener('input',e=>{if(e.target.id==='grStore'){const w=
   const all=[...document.querySelectorAll('[data-otp]')],nx=all.find(x=>!x.value);if(nx&&v)nx.focus();if(all.every(x=>x.value))$('grGo').click();});
 $('girisBody').addEventListener('keydown',e=>{const o=e.target.closest('[data-otp]');if(o&&e.key==='Backspace'&&!o.value){const p=document.querySelector(`[data-otp="${Number(o.dataset.otp)-1}"]`);if(p){p.value='';p.focus();}e.preventDefault();return;}});
 $('girisBody').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')){e.preventDefault();const go=$('grGo');if(go)go.click();}});
-const out=async()=>{if(!await window.askConfirm('Çıkış yapılsın mı? Veriler bu cihazda kalır.','Çıkış yap'))return;try{if(window.AndroidApp&&AndroidApp.scheduleVardiya)AndroidApp.scheduleVardiya(JSON.stringify({kapali:true}));}catch(e){}put(null);show();};
+const cik=()=>{try{if(window.AndroidApp&&AndroidApp.scheduleVardiya)AndroidApp.scheduleVardiya(JSON.stringify({kapali:true}));}catch(e){}put(null);show();};
+const out=async()=>{if(!await window.askConfirm('Çıkış yapılsın mı? Veriler bu cihazda kalır.','Çıkış yap'))return;cik();};
+/* Otomatik çıkış: mağaza telefonu ortak. Mağaza girişlerinde (MS, MSY, GT, personel) belirlenen süre dokunulmazsa çıkış yapılır.
+   Son işlem zamanı cihazda tutulur; uygulama arka planda kalıp geri açılınca da süre kontrol edilir. Süre cihaza göre Ayarlar > Hesap'tan seçilir. */
+const OKEY='magaza-oto',AKEY='magaza-son-islem';
+const otoDk=()=>{let v=null;try{v=localStorage.getItem(OKEY);}catch(e){}const n=Number(v==null?10:v);return [0,5,10,30].includes(n)?n:10;};
+const otoAcik=()=>!!G&&G.tip==='magaza'&&!G.acik&&otoDk()>0;
+let sonIs=(()=>{try{return Number(localStorage.getItem(AKEY))||Date.now();}catch(e){return Date.now();}})(),otoUyar=false;
+const islem=()=>{sonIs=Date.now();if(otoUyar){otoUyar=false;}try{localStorage.setItem(AKEY,String(sonIs));}catch(e){}};
+let isT=0;['pointerdown','keydown','touchstart','wheel'].forEach(ev=>document.addEventListener(ev,()=>{const n=Date.now();if(n-isT<5000){sonIs=n;return;}isT=n;islem();},{passive:true,capture:true}));
+function otoKontrol(){if(!otoAcik()||document.body.classList.contains('giris-lock'))return;let son=sonIs;try{son=Math.max(son,Number(localStorage.getItem(AKEY))||0);}catch(e){}
+  const kal=otoDk()*60000-(Date.now()-son);
+  if(kal<=0){otoUyar=false;cik();V.toast('Uzun süre işlem yapılmadığı için çıkış yapıldı.');return;}
+  if(kal<=30000&&!otoUyar){otoUyar=true;V.toast('İşlem yapılmazsa 30 saniye içinde çıkış yapılacak. Devam etmek için ekrana dokun.');}}
+setInterval(otoKontrol,5000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)otoKontrol();else{try{localStorage.setItem(AKEY,String(sonIs));}catch(e){}}});
+function otoCiz(){const r=$('otoRow'),h=$('otoHint'),on=!!G&&G.tip==='magaza';if(r)r.hidden=!on||!!G.acik;if(h){h.hidden=!on;h.innerHTML=G&&G.acik?'Oturum açık tutuluyor: işlem yapmasan da çıkış yapılmaz. Kapatmak için çıkış yapıp tekrar girerken kutuyu boş bırak.':'Mağaza telefonu ortak kullanıldığı için bir süre dokunulmazsa çıkış yapılır. Kendi telefonunsa girişte "Oturumu açık tut" kutusunu işaretle.';}const s=$('otoSel');if(s)s.value=String(otoDk());}
+$('otoSel').addEventListener('change',()=>{try{localStorage.setItem(OKEY,$('otoSel').value);}catch(e){}islem();V.toast(Number($('otoSel').value)?`${$('otoSel').value} dakika işlem olmazsa çıkış yapılacak.`:'Otomatik çıkış kapatıldı.');});
 $('smsDemo').addEventListener('click',()=>{if(!sms||step!=='kod')return;const all=[...document.querySelectorAll('[data-otp]')];sms.code.split('').forEach((c,k)=>{if(all[k])all[k].value=c;});$('smsDemo').hidden=true;$('grGo').click();});
 $('cikisBtn').addEventListener('click',out);$('hsCikis').addEventListener('click',out);
 window.__giris=()=>G;
-const g0=get();if(g0&&g0.tip)apply(g0);else show();
+const g0=get();if(g0&&g0.tip){apply(g0);otoKontrol();}else show();
 })();
 </script>
 <script>
