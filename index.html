@@ -1196,6 +1196,8 @@ body[data-role="staff"] #logBox{display:none}
       <button type="button" class="btn" id="hsCikis" style="width:100%;margin-top:12px">Çıkış yap / kullanıcı değiştir</button>
       <label id="otoRow" class="oto-row" hidden>Otomatik çıkış<select id="otoSel" class="ssel"><option value="5">5 dakika işlem yoksa</option><option value="10">10 dakika işlem yoksa</option><option value="30">30 dakika işlem yoksa</option><option value="0">Kapalı</option></select></label>
       <p class="hint" id="otoHint" style="margin:6px 0 0" hidden>Mağaza telefonu ortak kullanıldığı için bir süre dokunulmazsa çıkış yapılır; sonraki kişi kendi siciliyle girer.</p>
+      <button type="button" class="btn" id="demoSifir" style="width:100%;margin-top:12px">Demo verisini sıfırla</button>
+      <p class="hint" style="margin:6px 0 0">Sunumdan önce örnek mesajları, raporları ve kayıtları ilk hâline döndürür. Renk ayarı korunur.</p>
     </details>
     <details class="box sect" id="mgBox" open hidden><summary><h2 id="mgBoxT">Mağazam</h2></summary><div id="mgBody"></div></details>
     <details class="box sect" id="istBox" open><summary><h2>Mağazalardan istediklerim</h2></summary><div id="istBody"></div></details>
@@ -4901,7 +4903,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)otoKontrol
 function otoCiz(){const r=$('otoRow'),h=$('otoHint'),on=!!G&&G.tip==='magaza';if(r)r.hidden=!on||!!G.acik;if(h){h.hidden=!on;h.innerHTML=G&&G.acik?'Oturum açık tutuluyor: işlem yapmasan da çıkış yapılmaz. Kapatmak için çıkış yapıp tekrar girerken kutuyu boş bırak.':'Mağaza telefonu ortak kullanıldığı için bir süre dokunulmazsa çıkış yapılır. Kendi telefonunsa girişte "Oturumu açık tut" kutusunu işaretle.';}const s=$('otoSel');if(s)s.value=String(otoDk());}
 $('otoSel').addEventListener('change',()=>{try{localStorage.setItem(OKEY,$('otoSel').value);}catch(e){}islem();V.toast(Number($('otoSel').value)?`${$('otoSel').value} dakika işlem olmazsa çıkış yapılacak.`:'Otomatik çıkış kapatıldı.');});
 $('smsDemo').addEventListener('click',()=>{if(!sms||step!=='kod')return;const all=[...document.querySelectorAll('[data-otp]')];sms.code.split('').forEach((c,k)=>{if(all[k])all[k].value=c;});$('smsDemo').hidden=true;$('grGo').click();});
-$('cikisBtn').addEventListener('click',out);$('hsCikis').addEventListener('click',out);
+$('cikisBtn').addEventListener('click',out);$('hsCikis').addEventListener('click',out);$('demoSifir').addEventListener('click',()=>{const f=()=>{try{Object.keys(localStorage).filter(k=>k!=='vardiya-tema').forEach(k=>localStorage.removeItem(k));sessionStorage.clear();}catch(e){}location.reload();};if(window.askConfirm)window.askConfirm('Bu telefondaki tüm demo verisi silinip ilk hâline dönecek ve giriş ekranı açılacak. Devam edilsin mi?','Sıfırla').then(v=>{if(v)f();});else f();});
 window.__giris=()=>G;
 const g0=get();if(g0&&g0.tip){apply(g0);otoKontrol();}else show();
 })();
