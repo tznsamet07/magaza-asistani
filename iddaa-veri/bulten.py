@@ -184,14 +184,30 @@ def oynanma_ekle(m, e):
 onceki = oku_json("bulten.json") or {}
 eski = {str(m["id"]): m for m in onceki.get("futbol", []) + onceki.get("basket", [])}
 
+simdi = datetime.datetime.now(TR)
+# Bülten 5 dakikada bir çekiliyor; "önceki oran" okları yine ~yarım saatlik değişimi göstersin diye
+# karşılaştırma anı en az 25 dakikada bir ilerletilir.
+def zaman_oku(z):
+    try:
+        return datetime.datetime.strptime(z, "%Y-%m-%d %H:%M").replace(tzinfo=TR)
+    except (TypeError, ValueError):
+        return None
+_oz = zaman_oku(onceki.get("onceZaman"))
+ONCE_YENILE = not _oz or simdi - _oz >= datetime.timedelta(minutes=25)
+ONCE_ZAMAN = onceki.get("zaman") if ONCE_YENILE else onceki.get("onceZaman")
+
 def hareket(m):
     # İlk görülen oranı saklar; oran düşüşü = piyasaya para girdiği anlamına gelebilir
     e = eski.get(str(m["id"]))
     m["ilk"] = (e or {}).get("ilk") or {k: m[k]["o"] for k in m["oranlar"] if m.get(k)}
-    m["once"] = {k: e[k]["o"] for k in m["oranlar"] if e and e.get(k) and m.get(k) and e[k].get("c") == m[k].get("c")} if e else {}
+    if not e:
+        m["once"] = {}
+    elif ONCE_YENILE:
+        m["once"] = {k: e[k]["o"] for k in m["oranlar"] if e.get(k) and m.get(k) and e[k].get("c") == m[k].get("c")}
+    else:
+        m["once"] = {k: v for k, v in (e.get("once") or {}).items() if m.get(k)}
     del m["oranlar"]
 
-simdi = datetime.datetime.now(TR)
 futbol, basket = [], []
 for e in ham["sg"]["EA"]:
     if e.get("GT") not in (1, 2):
@@ -225,7 +241,36 @@ for e in ham["sg"]["EA"]:
 
 futbol.sort(key=lambda m: m["t"]); basket.sort(key=lambda m: m["t"])
 veri = oku_json("veri.json") or {}
-cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "veriGuncelleme": veri.get("guncelleme"), "futbol": futbol, "basket": basket}
+# ---------- İddaa geç kalıyor mu? ----------
+# Borsada bir seçeneğin olasılığı son 30-90 dakikada belirgin arttıysa (haber, ilk 11, sakatlık)
+# ama iddaa oranı yerinde duruyorsa, iddaa oranı bir süre gerçek ihtimalin üstünde kalır.
+gecmis = (oku_json("borsa-gecmis.json") or {})
+simdi_s = int(simdi.timestamp())
+for m in futbol:
+    sm = m.get("sm")
+    if not sm or not sm.get("ms"):
+        continue
+    g = gecmis.setdefault(str(m["id"]), [])
+    g.append([simdi_s, sm["ms"], sm.get("au25"), m["ms"]["o"], (m.get("au25") or {}).get("o")])
+    eski_ = [x for x in g if 30 * 60 <= simdi_s - x[0] <= 90 * 60]
+    if not eski_:
+        continue
+    x = eski_[0]
+    isaret = []
+    for k, pn, p0, on, o0 in (("ms", sm["ms"], x[1], m["ms"]["o"], x[3]), ("au25", sm.get("au25"), x[2], (m.get("au25") or {}).get("o"), x[4])):
+        if not (pn and p0 and on and o0) or len(on) != len(pn):
+            continue
+        for i in range(len(pn)):
+            if pn[i] - p0[i] >= 0.03 and on[i] / o0[i] - 1 > -0.02:
+                isaret.append({"k": k, "i": i, "p0": p0[i], "p1": pn[i], "o0": o0[i], "o1": on[i], "dk": round((simdi_s - x[0]) / 60)})
+    if isaret:
+        m["gecikme"] = isaret
+gecmis = {i: [x for x in g if simdi_s - x[0] <= 4 * 3600] for i, g in gecmis.items()}
+gecmis = {i: g for i, g in gecmis.items() if g}
+with open(os.path.join(K, "borsa-gecmis.json"), "w", encoding="utf-8") as f:
+    json.dump(gecmis, f, separators=(",", ":"))
+
+cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "onceZaman": ONCE_ZAMAN, "veriGuncelleme": veri.get("guncelleme"), "futbol": futbol, "basket": basket}
 with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
     json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
 print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "football-data,", sum(1 for m in futbol if m["sm"]), "Smarkets,", sum(1 for m in futbol if m["dkf"]), "DraftKings,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings")
