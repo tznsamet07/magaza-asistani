@@ -25,21 +25,17 @@ jobs:
               except Exception as e:
                   return getattr(e, "code", str(e)), {}, (e.read() if hasattr(e, "read") else b"")
           out = open("sonuc.txt", "w")
-          for ad, u in [("canli", "https://bulten.nesine.com/api/bulten/getlivebultenv3"), ("canli2", "https://cdnbulten.nesine.com/api/bulten/getlivebultenv3"),
-                        ("espn-all", "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard"),
-                        ("espn-eng", "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard"),
-                        ("espn-tur", "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard")]:
+          B = "https://site.api.espn.com/apis/site/v2/sports/soccer/"
+          for u in [B + "all/summary?event=401879254", B + "700/summary?event=401879254", B + "eng.1/summary?event=401879254",
+                    B + "all/scoreboard?dates=20261026", B + "all/scoreboard?dates=20261026&limit=500", B + "all/scoreboard?limit=500",
+                    "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879254",
+                    "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401879254"]:
               s, h, b = al(u)
-              out.write(f"\n=== {ad} {u} -> {s} {len(b)} cors={h.get('Access-Control-Allow-Origin')}\n{b[:1500]!r}\n")
-              open(ad + ".json", "wb").write(b[:3000000])
-          try:
-              ev = json.load(open("espn-eng.json"))["events"]
-              for e in ev[:3]:
-                  s, h, b = al("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=" + e["id"])
-                  open("ozet-" + e["id"] + ".json", "wb").write(b)
-                  out.write(f"ozet {e['id']} {e['name']} {e['status']['type']['name']} -> {s} {len(b)}\n")
-          except Exception as x:
-              out.write(f"ozet hata {x}\n")
+              n = ""
+              try:
+                  j = json.loads(b); n = len(j.get("events", [])) if "events" in j else ("rosters" in j, j.get("header", {}).get("league", {}).get("slug"))
+              except Exception as x: n = str(x)[:80]
+              out.write(f"{u} -> {s} {len(b)} {n}\n")
           PY
           sed -i 's/^          //' dene.py
           timeout 300 python3 dene.py || true
