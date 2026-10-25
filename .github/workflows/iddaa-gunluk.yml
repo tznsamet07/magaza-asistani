@@ -26,7 +26,6 @@ jobs:
           curl -sSfL -m 90 -A "Mozilla/5.0" -H "Referer: https://www.nesine.com/" -o nesine.json "https://cdnbulten.nesine.com/api/bulten/getprebultenfull" || echo "bülten alınamadı"
           curl -sSfL -m 60 -A "Mozilla/5.0" -o fixtures.csv "https://www.football-data.co.uk/fixtures.csv" || echo "fikstür alınamadı"
       - name: Geçmiş istatistikler (günde bir)
-        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '' || startsWith(format('{0}', github.run_started_at), 'x') || true
         run: |
           SAAT=$(date -u +%H); DAK=$(date -u +%M)
           if [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ] && { [ "$SAAT" != "05" ] || [ "$DAK" -ge 40 ]; } && [ -f iddaa-veri/veri.json ]; then echo "bugün zaten güncel"; exit 0; fi
