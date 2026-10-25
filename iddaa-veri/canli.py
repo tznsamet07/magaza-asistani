@@ -147,7 +147,8 @@ for m in bulten.get("futbol", []) + [dict(x, t=x["bas"]) for x in futbol]:
         continue
     k = kadro.setdefault(str(m["id"]), {"t": m["t"], "eid": x["id"]})
     k["form"] = x["form"]
-    if not k.get("ev") and m["t"] - simdi_ms < 100 * 60e3 and k.get("son", 0) < simdi_ms - 9 * 60e3:
+    # Puan durumu ve son karşılaşmalar için her maç bir kez; ilk 11 için son 100 dakikada 9 dakikada bir
+    if "sira" not in k or (not k.get("ev") and m["t"] - simdi_ms < 100 * 60e3 and k.get("son", 0) < simdi_ms - 9 * 60e3):
         cek.append(k)
 
 def ozet(k):
@@ -158,6 +159,27 @@ def ozet(k):
     except Exception:
         return
     k["son"] = simdi_ms
+    # Puan durumu: iki takımın sırası, puanı, oynadığı maç, averajı
+    try:
+        tk = {c["homeAway"]: c["id"] for c in s["header"]["competitions"][0]["competitors"]}
+        k["sira"] = {}
+        for g in (s.get("standings") or {}).get("groups", []):
+            girdi = g.get("standings", {}).get("entries", [])
+            for e in girdi:
+                ist = {x["name"]: x.get("displayValue") for x in e.get("stats", [])}
+                for yer, tid in tk.items():
+                    if e.get("id") == tid:
+                        k["sira"][yer] = {"s": ist.get("rank"), "p": ist.get("points"), "o": ist.get("gamesPlayed"), "a": ist.get("pointDifferential"), "n": len(girdi)}
+        # Son karşılaşmalar (ev sahibi önce)
+        k["h2h"] = []
+        for ss in s.get("seasonseries") or []:
+            for e in ss.get("events", [])[:6]:
+                c = {x["homeAway"]: x for x in e.get("competitors", [])}
+                if "home" in c and "away" in c and e.get("status") == "post":
+                    k["h2h"].append([e.get("date", "")[:10], c["home"]["team"].get("displayName"), c["home"].get("score"), c["away"].get("score"), c["away"]["team"].get("displayName")])
+            break
+    except (KeyError, IndexError, TypeError):
+        k.setdefault("sira", {})
     for r in s.get("rosters") or []:
         ilk = [p for p in r.get("roster", []) if p.get("starter")]
         if len(ilk) < 11:
@@ -168,7 +190,7 @@ def ozet(k):
             "y": [p["athlete"].get("displayName") for p in r.get("roster", []) if not p.get("starter")][:12]}
 
 with concurrent.futures.ThreadPoolExecutor(8) as h:
-    list(h.map(ozet, cek[:60]))
+    list(h.map(ozet, cek[:80]))
 with open(os.path.join(K, "kadro.json"), "w", encoding="utf-8") as f:
     json.dump({"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "maclar": kadro}, f, ensure_ascii=False, separators=(",", ":"))
 print(len(kadro), "maç ESPN ile eşleşti,", len(cek), "özet çekildi,", sum(1 for k in kadro.values() if k.get("ev")), "ilk 11 var")

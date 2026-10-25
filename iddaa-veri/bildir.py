@@ -2,13 +2,10 @@
 # Telefonda ntfy uygulamasını kurup KONU kanalına abone olmak yeterli.
 # Her seçenek bir kez bildirilir; avantajı belirgin büyürse yeniden bildirilir. -> bildirim.json
 import json, os, datetime, urllib.request, base64
-from ortak import oku_json, K, TR
+from ortak import oku_json, K, TR, KONU, ESIK, W
 
-KONU = "iddaa-analiz-7e4d51316682"
-ESIK = 0.05          # dış kaynaklı gerçek olasılıkta en az %5 avantaj
 ESIK_GECIKME = 0.03  # borsa oynadı, iddaa durdu: %3 yeter
 AD = {"ms": ["MS 1", "MS X", "MS 2"], "au25": ["2.5 Alt", "2.5 Üst"], "kg": ["KG Var", "KG Yok"]}
-W = {"borsa": 3, "piyasa": 2, "dk": 1}
 
 def marjsiz(o):
     if not o or not all(o):

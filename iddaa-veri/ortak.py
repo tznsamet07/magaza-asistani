@@ -28,3 +28,18 @@ def benzer(a, b):
     if a in b or b in a:
         return 0.9
     return difflib.SequenceMatcher(None, a, b).ratio()
+
+
+# Bildirim kanalı ve avantaj eşiği (bildir.py, karne.py)
+KONU = "iddaa-analiz-7e4d51316682"
+ESIK = 0.05  # dış kaynaklı gerçek olasılıkta en az %5 avantaj
+# Gerçek olasılıkta kaynak ağırlıkları (uygulamadaki varsayılanla aynı)
+W = {"borsa": 3, "piyasa": 2, "dk": 1}
+
+def gercek_k(k, pz):
+    # kiyas.json kaydındaki kaynaklardan ağırlıklı ortalama olasılık
+    ks = [(k[a][pz], W[a]) for a in ("borsa", "piyasa", "dk") if k.get(a, {}).get(pz)]
+    if not ks:
+        return None
+    w = sum(x[1] for x in ks)
+    return [sum(x[0][i] * x[1] for x in ks) / w for i in range(len(ks[0][0]))]
