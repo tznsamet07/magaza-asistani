@@ -91,6 +91,63 @@ def espn_eslestir(ev, dep, bas):
             return {"cizgi": x["cizgi"], "ust": x["ust"], "alt": x["alt"], "lig": x["lig"]}
     return None
 
+# Smarkets borsası (komisyon ~%2): maç sonucu, alt/üst, KG için gerçek olasılık
+borsa = []
+for x in (oku_json("smarkets.json") or {}).get("maclar", []):
+    try:
+        x["_t"] = datetime.datetime.fromisoformat(x["t"].replace("Z", "+00:00"))
+        borsa.append(x)
+    except (KeyError, ValueError):
+        continue
+
+def borsa_eslestir(ev, dep, bas):
+    en, puan = None, 0
+    for x in borsa:
+        if abs((x["_t"] - bas).total_seconds()) > 3 * 3600:
+            continue
+        b1, b2 = benzer(ev, x["ev"]), benzer(dep, x["dep"])
+        if min(b1, b2) >= 0.6 and b1 + b2 > puan:
+            en, puan = x, b1 + b2
+    if not en or puan < 1.4:
+        return None
+    return {k: en[k] for k in ("ms", "au15", "au25", "au35", "kg") if k in en}
+
+# ESPN'deki DraftKings futbol oranları (ABD lisanslı, marj ~%6)
+dk_futbol = []
+def amerikan(a):
+    try:
+        a = float(str(a).replace("+", ""))
+        return round(1 + (a / 100 if a > 0 else 100 / -a), 3) if a else None
+    except (TypeError, ValueError):
+        return None
+for ad in ("espn-futbol-1.json", "espn-futbol-2.json"):
+    for ev in (oku_json(ad) or {}).get("events", []):
+        try:
+            c = ev["competitions"][0]
+            od = next((o for o in c.get("odds") or [] if o and o.get("homeTeamOdds")), None)
+            if not od:
+                continue
+            tk = {x["homeAway"]: x["team"] for x in c["competitors"]}
+            ms = [amerikan(od["homeTeamOdds"].get("moneyLine")), amerikan((od.get("drawOdds") or {}).get("moneyLine")), amerikan(od["awayTeamOdds"].get("moneyLine"))]
+            if not all(ms):
+                continue
+            au = None
+            if od.get("overUnder") == 2.5 and od.get("overOdds") and od.get("underOdds"):
+                au = [amerikan(od["underOdds"]), amerikan(od["overOdds"])]
+            dk_futbol.append({"t": datetime.datetime.fromisoformat(ev["date"].replace("Z", "+00:00")),
+                "ev": [tk["home"].get(k, "") for k in ("displayName", "shortDisplayName")],
+                "dep": [tk["away"].get(k, "") for k in ("displayName", "shortDisplayName")], "ms": ms, "au25": au})
+        except (KeyError, ValueError, TypeError, StopIteration):
+            continue
+
+def dk_eslestir(ev, dep, bas):
+    for x in dk_futbol:
+        if abs((x["t"] - bas).total_seconds()) > 3 * 3600:
+            continue
+        if max(benzer(ev, n) for n in x["ev"] if n) >= 0.6 and max(benzer(dep, n) for n in x["dep"] if n) >= 0.6:
+            return {"ms": x["ms"], "au25": x["au25"]}
+    return None
+
 # Nesine oynanma yüzdeleri (her seçeneği oynayan kupon oranı) ve en çok kazananların tercihleri
 oyn = {}
 for ad in ("oynanma-1.json", "oynanma-2.json"):
@@ -146,6 +203,8 @@ for e in ham["sg"]["EA"]:
             continue
         m["oranlar"] = ["ms", "au25", "kg", "korner"]
         m["fd"] = eslestir(e["HN"], e["AN"], bas.date())
+        m["sm"] = borsa_eslestir(e["HN"], e["AN"], bas)
+        m["dkf"] = dk_eslestir(e["HN"], e["AN"], bas)
         oynanma_ekle(m, e)
         hareket(m)
         futbol.append(m)
@@ -164,7 +223,7 @@ veri = oku_json("veri.json") or {}
 cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "veriGuncelleme": veri.get("guncelleme"), "futbol": futbol, "basket": basket}
 with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
     json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
-print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "eşleşen,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings")
+print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "football-data,", sum(1 for m in futbol if m["sm"]), "Smarkets,", sum(1 for m in futbol if m["dkf"]), "DraftKings,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings")
 
 # Maç öncesi son oranlar; maç başlayınca bültenden düştüğü için canlı hesapta buradan okunur
 onmac = (oku_json("onmac.json") or {}).get("maclar", {})
@@ -186,7 +245,7 @@ for m in futbol:
     if not f or m["t"] <= simdi_ms:
         continue
     k = takip["maclar"].setdefault(str(m["id"]), {"t": m["t"], "ev": m["ev"], "dep": m["dep"], "lig": m["lig"], "fd": {"lig": f["lig"], "ev": f["ev"], "dep": f["dep"]}})
-    son = {"ms": m["ms"]["o"], "au25": m["au25"]["o"] if m.get("au25") else None, "avgMs": f["avgMs"], "avgAu": f["avgAu"], "zaman": simdi_ms}
+    son = {"ms": m["ms"]["o"], "au25": m["au25"]["o"] if m.get("au25") else None, "avgMs": f["avgMs"], "avgAu": f["avgAu"], "sm": m.get("sm"), "zaman": simdi_ms}
     k.setdefault("ilk", son)
     k["son"] = son
 # Sonuçlar
