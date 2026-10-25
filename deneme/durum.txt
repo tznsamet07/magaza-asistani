@@ -1,3 +1,8 @@
-nesine-sayfa 200 310933
-espn 200 140381 https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard
-espn 200 21534 https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard
+geteventplaypercentages 400 0
+getOutcomePlayPercentages 400 0
+getprebultenall 404 0
+getlivebultenv3 200 54371
+getprebultenv3 404 0
+wnba 200
+euroleague 200
+nba-gecmis 200
