@@ -10,8 +10,11 @@ def oku_json(ad):
     if not os.path.exists(yol):
         return None
     ac = gzip.open if ad.endswith(".gz") else open
-    with ac(yol, "rt", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with ac(yol, "rt", encoding="utf-8") as f:
+            return json.load(f)
+    except (ValueError, OSError):
+        return None
 
 def sade(s):
     s = unicodedata.normalize("NFKD", s.lower()).encode("ascii", "ignore").decode()
@@ -79,7 +82,40 @@ def eslestir(ev, dep, gun):
         "maxAu": [sayi(en.get("Max<2.5")), sayi(en.get("Max>2.5"))],
         "bfeMs": [sayi(en.get(k)) for k in ("BFEH", "BFED", "BFEA")],
         "bfeAu": [sayi(en.get("BFE<2.5")), sayi(en.get("BFE>2.5"))],
+        "hakem": (en.get("Referee") or "").strip() or None,
     }
+
+# ESPN: ABD basketbolu için DraftKings çizgisi (keskin piyasa referansı)
+espn = []
+for ad in ("espn-nba.json", "espn-wnba.json"):
+    j = oku_json(ad) or {}
+    for ev in j.get("events", []):
+        try:
+            c = ev["competitions"][0]
+            od = (c.get("odds") or [None])[0]
+            if not od or not od.get("total"):
+                continue
+            tk = {x["homeAway"]: x["team"] for x in c["competitors"]}
+            def ondalik(a):
+                a = float(str(a).replace("+", ""))
+                return round(1 + (a / 100 if a > 0 else 100 / -a), 3)
+            t = od["total"]
+            espn.append({"t": datetime.datetime.fromisoformat(ev["date"].replace("Z", "+00:00")),
+                "ev": [tk["home"].get("location", ""), tk["home"].get("displayName", "")],
+                "dep": [tk["away"].get("location", ""), tk["away"].get("displayName", "")],
+                "cizgi": float(t["over"]["close"]["line"][1:]),
+                "ust": ondalik(t["over"]["close"]["odds"]), "alt": ondalik(t["under"]["close"]["odds"]),
+                "lig": "WNBA" if "wnba" in ad else "NBA"})
+        except (KeyError, ValueError, IndexError, TypeError):
+            continue
+
+def espn_eslestir(ev, dep, bas):
+    for x in espn:
+        if abs((x["t"] - bas).total_seconds()) > 36 * 3600:
+            continue
+        if max(benzer(ev, n) for n in x["ev"]) >= 0.6 and max(benzer(dep, n) for n in x["dep"]) >= 0.6:
+            return {"cizgi": x["cizgi"], "ust": x["ust"], "alt": x["alt"], "lig": x["lig"]}
+    return None
 
 onceki = oku_json("bulten.json") or {}
 eski = {str(m["id"]): m for m in onceki.get("futbol", []) + onceki.get("basket", [])}
@@ -103,7 +139,7 @@ for e in ham["sg"]["EA"]:
     m = {"id": e["C"], "t": e["ED"], "lig": ligler.get(e.get("LC"), ""), "ev": e["HN"], "dep": e["AN"]}
     if e["GT"] == 1:
         m.update(ms=pazar(mk, 1), au15=pazar(mk, 11), au25=pazar(mk, 12), au35=pazar(mk, 13), kg=pazar(mk, 38),
-                 korner=pazar(mk, 216), kart=pazar(mk, 218))
+                 korner=pazar(mk, 216), kart=pazar(mk, 218), iyms=pazar(mk, 5), golAralik=pazar(mk, 43))
         if not m["ms"]:
             continue
         m["oranlar"] = ["ms", "au25", "kg", "korner"]
@@ -115,6 +151,7 @@ for e in ham["sg"]["EA"]:
         if not m["toplam"] and not m["ms"]:
             continue
         m["oranlar"] = ["ms", "toplam"]
+        m["dk"] = espn_eslestir(e["HN"], e["AN"], bas)
         hareket(m)
         basket.append(m)
 
@@ -123,7 +160,7 @@ veri = oku_json("veri.json") or {}
 cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "veriGuncelleme": veri.get("guncelleme"), "futbol": futbol, "basket": basket}
 with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
     json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
-print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "eşleşen")
+print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "eşleşen,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings")
 
 # ---------- Otomatik takip ----------
 # Piyasa verisi olan her maçın iddaa oranı ve piyasa olasılığı başlama saatine kadar kaydedilir;

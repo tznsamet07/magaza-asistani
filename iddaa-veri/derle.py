@@ -1,7 +1,7 @@
 # football-data.co.uk CSV'lerini analiz aracının okuduğu sıkıştırılmış veri.json'a çevirir
 import csv, glob, json, os, datetime, io
 
-ALANLAR = ["t", "h", "a", "gh", "ga", "ih", "ia", "kh", "ka", "sh", "sa", "ou", "ua", "bu", "ba", "cu", "ca"]
+ALANLAR = ["t", "h", "a", "gh", "ga", "ih", "ia", "kh", "ka", "sh", "sa", "ou", "ua", "bu", "ba", "cu", "ca", "hk"]
 SINIR = datetime.date.today() - datetime.timedelta(days=3 * 365)
 ULKE = {"Argentina": "ARG", "Austria": "AUT", "Brazil": "BRA", "Denmark": "DNK", "Finland": "FIN", "Ireland": "IRL",
         "Japan": "JPN", "Norway": "NOR", "Poland": "POL", "Romania": "ROU", "Sweden": "SWE", "Switzerland": "SWZ", "USA": "USA"}
@@ -42,7 +42,7 @@ for yol in sorted(glob.glob(os.path.join(KLASOR, "*.csv"))):
             L["maclar"].append([(d - datetime.date(1970, 1, 1)).days, ix(ev.strip()), ix(dep.strip()), gh, ga,
                 sayi(r.get("HTHG")), sayi(r.get("HTAG")), sayi(r.get("HC")), sayi(r.get("AC")), kart_h, kart_a,
                 sayi(r.get("Avg>2.5")), sayi(r.get("Avg<2.5")), sayi(r.get("B365>2.5")), sayi(r.get("B365<2.5")),
-                sayi(r.get("AvgC>2.5")), sayi(r.get("AvgC<2.5"))])
+                sayi(r.get("AvgC>2.5")), sayi(r.get("AvgC<2.5")), (r.get("Referee") or "").strip() or None])
 for L in ligler.values():
     L["maclar"].sort(key=lambda m: m[0])
 # Yaklaşan maçlar: [lig, gün, ev, deplasman, Avg>2.5, Avg<2.5]
