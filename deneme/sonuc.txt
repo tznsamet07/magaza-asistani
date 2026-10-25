@@ -1,7 +1,0 @@
-100 Smarkets maçı, 78 fiyatlı
-
-real	0m11.702s
-user	0m0.175s
-sys	0m0.047s
-119 futbol, 39 basketbol, 10 football-data, 62 Smarkets, 0 DraftKings, 0 basketbol DraftKings
-11 takipte, 0 sonuçlandı

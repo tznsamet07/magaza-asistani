@@ -124,16 +124,21 @@ for ad in ("espn-futbol-1.json", "espn-futbol-2.json"):
     for ev in (oku_json(ad) or {}).get("events", []):
         try:
             c = ev["competitions"][0]
-            od = next((o for o in c.get("odds") or [] if o and o.get("homeTeamOdds")), None)
+            od = next((o for o in c.get("odds") or [] if o and o.get("moneyline")), None)
             if not od:
                 continue
             tk = {x["homeAway"]: x["team"] for x in c["competitors"]}
-            ms = [amerikan(od["homeTeamOdds"].get("moneyLine")), amerikan((od.get("drawOdds") or {}).get("moneyLine")), amerikan(od["awayTeamOdds"].get("moneyLine"))]
+            son_ = lambda x: amerikan(((x or {}).get("close") or (x or {}).get("current") or {}).get("odds"))
+            ml = od["moneyline"]
+            ms = [son_(ml.get("home")), son_(ml.get("draw")), son_(ml.get("away"))]
             if not all(ms):
                 continue
             au = None
-            if od.get("overUnder") == 2.5 and od.get("overOdds") and od.get("underOdds"):
-                au = [amerikan(od["underOdds"]), amerikan(od["overOdds"])]
+            t = od.get("total") or {}
+            ust, alt = (t.get("over") or {}).get("close") or {}, (t.get("under") or {}).get("close") or {}
+            if ust.get("line") == "o2.5" and alt.get("line") == "u2.5":
+                au = [amerikan(alt.get("odds")), amerikan(ust.get("odds"))]
+                au = au if all(au) else None
             dk_futbol.append({"t": datetime.datetime.fromisoformat(ev["date"].replace("Z", "+00:00")),
                 "ev": [tk["home"].get(k, "") for k in ("displayName", "shortDisplayName")],
                 "dep": [tk["away"].get(k, "") for k in ("displayName", "shortDisplayName")], "ms": ms, "au25": au})
