@@ -1,0 +1,32 @@
+const {chromium}=require(process.env.PW||'playwright');
+const login=async p=>{await p.click('#grGo');await p.fill('#grTel','0532 123 45 67');await p.click('#grGo');await p.waitForTimeout(400);await p.click('#smsDemo');await p.waitForTimeout(500);};
+(async()=>{const b=await chromium.launch();
+for(const [tag,dark] of [['l',0],['k',1]]){
+const p=await (await b.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,colorScheme:dark?'dark':'light'})).newPage();
+const errs=[];p.on('pageerror',e=>errs.push(e.message));
+const out=async()=>{await p.click('#cikisBtn');await p.click('#qYes');};
+await p.goto('file://'+process.argv[2]);await p.waitForTimeout(500);
+await p.fill('#grSicil','104512');await login(p);
+await p.click('#tabC');await p.waitForTimeout(200);
+await p.click('#icReqL li[data-icans]:has-text("Soğuk dolap")');await p.waitForTimeout(200);
+await p.fill('[data-icf="0"]','Süt dolabı');await p.fill('[data-icf="1"]','1');await p.click('#icRowAdd');await p.waitForTimeout(100);
+const ins=await p.$$('[data-attin]');await ins[1].setInputFiles([require('path').join(__dirname,'ornek','foto.png'),require('path').join(__dirname,'ornek','liste.pdf')]);await p.waitForTimeout(800);
+await ins[1].setInputFiles([{name:'buyuk.pdf',mimeType:'application/pdf',buffer:Buffer.concat([Buffer.from('%PDF-1.4\n'),Buffer.alloc(2500000,48)])}]).catch(()=>{});
+const ins2=await p.$$('[data-attin]');await ins2[1].setInputFiles([{name:'buyuk.pdf',mimeType:'application/pdf',buffer:Buffer.concat([Buffer.from('%PDF-1.4\n'),Buffer.alloc(2500000,48)])}]);await p.waitForTimeout(500);
+console.log(tag,'toast',await p.$eval('#toast',e=>e.textContent).catch(()=>'?'));
+console.log(tag,'atts',await p.$$eval('#icBody .att',x=>x.length),'rows',await p.$$eval('.col-tab tbody tr',x=>x.length));
+await p.evaluate(()=>document.querySelector('.att-act').scrollIntoView({block:'center'}));await p.screenshot({path:`att-${tag}1.png`});
+await p.click('.att-th');await p.waitForTimeout(200);await p.screenshot({path:`att-${tag}2.png`});await p.click('#attView .btn:not(a)');
+await p.click('#icAnswer');await p.waitForTimeout(300);
+console.log(tag,'saved',await p.evaluate(()=>{const D=JSON.parse(localStorage['magaza-iletisim-demo']);const r=D.requests.find(x=>x.title.startsWith('Soğuk'));return (D.responses[r.id].me.files||[]).map(f=>f.name+':'+f.size)}));
+await out();await p.fill('#grSicil','200118');await login(p);
+await p.click('#tabC');await p.click('[data-bstab="t"]');await p.click('#bsReqL li[data-icreq]:has-text("Soğuk dolap")');await p.waitForTimeout(200);
+console.log(tag,'BS sees atts',await p.$$eval('.att-grp .att',x=>x.length));
+await p.evaluate(()=>document.querySelector('.att-grp').scrollIntoView({block:'center'}));await p.screenshot({path:`att-${tag}3.png`});
+await p.click('#icBody [data-icgo="home"]');await p.click('[data-icgo="new"]');await p.waitForTimeout(200);
+await p.fill('#icT','Ekli deneme');const n1=await p.$$('[data-attin]');await n1[1].setInputFiles([require('path').join(__dirname,'ornek','liste.pdf')]);await p.waitForTimeout(400);
+console.log(tag,'title kept',await p.$eval('#icT',e=>e.value));
+await p.evaluate(()=>document.querySelector('.att-act').scrollIntoView({block:'center'}));await p.screenshot({path:`att-${tag}4.png`});
+await p.click('#icSendReq');await p.waitForTimeout(300);console.log(tag,'BS req has file',await p.$$eval('#icBody .att',x=>x.length));
+console.log('errors',errs);}
+await b.close();})();

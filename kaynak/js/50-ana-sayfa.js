@@ -12,14 +12,14 @@
       ['c:yuk', 'Yükselme sınavı', 'Aday, sınav tarihi ve sonuç'],
       ['c:rehber', 'Mağaza rehberi', 'Kod, ad ya da adresle ara'],
       ['c:kurum', 'Kurum yapısı', 'Üst yönetim ve kademeler'],
-      ['v', 'Vardiya planı', 'Haftalık çalışma planı'],
+      ['v', 'Vardiya planı', 'Haftalık plan, çalışanlar ve kurallar'],
       ['f:mevcut', 'Mevcut listesi', 'Aylık saat ve dinlenme, imza'],
       ['s', 'SKT kontrol', 'Ürün ekle, satıldı ya da fire'],
       ['b', 'BS raporu', "BS'nin istediği günlük dönüşler"],
       ['a', 'Ay başı', 'Ciro hedefi ve grafikler'],
       ['k', 'Aktüel', 'Salı, Cuma ve Pazar ürünleri'],
       ['f:sip', 'Sipariş günleri', 'Sipariş ve gelen grupları'],
-      ['g', 'Ayarlar', 'Hesap, görünüm, çalışanlar']
+      ['g', 'Ayarlar', 'Hesap, görünüm, yedekleme']
     ],
     pm: [
       ['c', "BS'lerim", 'Bölge sorumlularıyla birebir sohbet'],

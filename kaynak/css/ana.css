@@ -7550,3 +7550,36 @@ body[data-role='staff'] #logBox {
 :root.tema-bim #turList .si.chk .si-date small {
   color: var(--ok);
 }
+
+/* Vardiya ayarları: Vardiya sekmesinde "Plan / Vardiya ayarları" geçişi (js/11-vardiya-ayarlari.js) */
+.vd-seg {
+  display: none;
+}
+body.tab-v .vd-seg {
+  display: flex;
+  max-width: 420px;
+  margin: 0 0 12px;
+}
+.vd-seg button {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+body.tab-v.vd-ayar aside {
+  display: flex !important;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+}
+body.tab-v.vd-ayar main,
+body.tab-v.vd-ayar .top .actions {
+  display: none !important;
+}
+body.tab-v.vd-ayar aside > details:not(.vd-set),
+body.tab-g aside > details.vd-set {
+  display: none !important;
+}
+body[data-role='staff'] .vd-seg,
+body.giris-gt .vd-seg {
+  display: none !important;
+}

@@ -1,0 +1,15 @@
+const {chromium}=require(process.env.PW||'playwright');const F='file://'+(process.argv[2]);
+const sicil=async(p,sc)=>{await p.fill('#grSicil',sc);await p.click('#grGo');await p.waitForTimeout(150);};
+const telkod=async p=>{await p.fill('#grTel','05321234567');await p.click('#grGo');await p.click('#smsDemo');await p.waitForTimeout(700);};
+(async()=>{const b=await chromium.launch();const errs=[];
+const p=await (await b.newContext({viewport:{width:390,height:844}})).newPage();p.on('pageerror',e=>errs.push(e.message));
+await p.goto(F);await p.waitForTimeout(400);await sicil(p,'200118');await telkod(p);
+await p.evaluate(()=>{localStorage.setItem('vardiya-tema','x');localStorage.setItem('magaza-kayit','{"list":[],"bsYetki":{"200118":true}}');});
+await p.evaluate(()=>document.getElementById('tabG').click());await p.waitForTimeout(200);
+console.log('btn',await p.isVisible('#demoSifir'));
+await p.click('#demoSifir');await p.waitForTimeout(150);console.log('dlg',await p.isVisible('#qDlg'));
+await p.click('#qNo');await p.waitForTimeout(100);console.log('iptal',await p.evaluate(()=>!!localStorage.getItem('magaza-kayit')));
+await p.click('#demoSifir');await p.waitForTimeout(150);await p.click('#qYes');await p.waitForTimeout(800);
+console.log('sonra',await p.evaluate(()=>[Object.keys(localStorage).join(','),document.body.classList.contains('giris-lock'),!!document.getElementById('grSicil')].join(' / ')));
+await sicil(p,'104512');await telkod(p);console.log('ms girdi',await p.evaluate(()=>JSON.stringify(window.__giris()).slice(0,80)));
+console.log('errs',errs.length?errs:'yok');await b.close();})();

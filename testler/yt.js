@@ -1,0 +1,15 @@
+const {chromium}=require(process.env.PW||'playwright');const F='file://'+(process.argv[2]||require('path').join(__dirname,'..','index.html'));
+const sicil=async(p,sc)=>{await p.fill('#grSicil',sc);await p.click('#grGo');await p.waitForTimeout(150);};
+const telkod=async p=>{await p.fill('#grTel','05321234567');await p.click('#grGo');await p.click('#smsDemo');await p.waitForTimeout(700);};
+const out=async p=>{await p.evaluate(()=>localStorage.removeItem('magaza-giris'));await p.reload();await p.waitForTimeout(400);};
+(async()=>{const b=await chromium.launch();const errs=[];
+const p=await (await b.newContext({viewport:{width:390,height:844}})).newPage();p.on('pageerror',e=>errs.push(e.message));
+await p.clock.install({time:new Date('2026-10-22T11:00:00')});await p.goto(F);await p.waitForTimeout(400);
+await sicil(p,'104548');await telkod(p);const vis=()=>p.evaluate(()=>['tabS','tabB','tabA'].map(id=>id+':'+(getComputedStyle(document.getElementById(id)).display!=='none')).join(' '));
+console.log('staff before',await vis());
+await out(p);await sicil(p,'200118');await telkod(p);await p.evaluate(()=>window.__setTab('g'));await p.waitForTimeout(200);
+console.log('switches',await p.evaluate(()=>[...document.querySelectorAll('[data-yk]')].map(x=>x.dataset.yk+'='+x.getAttribute('aria-checked')).join(' ')));
+await p.evaluate(()=>{const s=document.querySelector('[data-yk="s"]');if(s.getAttribute('aria-checked')==='true')s.click();const bb=document.querySelector('[data-yk="b"]');if(bb.getAttribute('aria-checked')!=='true')bb.click();});await p.waitForTimeout(150);
+console.log('after',await p.evaluate(()=>[...document.querySelectorAll('[data-yk]')].map(x=>x.dataset.yk+'='+x.getAttribute('aria-checked')).join(' ')));
+await out(p);await sicil(p,'104548');await telkod(p);console.log('staff after',await vis());
+console.log('errs',errs);await b.close();})();

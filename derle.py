@@ -6,7 +6,10 @@ import re,os,sys
 KOK=os.path.dirname(os.path.abspath(__file__))
 K=os.path.join(KOK,'kaynak')
 def oku(p):
-    with open(os.path.join(K,p),encoding='utf-8',newline='') as f:return f.read()
+    tam=os.path.join(K,p)
+    if p.endswith('/'):  # klasör: içindeki dosyalar ad sırasıyla tek bloğa eklenir
+        return ''.join(oku(p+a) for a in sorted(os.listdir(tam)) if not a.startswith('.'))
+    with open(tam,encoding='utf-8',newline='') as f:return f.read()
 def dahil(m):
     yol,tag,attr=m.group(1),m.group(2),m.group(3) or ''
     return '<%s%s>%s</%s>'%(tag,attr,oku(yol),tag)

@@ -7913,6 +7913,39 @@ body[data-role='staff'] #logBox {
 :root.tema-bim #turList .si.chk .si-date small {
   color: var(--ok);
 }
+
+/* Vardiya ayarları: Vardiya sekmesinde "Plan / Vardiya ayarları" geçişi (js/11-vardiya-ayarlari.js) */
+.vd-seg {
+  display: none;
+}
+body.tab-v .vd-seg {
+  display: flex;
+  max-width: 420px;
+  margin: 0 0 12px;
+}
+.vd-seg button {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+body.tab-v.vd-ayar aside {
+  display: flex !important;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+}
+body.tab-v.vd-ayar main,
+body.tab-v.vd-ayar .top .actions {
+  display: none !important;
+}
+body.tab-v.vd-ayar aside > details:not(.vd-set),
+body.tab-g aside > details.vd-set {
+  display: none !important;
+}
+body[data-role='staff'] .vd-seg,
+body.giris-gt .vd-seg {
+  display: none !important;
+}
 </style>
 </head>
 <body>
@@ -7999,6 +8032,7 @@ try {
 <div class="msheet" id="moreSheet" hidden><div class="msheet-card" role="dialog" aria-modal="true" aria-label="Diğer bölümler"><div class="msheet-grip" aria-hidden="true"></div><h2>Diğer</h2><div id="moreList"></div></div></div>
 
 <div class="layout">
+  <div class="ic-seg vd-seg" id="vdSeg" role="group" aria-label="Vardiya"><button type="button" data-vds="plan" aria-pressed="true">Plan</button><button type="button" data-vds="ayar" aria-pressed="false">Vardiya ayarları</button></div>
   <aside>
     <details class="box sect" id="hesapBox" open><summary><h2>Hesap</h2></summary>
       <div class="hs-row"><div class="ic-av" id="hsAv">?</div><div class="ic-sm"><b id="hsAd"></b><small id="hsRol"></small></div></div>
@@ -8015,48 +8049,6 @@ try {
       <p class="hint">Bu telefona özel. Her çalışan kendi rengini ve açık/koyu modunu seçebilir.</p>
       <div class="tema-row"><span>Renk</span><div class="sfilter" role="group" aria-label="Renk"><button type="button" data-tr="yesil">Yeşil</button><button type="button" data-tr="bim">BİM kırmızı</button></div></div>
       <div class="tema-row"><span>Mod</span><div class="sfilter" role="group" aria-label="Mod"><button type="button" data-tm="auto">Otomatik</button><button type="button" data-tm="light">Açık</button><button type="button" data-tm="dark">Koyu</button></div></div>
-    </details>
-
-    <details class="box sect"><summary><h2>Çalışanlar</h2></summary>
-      <p class="hint">Tabloda görev sırasına göre dizilir. İzin günü “otomatik” kalırsa program seçer.</p>
-      <div id="empList"></div>
-      <button class="btn small" id="addEmp" type="button" style="margin-top:10px">+ Çalışan ekle</button>
-      <div class="rule"><b>Tam gün eşleşmesi</b>M.S. izinliyken M.S.Y. tam gün çeker, M.S.Y. izinliyken M.S. çeker. G.T. izinliyken personel, personel izinliyken G.T. tam gün çeker. <b style="display:inline">Part eleman varsa</b> sadece M.S. ve M.S.Y. tam gün çeker; G.T. ve personelin iznini part eleman kapatır.</div>
-    </details>
-
-    <details class="box sect"><summary><h2>Sevkiyat ve temizlik</h2></summary>
-      <p class="hint">Cuma aktüel günü, kimseye izin verilmez.</p>
-      <table class="days" id="daysTable"></table>
-    </details>
-
-    <details class="box sect"><summary><h2>Saatler</h2></summary>
-      <div class="field"><span>İlk vardiya başlar</span><select class="tsel" id="open" data-tsel></select></div>
-      <div class="field"><span>Son vardiya biter</span><select class="tsel" id="close" data-tsel></select></div>
-      <div class="field"><span>Sabah vardiyası normalde biter</span><select class="tsel" id="mEnd" data-tsel></select></div>
-      <div class="field"><span>Akşam vardiyası normalde başlar</span><select class="tsel" id="eStart" data-tsel></select></div>
-      <div class="field"><span>Mola, tam gün (saat)</span><input type="number" id="tamMola" min="0" max="5" step="0.25"></div>
-      <div class="field"><span>Haftalık hedef</span><select id="weekMode" class="tsel" style="width:auto"><option value="auto">Aylığa göre otomatik</option><option value="fixed">Sabit</option></select></div>
-      <div class="field"><span>Sabit haftalık hedef (saat)</span><input type="number" id="weekTarget" min="1" max="80" step="0.5"></div>
-      <p class="hint" style="margin:6px 0 0">Otomatikte her kişinin haftalık hedefi, ayın kalan saatine göre hesaplanır; ay sonunda toplam aylık hedefe (195 / 180) oturur.</p>
-      <p class="hint" style="margin:10px 0 0">Aylık hedef ayın gün sayısına göre otomatik: 31 ve 30 gün → 195 saat, 28 gün → 180 saat (29 gün → 187,5).</p>
-      <div class="field"><span>Rapor / yıllık izin günü (saat)</span><input type="number" id="leaveHours" min="0" max="24" step="0.5"></div>
-      <p class="hint" style="margin:10px 0 0">Program sabah ve akşam vardiyalarının saatlerini, herkesin haftası hedefe tamamlanacak şekilde kaydırır.</p>
-    </details>
-
-    <details class="box sect"><summary><h2>Pazar günü (sakin gün)</h2></summary>
-      <p class="hint">Pazar herkes kısa çalışır ki ailesiyle vakit geçirebilsin. Bu saatler sabit kalır, haftalık saat diğer günlerle tamamlanır. Pazar izin de yazılabilir (aynı gün en fazla bir kişi).</p>
-      <label class="check" style="margin-top:6px"><input type="checkbox" id="sunShort"><span>Pazar kısa vardiya düzenini uygula</span></label>
-      <label class="check"><input type="checkbox" id="sunNoIzin"><span>Pazar kimseye izin verme</span></label>
-      <div class="field"><span>Sabahçı çıkar</span><select class="tsel" id="sunMEnd" data-tsel></select></div>
-      <div class="field"><span>Akşamcı gelir</span><select class="tsel" id="sunEStart" data-tsel></select></div>
-    </details>
-
-    <details class="box sect"><summary><h2>Semt pazarı günü</h2></summary>
-      <p class="hint">Bu gün akşamcı erken gelir, sabahcı geç çıkar. Bu saatler sabit kalır, haftalık 45 saat diğer günlerle tamamlanır.</p>
-      <label class="check" style="margin-top:6px"><input type="checkbox" id="pazarOn"><span>Pazar günü düzenini uygula</span></label>
-      <div class="field"><span>Gün</span><select id="pazarDay" style="border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:6px 8px"></select></div>
-      <div class="field"><span>Sabahçı çıkar</span><select class="tsel" id="pazarMEnd" data-tsel></select></div>
-      <div class="field"><span>Akşamcı gelir</span><select class="tsel" id="pazarEStart" data-tsel></select></div>
     </details>
 
     <details class="box sect" id="usrBox">
@@ -8086,24 +8078,28 @@ try {
       <p class="hint" id="bkInfo" style="margin:8px 0 0"></p>
     </details>
 
-    <details class="box sect"><summary><h2>Bayram (kapalı günler)</h2></summary>
-      <p class="hint">Mağazanın kapalı olduğu günler. O gün herkese “Bayram” yazılır ve 7,5 saat sayılır.</p>
-      <div id="holList"></div>
-      <div class="hol-add"><input type="date" id="holDate" aria-label="Tarih"><input type="text" id="holName" placeholder="Açıklama" aria-label="Açıklama"><button type="button" class="btn small" id="holAdd">Ekle</button></div>
+    <details class="box sect vd-set"><summary><h2>Çalışanlar</h2></summary>
+      <p class="hint">Tabloda görev sırasına göre dizilir. İzin günü “otomatik” kalırsa program seçer.</p>
+      <div id="empList"></div>
+      <button class="btn small" id="addEmp" type="button" style="margin-top:10px">+ Çalışan ekle</button>
+      <div class="rule"><b>Tam gün eşleşmesi</b>M.S. izinliyken M.S.Y. tam gün çeker, M.S.Y. izinliyken M.S. çeker. G.T. izinliyken personel, personel izinliyken G.T. tam gün çeker. <b style="display:inline">Part eleman varsa</b> sadece M.S. ve M.S.Y. tam gün çeker; G.T. ve personelin iznini part eleman kapatır.</div>
     </details>
 
-    <details class="box sect"><summary><h2>Sayım günleri</h2></summary>
-      <p class="hint">Sayım günlerini tarih belli oldukça ekle. O gün kimseye izin yazılmaz. <b>Akşam</b> sayımında sabahçılar ara verip sayıma geri döner, akşamcılar normal çalışır. <b>Sabah</b> sayımında herkes erken gelir; yarısı sayımdan sonra çıkıp akşam kapanışa döner, diğerleri öğleden sonraya kadar kalır.</p>
-      <div class="field"><span>Akşam sayımında sabahçı çıkar</span><select class="tsel" id="cntOut" data-tsel></select></div>
-      <div class="field"><span>…ve sayıma döner</span><select class="tsel" id="cntBack" data-tsel></select></div>
-      <div class="field"><span>Sabah sayımında herkes gelir</span><select class="tsel" id="cntMStart" data-tsel></select></div>
-      <div class="field"><span>…yarısı çıkar (akşam döner)</span><select class="tsel" id="cntMEndShort" data-tsel></select></div>
-      <div class="field"><span>…diğerleri çıkar</span><select class="tsel" id="cntMEndLong" data-tsel></select></div>
-      <div id="cntList" style="margin-top:8px"></div>
-      <div class="hol-add"><input type="date" id="cntDate" aria-label="Sayım tarihi"><select id="cntPart" class="tsel" style="width:auto" aria-label="Sayım zamanı"><option value="aksam">Akşam (kapanışta)</option><option value="sabah">Sabah (açılışta)</option><option value="gun">Tüm gün</option></select><input type="text" id="cntName" placeholder="Not" aria-label="Not" style="display:none"><button type="button" class="btn small" id="cntAdd">Ekle</button></div>
+    <details class="box sect vd-set"><summary><h2>Saatler</h2></summary>
+      <div class="field"><span>İlk vardiya başlar</span><select class="tsel" id="open" data-tsel></select></div>
+      <div class="field"><span>Son vardiya biter</span><select class="tsel" id="close" data-tsel></select></div>
+      <div class="field"><span>Sabah vardiyası normalde biter</span><select class="tsel" id="mEnd" data-tsel></select></div>
+      <div class="field"><span>Akşam vardiyası normalde başlar</span><select class="tsel" id="eStart" data-tsel></select></div>
+      <div class="field"><span>Mola, tam gün (saat)</span><input type="number" id="tamMola" min="0" max="5" step="0.25"></div>
+      <div class="field"><span>Haftalık hedef</span><select id="weekMode" class="tsel" style="width:auto"><option value="auto">Aylığa göre otomatik</option><option value="fixed">Sabit</option></select></div>
+      <div class="field"><span>Sabit haftalık hedef (saat)</span><input type="number" id="weekTarget" min="1" max="80" step="0.5"></div>
+      <p class="hint" style="margin:6px 0 0">Otomatikte her kişinin haftalık hedefi, ayın kalan saatine göre hesaplanır; ay sonunda toplam aylık hedefe (195 / 180) oturur.</p>
+      <p class="hint" style="margin:10px 0 0">Aylık hedef ayın gün sayısına göre otomatik: 31 ve 30 gün → 195 saat, 28 gün → 180 saat (29 gün → 187,5).</p>
+      <div class="field"><span>Rapor / yıllık izin günü (saat)</span><input type="number" id="leaveHours" min="0" max="24" step="0.5"></div>
+      <p class="hint" style="margin:10px 0 0">Program sabah ve akşam vardiyalarının saatlerini, herkesin haftası hedefe tamamlanacak şekilde kaydırır.</p>
     </details>
 
-    <details class="box sect"><summary><h2>Kurallar</h2></summary>
+    <details class="box sect vd-set"><summary><h2>Kurallar</h2></summary>
       <label class="check"><input type="checkbox" id="yetkili">
         <span>Açılışta ve kapanışta M.S., M.S.Y. veya G.T.'den biri bulunsun</span></label>
       <label class="check"><input type="checkbox" id="oneOff">
@@ -8120,7 +8116,15 @@ try {
         <span>Akşam kapanışı yapan, ertesi sabah açılışa yazılmasın</span></label>
     </details>
 
-    <details class="box sect"><summary><h2>Cuma (aktüel günü)</h2></summary>
+    <details class="box sect vd-set"><summary><h2>Pazar günü (sakin gün)</h2></summary>
+      <p class="hint">Pazar herkes kısa çalışır ki ailesiyle vakit geçirebilsin. Bu saatler sabit kalır, haftalık saat diğer günlerle tamamlanır. Pazar izin de yazılabilir (aynı gün en fazla bir kişi).</p>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="sunShort"><span>Pazar kısa vardiya düzenini uygula</span></label>
+      <label class="check"><input type="checkbox" id="sunNoIzin"><span>Pazar kimseye izin verme</span></label>
+      <div class="field"><span>Sabahçı çıkar</span><select class="tsel" id="sunMEnd" data-tsel></select></div>
+      <div class="field"><span>Akşamcı gelir</span><select class="tsel" id="sunEStart" data-tsel></select></div>
+    </details>
+
+    <details class="box sect vd-set"><summary><h2>Cuma (aktüel günü)</h2></summary>
       <div class="field" style="margin-top:0"><span>Sabahçı en erken çıkar</span><select class="tsel" id="friMinEnd" data-tsel></select></div>
       <p class="hint" style="margin:10px 0 0;font-weight:600;color:var(--ink)">Cuma aracı</p>
       <p class="hint">Bir kişi Cuma günü bölünmüş çalışır: açılışta kısa süre gelir, akşam tekrar gelip kapanışa kadar kalır.</p>
@@ -8130,6 +8134,36 @@ try {
       <p class="hint" style="margin:12px 0 4px">Aracı her hafta değişir: en uzun süredir aracı olmayan kişi seçilir.</p>
       <div id="araciHistList" style="font-size:14px"></div>
     </details>
+    <details class="box sect vd-set"><summary><h2>Semt pazarı günü</h2></summary>
+      <p class="hint">Bu gün akşamcı erken gelir, sabahcı geç çıkar. Bu saatler sabit kalır, haftalık 45 saat diğer günlerle tamamlanır.</p>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="pazarOn"><span>Pazar günü düzenini uygula</span></label>
+      <div class="field"><span>Gün</span><select id="pazarDay" style="border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:6px 8px"></select></div>
+      <div class="field"><span>Sabahçı çıkar</span><select class="tsel" id="pazarMEnd" data-tsel></select></div>
+      <div class="field"><span>Akşamcı gelir</span><select class="tsel" id="pazarEStart" data-tsel></select></div>
+    </details>
+
+    <details class="box sect vd-set"><summary><h2>Sevkiyat ve temizlik</h2></summary>
+      <p class="hint">Cuma aktüel günü, kimseye izin verilmez.</p>
+      <table class="days" id="daysTable"></table>
+    </details>
+
+    <details class="box sect vd-set"><summary><h2>Sayım günleri</h2></summary>
+      <p class="hint">Sayım günlerini tarih belli oldukça ekle. O gün kimseye izin yazılmaz. <b>Akşam</b> sayımında sabahçılar ara verip sayıma geri döner, akşamcılar normal çalışır. <b>Sabah</b> sayımında herkes erken gelir; yarısı sayımdan sonra çıkıp akşam kapanışa döner, diğerleri öğleden sonraya kadar kalır.</p>
+      <div class="field"><span>Akşam sayımında sabahçı çıkar</span><select class="tsel" id="cntOut" data-tsel></select></div>
+      <div class="field"><span>…ve sayıma döner</span><select class="tsel" id="cntBack" data-tsel></select></div>
+      <div class="field"><span>Sabah sayımında herkes gelir</span><select class="tsel" id="cntMStart" data-tsel></select></div>
+      <div class="field"><span>…yarısı çıkar (akşam döner)</span><select class="tsel" id="cntMEndShort" data-tsel></select></div>
+      <div class="field"><span>…diğerleri çıkar</span><select class="tsel" id="cntMEndLong" data-tsel></select></div>
+      <div id="cntList" style="margin-top:8px"></div>
+      <div class="hol-add"><input type="date" id="cntDate" aria-label="Sayım tarihi"><select id="cntPart" class="tsel" style="width:auto" aria-label="Sayım zamanı"><option value="aksam">Akşam (kapanışta)</option><option value="sabah">Sabah (açılışta)</option><option value="gun">Tüm gün</option></select><input type="text" id="cntName" placeholder="Not" aria-label="Not" style="display:none"><button type="button" class="btn small" id="cntAdd">Ekle</button></div>
+    </details>
+
+    <details class="box sect vd-set"><summary><h2>Bayram (kapalı günler)</h2></summary>
+      <p class="hint">Mağazanın kapalı olduğu günler. O gün herkese “Bayram” yazılır ve 7,5 saat sayılır.</p>
+      <div id="holList"></div>
+      <div class="hol-add"><input type="date" id="holDate" aria-label="Tarih"><input type="text" id="holName" placeholder="Açıklama" aria-label="Açıklama"><button type="button" class="btn small" id="holAdd">Ekle</button></div>
+    </details>
+
   </aside>
 
   <main>
@@ -11504,6 +11538,28 @@ try {
   };
 })();
 </script>
+<script>
+/* ===== Vardiya › Plan / Vardiya ayarları geçişi =====
+   Vardiyayla ilgili ayar kutuları (class="vd-set") Ayarlar sekmesinde değil, Vardiya sekmesinde
+   "Vardiya ayarları" düğmesiyle açılır. Kutuların kendisi ve kodları yerinde kalır; görünüm CSS ile değişir. */
+(function () {
+  const seg = document.getElementById('vdSeg');
+  if (!seg) return;
+  function goster(ayar) {
+    document.body.classList.toggle('vd-ayar', ayar);
+    seg.querySelectorAll('[data-vds]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.vds === 'ayar') === ayar)));
+    window.scrollTo({ top: 0 });
+  }
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('[data-vds]');
+    if (b) goster(b.dataset.vds === 'ayar');
+  });
+  // başka sekmeye geçip dönünce plan açılır
+  const tabV = document.getElementById('tabV');
+  if (tabV) tabV.addEventListener('click', () => goster(false));
+  window.__vardiyaAyarlari = goster;
+})();
+</script>
 <script>/* ===== Gömülü barkod okuyucu (EAN-13 / EAN-8) ===== */
 /* EAN-13 / EAN-8 / UPC-A barkod çözücü: internet ve harici kütüphane gerektirmez */
 const EAN = (() => {
@@ -12806,7 +12862,7 @@ const EAN = (() => {
     } else if (t === 'g') {
       h.firstChild.textContent = 'Ayarlar';
       $('subtitle').textContent =
-        document.body.dataset.role === 'admin' ? 'Çalışanlar, saatler, kurallar ve kullanıcılar' : 'Hesap ve görünüm';
+        document.body.dataset.role === 'admin' ? 'Hesap, görünüm ve yedekleme' : 'Hesap ve görünüm';
     } else V.renderSheet();
   }
   window.__setTab = setTab;
@@ -12817,7 +12873,7 @@ const EAN = (() => {
       ['b', 'tabB', 'BS raporu', 'Sabah SKT dönüşü, akşam raporu'],
       ['a', 'tabA', 'Ay başı', 'Ciro hedefi, saat ve grafikler'],
       ['k', 'tabK', 'Aktüel', 'Salı, Cuma ve Pazar ürünleri'],
-      ['g', 'tabG', 'Ayarlar', 'Hesap, görünüm, çalışanlar']
+      ['g', 'tabG', 'Ayarlar', 'Hesap, görünüm, yedekleme']
     ];
     const vis = id => {
       const b = $(id);
@@ -18176,7 +18232,7 @@ const EAN = (() => {
       msOk = I._ms && I._ms.k === R.map(imzaKey).join('|');
     const h = `<div class="fnav" style="margin:0 0 8px"><button type="button" data-pf="mvp" aria-label="Önceki ay">‹</button><b>${AY[m - 1]} ${y}</b><button type="button" data-pf="mvn" aria-label="Sonraki ay">›</button></div>
   <p class="hint" style="margin:0 0 8px">Vardiya planından kendiliğinden dolar; vardiyada bir saat ya da izin değişince burası da değişir. Saatler molası düşülmüş çalışma saatidir. <b>B</b> boş gün, <b>Y</b> yıllık izin, <b>R</b> rapor, <b>H</b> bayram.${eksik ? ` Vardiyası henüz yazılmamış ${eksik} gün boş görünüyor.` : ''}</p>
-  ${R.length ? `<div class="scroll pf-mvw"><table class="ctab pf-mv"><thead><tr><th>Adı</th>${gunH}<th>Toplam</th><th>Fiks</th><th>Fark</th><th>Dinl. dk</th><th>B</th><th>Y</th><th>R</th><th>Resmi tatil</th><th>İmza</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="hint">Çalışan listesi boş. Ayarlar › Çalışanlar bölümünden ekle.</p>'}
+  ${R.length ? `<div class="scroll pf-mvw"><table class="ctab pf-mv"><thead><tr><th>Adı</th>${gunH}<th>Toplam</th><th>Fiks</th><th>Fark</th><th>Dinl. dk</th><th>B</th><th>Y</th><th>R</th><th>Resmi tatil</th><th>İmza</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="hint">Çalışan listesi boş. Vardiya › Vardiya ayarları › Çalışanlar bölümünden ekle.</p>'}
   <div class="simp-act" style="margin-top:12px;flex-wrap:wrap">${kim ? (kimIm ? '<span class="pf-ok" style="padding:8px 0">Saatlerini kontrol edip imzaladın.</span>' : `<button type="button" class="btn primary" data-pf="imza" style="flex:1 1 100%">Saatlerimi kontrol ettim, imzala</button>`) : ''}${ms ? (msOk ? '<span class="pf-ok" style="padding:8px 0">M.S. onayı verildi.</span>' : '<button type="button" class="btn" data-pf="msimza" style="flex:1 1 100%">M.S. olarak onayla</button>') : ''}<button type="button" class="btn small" data-pf="mvkop" style="flex:1 1 100%">Excel için kopyala</button></div>
   <p class="hint">Her çalışan kendi saatlerini kontrol edip imzalar. İmzadan sonra vardiyası değişirse imza düşer ve yeniden istenir.</p>`;
     sayfa('mv', 'Mevcut listesi', h);
@@ -18638,14 +18694,14 @@ const EAN = (() => {
       ['c:yuk', 'Yükselme sınavı', 'Aday, sınav tarihi ve sonuç'],
       ['c:rehber', 'Mağaza rehberi', 'Kod, ad ya da adresle ara'],
       ['c:kurum', 'Kurum yapısı', 'Üst yönetim ve kademeler'],
-      ['v', 'Vardiya planı', 'Haftalık çalışma planı'],
+      ['v', 'Vardiya planı', 'Haftalık plan, çalışanlar ve kurallar'],
       ['f:mevcut', 'Mevcut listesi', 'Aylık saat ve dinlenme, imza'],
       ['s', 'SKT kontrol', 'Ürün ekle, satıldı ya da fire'],
       ['b', 'BS raporu', "BS'nin istediği günlük dönüşler"],
       ['a', 'Ay başı', 'Ciro hedefi ve grafikler'],
       ['k', 'Aktüel', 'Salı, Cuma ve Pazar ürünleri'],
       ['f:sip', 'Sipariş günleri', 'Sipariş ve gelen grupları'],
-      ['g', 'Ayarlar', 'Hesap, görünüm, çalışanlar']
+      ['g', 'Ayarlar', 'Hesap, görünüm, yedekleme']
     ],
     pm: [
       ['c', "BS'lerim", 'Bölge sorumlularıyla birebir sohbet'],
@@ -22436,7 +22492,7 @@ ${s.sonuc ? `<h2>Sonuç</h2><div class="t" style="min-height:0">${esc(s.sonuc.ka
           head('Savunma iste', true) +
           `<div class="box"><div class="sf">
         <div><div class="ic-lbl">Mağaza</div><div class="ic-pick">${D.stores.map(s => `<button type="button" data-svstore="${s.id}" aria-pressed="${f.store === s.id}">${esc(s.name)}</button>`).join('')}</div></div>
-        ${f.store ? `<div><div class="ic-lbl">Kimden?</div>${P.length ? `<div class="ic-pick">${P.map(p => `<button type="button" data-svkisi="${p.id}" aria-pressed="${f.kisi === p.id}">${esc(p.ad)} · ${KISA[p.unvan] || ''}</button>`).join('')}</div>` : '<p class="hint" style="margin:0">Bu mağazada kayıtlı çalışan yok (Ayarlar → Çalışanlar).</p>'}</div>` : ''}
+        ${f.store ? `<div><div class="ic-lbl">Kimden?</div>${P.length ? `<div class="ic-pick">${P.map(p => `<button type="button" data-svkisi="${p.id}" aria-pressed="${f.kisi === p.id}">${esc(p.ad)} · ${KISA[p.unvan] || ''}</button>`).join('')}</div>` : '<p class="hint" style="margin:0">Bu mağazada kayıtlı çalışan yok (Vardiya → Vardiya ayarları → Çalışanlar).</p>'}</div>` : ''}
         <div><div class="ic-lbl">Olay</div><div class="ic-pick">${OLAY.map(o => `<button type="button" data-svolay="${esc(o)}" aria-pressed="${f.olay === o}">${esc(o)}</button>`).join('')}</div></div>
         <div class="srow2"><label>Olay tarihi<input type="date" id="svT" value="${esc(f.tarih)}"></label><label>Son yanıt tarihi<input type="date" id="svSon" value="${esc(f.son)}"></label></div>
         <label>Olayın açıklaması<textarea id="svA" class="simp" rows="4" placeholder="Ne oldu, ne zaman oldu? Savunması istenen kişi bu metni görecek.">${esc(f.aciklama)}</textarea></label>
