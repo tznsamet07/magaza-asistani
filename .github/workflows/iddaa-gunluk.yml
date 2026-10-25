@@ -1,6 +1,6 @@
 # iddaa analiz aracının verisini günceller. Mağaza Asistanı uygulamasına dokunmaz;
 # her şey claude/project-thread-brb60g dalındaki iddaa-veri/ klasörüne yazılır.
-# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi), football-data fikstürü, ESPN basketbol çizgileri
+# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi, oynanma yüzdeleri), football-data fikstürü, ESPN basketbol çizgileri
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
 name: iddaa-gunluk
 on:
@@ -15,15 +15,22 @@ concurrency:
 jobs:
   guncelle:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           ref: claude/project-thread-brb60g
           fetch-depth: 5
-      - name: Bülten, fikstür, ESPN
+      - name: Bülten, oynanma, fikstür, ESPN
         run: |
           cd iddaa-veri
-          curl -sSfL -m 90 -A "Mozilla/5.0" -H "Referer: https://www.nesine.com/" -o nesine.json "https://cdnbulten.nesine.com/api/bulten/getprebultenfull" || echo "bülten alınamadı"
+          NES="-sSfL --compressed -m 90 -A Mozilla/5.0 -H Referer:https://www.nesine.com/"
+          curl $NES -o nesine.json "https://cdnbulten.nesine.com/api/bulten/getprebultenfull" || echo "bülten alınamadı"
+          for s in 1 2; do
+            curl $NES -o "oynanma-$s.json" "https://bulten.nesine.com/api/bulten/getOutcomePlayPercentages?sportId=$s" || echo "oynanma $s yok"
+            curl $NES -o "mac-oynanma-$s.json" "https://bulten.nesine.com/api/bulten/geteventplaypercentages?sportId=$s" || echo "maç oynanma $s yok"
+            curl $NES -o "kazananlar-$s.json" "https://bw.nesine.com/v1/BestWinnersBets?sportId=$s" || echo "kazananlar $s yok"
+          done
           curl -sSfL -m 60 -A "Mozilla/5.0" -o fixtures.csv "https://www.football-data.co.uk/fixtures.csv" || echo "fikstür alınamadı"
           for l in nba wnba; do
             curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
