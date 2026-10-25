@@ -25,7 +25,7 @@ def tek(mk, mst):
 
 # ---------- ESPN futbol ----------
 espn = []
-for ad in ("espn-futbol-1.json", "espn-futbol-2.json"):
+for ad in ("espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"):
     for ev in (oku_json(ad) or {}).get("events", []):
         try:
             c = ev["competitions"][0]
@@ -60,6 +60,21 @@ def espn_bul(ev, dep, bas_ms):
         if min(b1, b2) >= 0.6 and b1 + b2 > puan:
             en, puan = x, b1 + b2
     return en if puan >= 1.4 else None
+
+# ---------- Kaynak karşılaştırması: biten maçların sonucu ESPN'den ----------
+kiyas = oku_json("kiyas.json")
+if kiyas:
+    n = 0
+    for k in kiyas["maclar"].values():
+        if k.get("sonuc") or k["t"] > simdi_ms - 105 * 60e3:
+            continue
+        x = espn_bul(k["ev"], k["dep"], k["t"])
+        if x and x["durum"] == "post":
+            k["sonuc"] = x["skor"]; n += 1
+    if n:
+        with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
+            json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
+    print(n, "maçın sonucu ESPN'den işlendi")
 
 # ---------- Canlı bülten ----------
 ham = oku_json("nesine-canli.json") or {}

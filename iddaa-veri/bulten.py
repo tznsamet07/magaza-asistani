@@ -273,3 +273,57 @@ takip["zaman"] = cikti["zaman"]
 with open(os.path.join(K, "takip.json"), "w", encoding="utf-8") as f:
     json.dump(takip, f, ensure_ascii=False, separators=(",", ":"))
 print(len(takip["maclar"]), "takipte,", sum(1 for k in takip["maclar"].values() if k.get("sonuc")), "sonuçlandı")
+
+# ---------- Kaynak karşılaştırması ----------
+# Her maç için her kaynağın başlama öncesi son olasılığı kaydedilir; sonuç gelince (canli.py, ESPN ya da football-data)
+# uygulama hangi kaynağın daha isabetli olduğunu Brier skoruyla gösterir ve ağırlıkları buna göre ayarlar.
+def oran_ol(o):
+    if not o or not all(o):
+        return None
+    t = sum(1 / x for x in o)
+    return [round(1 / x / t, 4) for x in o]
+
+def halk_ol(v):
+    y = (v or {}).get("y")
+    if not y or sum(y) < 5:
+        return None
+    return [round(x / sum(y), 4) for x in y]
+
+kiyas = oku_json("kiyas.json") or {"maclar": {}}
+for m in futbol:
+    if m["t"] <= simdi_ms:
+        continue
+    k = {}
+    k["iddaa"] = {"ms": oran_ol(m["ms"]["o"]), "au25": oran_ol((m.get("au25") or {}).get("o"))}
+    k["halk"] = {"ms": halk_ol(m["ms"]), "au25": halk_ol(m.get("au25"))}
+    if m.get("sm"):
+        k["borsa"] = {"ms": m["sm"].get("ms"), "au25": m["sm"].get("au25")}
+    f = m.get("fd")
+    if f:
+        k["piyasa"] = {"ms": oran_ol(f.get("avgMs")), "au25": oran_ol(f.get("avgAu"))}
+    if m.get("dkf"):
+        k["dk"] = {"ms": oran_ol(m["dkf"]["ms"]), "au25": oran_ol(m["dkf"].get("au25"))}
+    k = {a: {p: v for p, v in b.items() if v} for a, b in k.items()}
+    k = {a: b for a, b in k.items() if b}
+    kayit = kiyas["maclar"].setdefault(str(m["id"]), {"t": m["t"], "ev": m["ev"], "dep": m["dep"], "lig": m["lig"]})
+    kayit["k"] = k
+    if f:
+        kayit["fd"] = {"lig": f["lig"], "ev": f["ev"], "dep": f["dep"]}
+# football-data sonuçları
+for k in kiyas["maclar"].values():
+    if k.get("sonuc") or not k.get("fd") or k["t"] > simdi_ms - 3 * 3600e3:
+        continue
+    L = veri.get("ligler", {}).get(k["fd"]["lig"])
+    if not L:
+        continue
+    gun = (datetime.datetime.fromtimestamp(k["t"] / 1000, datetime.timezone.utc).date() - gun0).days
+    tk = L["takimlar"]
+    for r in L["maclar"]:
+        if abs(r[0] - gun) <= 1 and tk[r[1]] == k["fd"]["ev"] and tk[r[2]] == k["fd"]["dep"]:
+            k["sonuc"] = [r[3], r[4]]
+            break
+kiyas["maclar"] = {i: k for i, k in kiyas["maclar"].items() if k["t"] > simdi_ms - 150 * 864e5 and (k.get("sonuc") or k["t"] > simdi_ms - 3 * 864e5)}
+kiyas["zaman"] = cikti["zaman"]
+with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
+    json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
+print(len(kiyas["maclar"]), "maç karşılaştırmada,", sum(1 for k in kiyas["maclar"].values() if k.get("sonuc")), "sonuçlandı")
