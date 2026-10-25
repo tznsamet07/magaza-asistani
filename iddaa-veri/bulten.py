@@ -1,0 +1,126 @@
+# Nesine'nin herkese açık iddaa bülteninden (nesine.json) günün futbol ve basketbol maçlarını çıkarır,
+# football-data fikstürüyle eşleştirir ve oran hareketini tutar -> bulten.json
+import json, os, csv, io, difflib, unicodedata, re, datetime, gzip
+
+K = os.path.dirname(os.path.abspath(__file__))
+TR = datetime.timezone(datetime.timedelta(hours=3))
+
+def oku_json(ad):
+    yol = os.path.join(K, ad)
+    if not os.path.exists(yol):
+        return None
+    ac = gzip.open if ad.endswith(".gz") else open
+    with ac(yol, "rt", encoding="utf-8") as f:
+        return json.load(f)
+
+def sade(s):
+    s = unicodedata.normalize("NFKD", s.lower()).encode("ascii", "ignore").decode()
+    s = re.sub(r"\b(fc|cf|sc|ac|afc|fk|sk|cd|ud|sd|as|us|ss|calcio|club|de|the|u21|u23|ii|b)\b", " ", s)
+    s = s.replace("utd", "united").replace("man.", "manchester").replace("ath.", "athletic")
+    return re.sub(r"[^a-z0-9]", "", s)
+
+def benzer(a, b):
+    a, b = sade(a), sade(b)
+    if not a or not b:
+        return 0
+    if a in b or b in a:
+        return 0.9
+    return difflib.SequenceMatcher(None, a, b).ratio()
+
+def sayi(v):
+    try:
+        x = float(v)
+        return x if x > 1 else None
+    except (TypeError, ValueError):
+        return None
+
+def pazar(mk, mtid):
+    m = mk.get(mtid)
+    if not m:
+        return None
+    o = [x.get("O") for x in sorted(m["OCA"], key=lambda x: x["N"])]
+    if any(not x or x <= 1 for x in o):
+        return None
+    return {"c": m.get("SOV", 0), "o": o}
+
+ham = oku_json("nesine.json")
+if ham is None:
+    raise SystemExit("nesine.json yok")
+ligler = {l["LID"]: l.get("UVN") or l["N"] for l in ham["sg"].get("LA", [])}
+
+# football-data fikstürü (piyasa ortalaması, Betfair borsası)
+fikstur = []
+yol = os.path.join(K, "fixtures.csv")
+if os.path.exists(yol):
+    with open(yol, encoding="utf-8-sig", errors="replace") as f:
+        for r in csv.DictReader(io.StringIO(f.read())):
+            try:
+                g, a, y = (int(x) for x in r["Date"].split("/"))
+                d = datetime.date(y + 2000 if y < 100 else y, a, g)
+            except (KeyError, ValueError):
+                continue
+            fikstur.append((d, r))
+
+def eslestir(ev, dep, gun):
+    en, puan = None, 0
+    for d, r in fikstur:
+        if abs((d - gun).days) > 1:
+            continue
+        b1, b2 = benzer(ev, r["HomeTeam"]), benzer(dep, r["AwayTeam"])
+        if min(b1, b2) >= 0.55 and b1 + b2 > puan:
+            en, puan = r, b1 + b2
+    if not en or puan < 1.3:
+        return None
+    return {
+        "lig": en["Div"], "ev": en["HomeTeam"].strip(), "dep": en["AwayTeam"].strip(),
+        "avgMs": [sayi(en.get(k)) for k in ("AvgH", "AvgD", "AvgA")],
+        "maxMs": [sayi(en.get(k)) for k in ("MaxH", "MaxD", "MaxA")],
+        "avgAu": [sayi(en.get("Avg<2.5")), sayi(en.get("Avg>2.5"))],
+        "maxAu": [sayi(en.get("Max<2.5")), sayi(en.get("Max>2.5"))],
+        "bfeMs": [sayi(en.get(k)) for k in ("BFEH", "BFED", "BFEA")],
+        "bfeAu": [sayi(en.get("BFE<2.5")), sayi(en.get("BFE>2.5"))],
+    }
+
+onceki = oku_json("bulten.json") or {}
+eski = {str(m["id"]): m for m in onceki.get("futbol", []) + onceki.get("basket", [])}
+
+def hareket(m):
+    # İlk görülen oranı saklar; oran düşüşü = piyasaya para girdiği anlamına gelebilir
+    e = eski.get(str(m["id"]))
+    m["ilk"] = (e or {}).get("ilk") or {k: m[k]["o"] for k in m["oranlar"] if m.get(k)}
+    m["once"] = {k: e[k]["o"] for k in m["oranlar"] if e and e.get(k) and m.get(k) and e[k].get("c") == m[k].get("c")} if e else {}
+    del m["oranlar"]
+
+simdi = datetime.datetime.now(TR)
+futbol, basket = [], []
+for e in ham["sg"]["EA"]:
+    if e.get("GT") not in (1, 2):
+        continue
+    bas = datetime.datetime.fromtimestamp(e["ED"] / 1000, TR)
+    if bas < simdi - datetime.timedelta(hours=2):
+        continue
+    mk = {m["MTID"]: m for m in e.get("MA", [])}
+    m = {"id": e["C"], "t": e["ED"], "lig": ligler.get(e.get("LC"), ""), "ev": e["HN"], "dep": e["AN"]}
+    if e["GT"] == 1:
+        m.update(ms=pazar(mk, 1), au15=pazar(mk, 11), au25=pazar(mk, 12), au35=pazar(mk, 13), kg=pazar(mk, 38),
+                 korner=pazar(mk, 216), kart=pazar(mk, 218))
+        if not m["ms"]:
+            continue
+        m["oranlar"] = ["ms", "au25", "kg", "korner"]
+        m["fd"] = eslestir(e["HN"], e["AN"], bas.date())
+        hareket(m)
+        futbol.append(m)
+    else:
+        m.update(ms=pazar(mk, 142), toplam=pazar(mk, 149), hand=pazar(mk, 148), ev_t=pazar(mk, 151), dep_t=pazar(mk, 150))
+        if not m["toplam"] and not m["ms"]:
+            continue
+        m["oranlar"] = ["ms", "toplam"]
+        hareket(m)
+        basket.append(m)
+
+futbol.sort(key=lambda m: m["t"]); basket.sort(key=lambda m: m["t"])
+veri = oku_json("veri.json") or {}
+cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "veriGuncelleme": veri.get("guncelleme"), "futbol": futbol, "basket": basket}
+with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
+    json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
+print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "eşleşen")
