@@ -124,3 +124,37 @@ cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "veriGuncelleme": veri.get("
 with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
     json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
 print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "eşleşen")
+
+# ---------- Otomatik takip ----------
+# Piyasa verisi olan her maçın iddaa oranı ve piyasa olasılığı başlama saatine kadar kaydedilir;
+# maç bitince sonuç football-data'dan işlenir. Uygulama bununla value sinyallerinin gerçek ROI'sini gösterir.
+takip = oku_json("takip.json") or {"maclar": {}}
+simdi_ms = int(simdi.timestamp() * 1000)
+for m in futbol:
+    f = m.get("fd")
+    if not f or m["t"] <= simdi_ms:
+        continue
+    k = takip["maclar"].setdefault(str(m["id"]), {"t": m["t"], "ev": m["ev"], "dep": m["dep"], "lig": m["lig"], "fd": {"lig": f["lig"], "ev": f["ev"], "dep": f["dep"]}})
+    son = {"ms": m["ms"]["o"], "au25": m["au25"]["o"] if m.get("au25") else None, "avgMs": f["avgMs"], "avgAu": f["avgAu"], "zaman": simdi_ms}
+    k.setdefault("ilk", son)
+    k["son"] = son
+# Sonuçlar
+gun0 = datetime.date(1970, 1, 1)
+for k in takip["maclar"].values():
+    if k.get("sonuc") or k["t"] > simdi_ms - 3 * 3600e3:
+        continue
+    L = veri.get("ligler", {}).get(k["fd"]["lig"])
+    if not L:
+        continue
+    gun = (datetime.datetime.fromtimestamp(k["t"] / 1000, datetime.timezone.utc).date() - gun0).days
+    tk = L["takimlar"]
+    for r in L["maclar"]:
+        if abs(r[0] - gun) <= 1 and tk[r[1]] == k["fd"]["ev"] and tk[r[2]] == k["fd"]["dep"]:
+            k["sonuc"] = [r[3], r[4]]
+            break
+# 150 günden eski kayıtlar silinir
+takip["maclar"] = {i: k for i, k in takip["maclar"].items() if k["t"] > simdi_ms - 150 * 864e5}
+takip["zaman"] = cikti["zaman"]
+with open(os.path.join(K, "takip.json"), "w", encoding="utf-8") as f:
+    json.dump(takip, f, ensure_ascii=False, separators=(",", ":"))
+print(len(takip["maclar"]), "takipte,", sum(1 for k in takip["maclar"].values() if k.get("sonuc")), "sonuçlandı")
