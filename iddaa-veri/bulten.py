@@ -170,7 +170,7 @@ print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol i
 onmac = (oku_json("onmac.json") or {}).get("maclar", {})
 for m in futbol + basket:
     if m["t"] > int(simdi.timestamp() * 1000):
-        onmac[str(m["id"])] = {"t": m["t"], "ms": (m.get("ms") or {}).get("o"), "au25": (m.get("au25") or {}).get("o"),
+        onmac[str(m["id"])] = {"t": m["t"], "ms": (m.get("ms") or {}).get("o"), "au25": (m.get("au25") or {}).get("o") or ((m.get("fd") or {}).get("avgAu") if all((m.get("fd") or {}).get("avgAu") or [None]) else None),
                                "toplam": [m["toplam"]["c"]] + m["toplam"]["o"] if m.get("toplam") else None}
 onmac = {i: k for i, k in onmac.items() if k["t"] > int(simdi.timestamp() * 1000) - 864e5}
 with open(os.path.join(K, "onmac.json"), "w", encoding="utf-8") as f:
