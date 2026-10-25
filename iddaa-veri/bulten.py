@@ -2,33 +2,7 @@
 # football-data fikstürüyle eşleştirir ve oran hareketini tutar -> bulten.json
 import json, os, csv, io, difflib, unicodedata, re, datetime, gzip
 
-K = os.path.dirname(os.path.abspath(__file__))
-TR = datetime.timezone(datetime.timedelta(hours=3))
-
-def oku_json(ad):
-    yol = os.path.join(K, ad)
-    if not os.path.exists(yol):
-        return None
-    ac = gzip.open if ad.endswith(".gz") else open
-    try:
-        with ac(yol, "rt", encoding="utf-8") as f:
-            return json.load(f)
-    except (ValueError, OSError):
-        return None
-
-def sade(s):
-    s = unicodedata.normalize("NFKD", s.lower()).encode("ascii", "ignore").decode()
-    s = re.sub(r"\b(fc|cf|sc|ac|afc|fk|sk|cd|ud|sd|as|us|ss|calcio|club|de|the|u21|u23|ii|b)\b", " ", s)
-    s = s.replace("utd", "united").replace("man.", "manchester").replace("ath.", "athletic")
-    return re.sub(r"[^a-z0-9]", "", s)
-
-def benzer(a, b):
-    a, b = sade(a), sade(b)
-    if not a or not b:
-        return 0
-    if a in b or b in a:
-        return 0.9
-    return difflib.SequenceMatcher(None, a, b).ratio()
+from ortak import oku_json, sade, benzer, K, TR
 
 def sayi(v):
     try:
@@ -191,6 +165,16 @@ cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "veriGuncelleme": veri.get("
 with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
     json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
 print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "eşleşen,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings")
+
+# Maç öncesi son oranlar; maç başlayınca bültenden düştüğü için canlı hesapta buradan okunur
+onmac = (oku_json("onmac.json") or {}).get("maclar", {})
+for m in futbol + basket:
+    if m["t"] > int(simdi.timestamp() * 1000):
+        onmac[str(m["id"])] = {"t": m["t"], "ms": (m.get("ms") or {}).get("o"), "au25": (m.get("au25") or {}).get("o"),
+                               "toplam": [m["toplam"]["c"]] + m["toplam"]["o"] if m.get("toplam") else None}
+onmac = {i: k for i, k in onmac.items() if k["t"] > int(simdi.timestamp() * 1000) - 864e5}
+with open(os.path.join(K, "onmac.json"), "w", encoding="utf-8") as f:
+    json.dump({"maclar": onmac}, f, separators=(",", ":"))
 
 # ---------- Otomatik takip ----------
 # Piyasa verisi olan her maçın iddaa oranı ve piyasa olasılığı başlama saatine kadar kaydedilir;

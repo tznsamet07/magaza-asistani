@@ -3,3 +3,5 @@ espn-*.json
 oynanma-*.json
 mac-oynanma-*.json
 kazananlar-*.json
+nesine-canli.json
+__pycache__/

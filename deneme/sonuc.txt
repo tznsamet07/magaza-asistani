@@ -1,8 +1,0 @@
-https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879254 -> 200 405545 (True, 'eng.1')
-https://site.api.espn.com/apis/site/v2/sports/soccer/700/summary?event=401879254 -> 400 189 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte
-https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879254 -> 200 405545 (True, 'eng.1')
-https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates=20261026 -> 200 391044 40
-https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates=20261026&limit=500 -> 200 391044 40
-https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500 -> 200 2470531 336
-https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879254 -> 200 405545 (True, 'eng.1')
-https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401879254 -> 200 422958 (True, 'eng.1')
