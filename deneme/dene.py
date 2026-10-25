@@ -11,24 +11,8 @@ def al(u, veri=None, tip=None):
     except Exception as e:
         return getattr(e, "code", str(e)), (e.read() if hasattr(e, "read") else b"")
 out = open("sonuc.txt", "w")
-s, sayfa = al("https://www.nesine.com/iddaa")
-out.write(f"sayfa {s} {len(sayfa)}\n")
-jsler = re.findall(r'src="([^"]+\.js[^"]*)"', sayfa.decode("utf-8", "ignore"))[:40]
-for j in jsler:
-    u = j if j.startswith("http") else ("https:" + j if j.startswith("//") else "https://www.nesine.com" + j)
+for u in ["https://bulten.nesine.com/api/bulten/geteventplaypercentages?sportId=1", "https://bulten.nesine.com/api/bulten/geteventplaypercentages?sportId=2",
+"https://bulten.nesine.com/api/bulten/getOutcomePlayPercentages?sportId=1", "https://bw.nesine.com/v1/BestWinnersBets?sportId=1",
+"https://bulten.nesine.com/api/bulten/getBestWinnersBets?sportId=1"]:
     s, b = al(u)
-    t = b.decode("utf-8", "ignore")
-    for m in re.finditer(r"PlayPercentages", t, re.I):
-        out.write(f"\n--- {u}\n" + t[max(0, m.start() - 700): m.start() + 700] + "\n")
-s, bul = al("https://cdnbulten.nesine.com/api/bulten/getprebultenfull")
-ea = json.loads(bul)["sg"]["EA"]
-kod = [e["C"] for e in ea if e.get("GT") == 1][:3]
-out.write(f"\nkodlar {kod}\n")
-for ep in ("geteventplaypercentages", "getOutcomePlayPercentages"):
-    base = "https://bulten.nesine.com/api/bulten/" + ep
-    denemeler = [(base + f"?eventIds={kod[0]}", None, None), (base + f"?eventCode={kod[0]}", None, None), (base + f"?code={kod[0]}", None, None),
-       (base + f"/{kod[0]}", None, None), (base, json.dumps(kod).encode(), "application/json"),
-       (base, json.dumps({"eventIds": kod}).encode(), "application/json"), (base, json.dumps({"codes": kod}).encode(), "application/json")]
-    for u, v, t in denemeler:
-        s, b = al(u, v, t)
-        out.write(f"{ep} {u[len(base):] or 'POST ' + v.decode()} -> {s} {b[:400]!r}\n")
+    out.write(f"\n=== {u} -> {s} {len(b)}\n{b[:2500]!r}\n")
