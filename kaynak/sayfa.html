@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mağaza Asistanı">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#0E4D33">
+<!-- BİM gerçek verileri. Elle değil, tools/bim-veri-isle.py ile doldurulur (biçim: notes/veri-formati.md).
+     urunler: [barkod, ürün adı, ürün grubu, uyarı günü] · fiyatlar: [barkod, satış fiyatı, kampanya fiyatı, kampanya başlangıç (YYYY-AA-GG), kampanya bitiş]
+     calisanlar: [sicil, ad soyad, unvan kodu, mağaza kodu] · unvanlar: [kod, unvan adı, kısa ad] -->
+<!-- @dahil veri/bim-veri.json script type="application/json" id="bimVeri" -->
+<!-- @dahil js/01-magaza-gocu.js script -->
+<!-- @dahil js/02-magaza-listesi.js script -->
+<!-- @dahil js/03-tema-baslangic.js script -->
+
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<title>Mağaza Asistanı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- @dahil css/ana.css style -->
+</head>
+<body>
+<!-- @dahil js/04-giris-kilidi.js script -->
+<div class="sms-demo" id="smsDemo" hidden role="status"></div>
+<div id="giris" class="auth" role="dialog" aria-modal="true" aria-labelledby="girisT" hidden>
+  <div class="auth-card">
+    <div class="auth-logo" aria-hidden="true"></div>
+    <span class="gr-rozet" id="grRozet" hidden aria-live="polite"></span>
+    <h1 id="girisT">Mağaza Asistanı</h1>
+    <div id="girisBody"></div>
+  </div>
+</div>
+<div id="auth" class="auth" role="dialog" aria-modal="true" aria-labelledby="authT">
+  <div class="auth-card">
+    <div class="auth-logo" aria-hidden="true"></div>
+    <h1 id="authT">Mağaza Asistanı</h1>
+    <p class="hint" id="authSub">Yükleniyor…</p>
+    <div class="atabs" id="atabs" role="tablist"><button type="button" role="tab" data-am="login">Giriş yap</button><button type="button" role="tab" data-am="register">Kayıt ol</button></div>
+    <form id="authForm" autocomplete="on" novalidate>
+      <div id="authFields" class="sf"></div>
+      <p class="auth-err" id="authErr" role="alert"></p>
+      <button type="submit" class="btn primary" id="authGo" style="width:100%"></button>
+    </form>
+    <button type="button" class="auth-link" id="authAlt"></button>
+    <button type="button" class="auth-link" id="authRst" hidden>Başka cihazda hesabım var: yedekten yükle</button>
+    <div id="regDone" hidden>
+      <p class="hint" id="regDoneTxt"></p>
+      <div style="display:grid;gap:8px">
+        <a class="btn primary" id="regSms" style="text-align:center;text-decoration:none">Yöneticiye SMS ile haber ver</a>
+        <a class="btn" id="regWa" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">WhatsApp ile haber ver</a>
+        <button type="button" class="btn" id="regBack">Giriş ekranına dön</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="sdlg-wrap" id="recDlg" hidden>
+  <div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="recT">
+    <h2 id="recT">Kurtarma kodunu telefonuna gönder</h2>
+    <p class="hint" id="recHint">Yönetici şifreni unutursan bu kodla yeni şifre belirlersin. Kendi telefonuna SMS ya da WhatsApp ile gönder; mesajların arasında saklanır, yazmana gerek kalmaz.</p>
+    <p class="rec-code" id="recCode"></p>
+    <div style="display:grid;gap:8px">
+      <a class="btn primary" id="recSms" style="text-align:center;text-decoration:none">SMS ile kendime gönder</a>
+      <a class="btn" id="recWa" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">WhatsApp ile kendime gönder</a>
+      <button type="button" class="btn" id="recOk">Gönderdim, devam et</button>
+    </div>
+  </div>
+</div>
+<header class="top">
+  <div class="userbar" id="userbar" hidden><a href="#" class="brand" id="brandLink" aria-label="Mağaza Asistanı, ana sayfa"><i aria-hidden="true"></i>Mağaza Asistanı</a><button type="button" class="bell" id="bellBtn" aria-label="Bildirimler"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><span class="badge" id="bellN" hidden></span></button><span id="userName"></span><button type="button" class="btn small" id="logoutBtn">Çıkış</button><button type="button" class="btn small" id="cikisBtn">Çıkış</button></div>
+  <h1 id="title">Haftalık vardiya<span id="subtitle">Market çalışma planı</span></h1>
+  <div class="actions">
+    <label class="weekpick">Hafta başlangıcı (Pazartesi)
+      <input type="date" id="weekStart">
+    </label>
+    <button class="btn primary" id="genBtn" type="button">Plan oluştur</button>
+    <details class="more" id="moreMenu">
+      <summary class="btn">Diğer</summary>
+      <div class="more-list">
+        <button class="btn" id="genMonthBtn" type="button">Ayın tamamını oluştur</button>
+        <button class="btn" id="fitBtn" type="button">Saatleri hedefe tamamla</button>
+        <button class="btn" id="printBtn" type="button">Yazdır</button>
+        <button class="btn" id="mvBtn" type="button" data-pf="mv">Mevcut listesi</button>
+        <button class="btn" id="clearBtn" type="button">Temizle</button>
+      </div>
+    </details>
+  </div>
+</header>
+<nav class="tabs" role="tablist" aria-label="Bölüm">
+  <button type="button" role="tab" id="tabH" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9v11h14V9"/><path d="M10 20v-6h4v6"/></svg><span class="tl">Ana sayfa</span></button>
+  <button type="button" role="tab" id="tabV" aria-selected="true"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span class="tl">Vardiya</span></button>
+  <button type="button" role="tab" id="tabS" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l-1 6H8z"/><path d="M8 9l-1.5 10.5A1.5 1.5 0 0 0 8 21h8a1.5 1.5 0 0 0 1.5-1.5L16 9"/><path d="M10 14h4"/></svg><span class="tl">SKT</span><span class="badge" id="sktBadge" hidden></span></button>
+  <button type="button" role="tab" id="tabB" class="tab-more" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="tl">BS raporu</span></button>
+  <button type="button" role="tab" id="tabC" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4.5"/></svg><span class="tl">İletişim</span><span class="badge" id="icBadge" hidden></span></button>
+  <button type="button" role="tab" id="tabA" class="tab-more" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg><span class="tl">Ay başı</span><span class="badge" id="abBadge" hidden></span></button>
+  <button type="button" role="tab" id="tabK" class="tab-more" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg><span class="tl">Aktüel</span></button>
+  <button type="button" role="tab" id="tabG" class="tab-more" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span class="tl">Ayarlar</span></button>
+  <button type="button" id="tabM" aria-haspopup="dialog" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span class="tl">Diğer</span><span class="badge" id="mBadge" hidden></span></button>
+</nav>
+<div class="msheet" id="moreSheet" hidden><div class="msheet-card" role="dialog" aria-modal="true" aria-label="Diğer bölümler"><div class="msheet-grip" aria-hidden="true"></div><h2>Diğer</h2><div id="moreList"></div></div></div>
+
+<div class="layout">
+  <aside>
+    <details class="box sect" id="hesapBox" open><summary><h2>Hesap</h2></summary>
+      <div class="hs-row"><div class="ic-av" id="hsAv">?</div><div class="ic-sm"><b id="hsAd"></b><small id="hsRol"></small></div></div>
+      <button type="button" class="btn" id="hsCikis" style="width:100%;margin-top:12px">Çıkış yap / kullanıcı değiştir</button>
+      <label id="otoRow" class="oto-row" hidden>Otomatik çıkış<select id="otoSel" class="ssel"><option value="5">5 dakika işlem yoksa</option><option value="10">10 dakika işlem yoksa</option><option value="30">30 dakika işlem yoksa</option><option value="0">Kapalı</option></select></label>
+      <p class="hint" id="otoHint" style="margin:6px 0 0" hidden>Mağaza telefonu ortak kullanıldığı için bir süre dokunulmazsa çıkış yapılır; sonraki kişi kendi siciliyle girer.</p>
+      <button type="button" class="btn" id="demoSifir" style="width:100%;margin-top:12px">Demo verisini sıfırla</button>
+      <p class="hint" style="margin:6px 0 0">Sunumdan önce örnek mesajları, raporları ve kayıtları ilk hâline döndürür. Renk ayarı korunur.</p>
+    </details>
+    <details class="box sect" id="mgBox" open hidden><summary><h2 id="mgBoxT">Mağazam</h2></summary><div id="mgBody"></div></details>
+    <details class="box sect" id="istBox" open><summary><h2>Mağazalardan istediklerim</h2></summary><div id="istBody"></div></details>
+    <details class="box sect" id="ykBox" open><summary><h2>Personel yetkileri</h2></summary><div id="ykBody"></div></details>
+    <details class="box sect" id="temaBox" open><summary><h2>Görünüm</h2></summary>
+      <p class="hint">Bu telefona özel. Her çalışan kendi rengini ve açık/koyu modunu seçebilir.</p>
+      <div class="tema-row"><span>Renk</span><div class="sfilter" role="group" aria-label="Renk"><button type="button" data-tr="yesil">Yeşil</button><button type="button" data-tr="bim">BİM kırmızı</button></div></div>
+      <div class="tema-row"><span>Mod</span><div class="sfilter" role="group" aria-label="Mod"><button type="button" data-tm="auto">Otomatik</button><button type="button" data-tm="light">Açık</button><button type="button" data-tm="dark">Koyu</button></div></div>
+    </details>
+
+    <details class="box sect"><summary><h2>Çalışanlar</h2></summary>
+      <p class="hint">Tabloda görev sırasına göre dizilir. İzin günü “otomatik” kalırsa program seçer.</p>
+      <div id="empList"></div>
+      <button class="btn small" id="addEmp" type="button" style="margin-top:10px">+ Çalışan ekle</button>
+      <div class="rule"><b>Tam gün eşleşmesi</b>M.S. izinliyken M.S.Y. tam gün çeker, M.S.Y. izinliyken M.S. çeker. G.T. izinliyken personel, personel izinliyken G.T. tam gün çeker. <b style="display:inline">Part eleman varsa</b> sadece M.S. ve M.S.Y. tam gün çeker; G.T. ve personelin iznini part eleman kapatır.</div>
+    </details>
+
+    <details class="box sect"><summary><h2>Sevkiyat ve temizlik</h2></summary>
+      <p class="hint">Cuma aktüel günü, kimseye izin verilmez.</p>
+      <table class="days" id="daysTable"></table>
+    </details>
+
+    <details class="box sect"><summary><h2>Saatler</h2></summary>
+      <div class="field"><span>İlk vardiya başlar</span><select class="tsel" id="open" data-tsel></select></div>
+      <div class="field"><span>Son vardiya biter</span><select class="tsel" id="close" data-tsel></select></div>
+      <div class="field"><span>Sabah vardiyası normalde biter</span><select class="tsel" id="mEnd" data-tsel></select></div>
+      <div class="field"><span>Akşam vardiyası normalde başlar</span><select class="tsel" id="eStart" data-tsel></select></div>
+      <div class="field"><span>Mola, tam gün (saat)</span><input type="number" id="tamMola" min="0" max="5" step="0.25"></div>
+      <div class="field"><span>Haftalık hedef</span><select id="weekMode" class="tsel" style="width:auto"><option value="auto">Aylığa göre otomatik</option><option value="fixed">Sabit</option></select></div>
+      <div class="field"><span>Sabit haftalık hedef (saat)</span><input type="number" id="weekTarget" min="1" max="80" step="0.5"></div>
+      <p class="hint" style="margin:6px 0 0">Otomatikte her kişinin haftalık hedefi, ayın kalan saatine göre hesaplanır; ay sonunda toplam aylık hedefe (195 / 180) oturur.</p>
+      <p class="hint" style="margin:10px 0 0">Aylık hedef ayın gün sayısına göre otomatik: 31 ve 30 gün → 195 saat, 28 gün → 180 saat (29 gün → 187,5).</p>
+      <div class="field"><span>Rapor / yıllık izin günü (saat)</span><input type="number" id="leaveHours" min="0" max="24" step="0.5"></div>
+      <p class="hint" style="margin:10px 0 0">Program sabah ve akşam vardiyalarının saatlerini, herkesin haftası hedefe tamamlanacak şekilde kaydırır.</p>
+    </details>
+
+    <details class="box sect"><summary><h2>Pazar günü (sakin gün)</h2></summary>
+      <p class="hint">Pazar herkes kısa çalışır ki ailesiyle vakit geçirebilsin. Bu saatler sabit kalır, haftalık saat diğer günlerle tamamlanır. Pazar izin de yazılabilir (aynı gün en fazla bir kişi).</p>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="sunShort"><span>Pazar kısa vardiya düzenini uygula</span></label>
+      <label class="check"><input type="checkbox" id="sunNoIzin"><span>Pazar kimseye izin verme</span></label>
+      <div class="field"><span>Sabahçı çıkar</span><select class="tsel" id="sunMEnd" data-tsel></select></div>
+      <div class="field"><span>Akşamcı gelir</span><select class="tsel" id="sunEStart" data-tsel></select></div>
+    </details>
+
+    <details class="box sect"><summary><h2>Semt pazarı günü</h2></summary>
+      <p class="hint">Bu gün akşamcı erken gelir, sabahcı geç çıkar. Bu saatler sabit kalır, haftalık 45 saat diğer günlerle tamamlanır.</p>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="pazarOn"><span>Pazar günü düzenini uygula</span></label>
+      <div class="field"><span>Gün</span><select id="pazarDay" style="border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:6px 8px"></select></div>
+      <div class="field"><span>Sabahçı çıkar</span><select class="tsel" id="pazarMEnd" data-tsel></select></div>
+      <div class="field"><span>Akşamcı gelir</span><select class="tsel" id="pazarEStart" data-tsel></select></div>
+    </details>
+
+    <details class="box sect" id="usrBox">
+      <summary><h2>Kullanıcılar <span class="badge" id="pendBadge" hidden></span></h2></summary>
+      <div id="pendList"></div>
+      <div class="sf" style="margin-bottom:12px">
+        <p class="hint" style="margin:0" id="qaInfo">Şifreni unutursan kayıtlı telefonun ve güvenlik sorunla yenilersin.</p>
+        <label>Cep telefonum<input id="myPhone" inputmode="tel" placeholder="05xx xxx xx xx"></label>
+        <label>Güvenlik sorum<select id="myQ" class="ssel"></select></label>
+        <label>Cevabım<input id="myAns" autocomplete="off" spellcheck="false" placeholder="Değiştirmek için yaz"></label>
+        <button type="button" class="btn small" id="qaSave">Telefonu ve güvenlik sorusunu kaydet</button>
+      </div>
+      <p class="hint"><b>Yönetici</b> her şeyi görür ve değiştirir. <b>Personel</b> vardiyayı sadece görür, SKT ve fire işlemlerini yapar; ay başı ve ayarları görmez.</p>
+      <div id="usrList"></div>
+      <div class="sf" style="margin-top:10px">
+        <div class="srow2"><label>Ad<input id="uName" autocomplete="off"></label><label>Kullanıcı kodu<input id="uCode" autocomplete="off" autocapitalize="off" spellcheck="false"></label></div>
+        <div class="srow2"><label>Geçici şifre<input id="uPass" type="password" autocomplete="new-password"></label><label>Yetki<select id="uRole" class="ssel"><option value="staff">Personel</option><option value="admin">Yönetici</option></select></label></div>
+        <button type="button" class="btn small" id="uAdd">Kullanıcı ekle</button>
+      </div>
+    </details>
+
+    <details class="box sect" id="bkBox"><summary><h2>Yedekleme ve taşıma</h2></summary>
+      <p class="hint">Tüm veriler (vardiyalar, SKT listesi, kayıtlı ürünler, fire, ciro tablosu, ayarlar) bu telefonda tutulur. Yedeği alıp WhatsApp'ta kendine gönder; telefon değişince ya da uygulamayı yeniden kurunca buraya yapıştırıp geri yükle.</p>
+      <div class="simp-act"><button type="button" class="btn small primary" id="bkShare">Yedeği al</button><button type="button" class="btn small" id="bkCopy">Panoya kopyala</button></div>
+      <textarea id="bkText" class="simp" rows="3" style="margin-top:10px" placeholder="Geri yüklemek için yedeği buraya yapıştır" aria-label="Yedek metni"></textarea>
+      <div class="simp-act" style="margin-top:6px"><label class="btn small" style="cursor:pointer">Dosyadan seç<input type="file" id="bkFile" accept=".txt,.json,text/plain,application/json" hidden></label><button type="button" class="btn small" id="bkRestore">Geri yükle</button></div>
+      <p class="hint" id="bkInfo" style="margin:8px 0 0"></p>
+    </details>
+
+    <details class="box sect"><summary><h2>Bayram (kapalı günler)</h2></summary>
+      <p class="hint">Mağazanın kapalı olduğu günler. O gün herkese “Bayram” yazılır ve 7,5 saat sayılır.</p>
+      <div id="holList"></div>
+      <div class="hol-add"><input type="date" id="holDate" aria-label="Tarih"><input type="text" id="holName" placeholder="Açıklama" aria-label="Açıklama"><button type="button" class="btn small" id="holAdd">Ekle</button></div>
+    </details>
+
+    <details class="box sect"><summary><h2>Sayım günleri</h2></summary>
+      <p class="hint">Sayım günlerini tarih belli oldukça ekle. O gün kimseye izin yazılmaz. <b>Akşam</b> sayımında sabahçılar ara verip sayıma geri döner, akşamcılar normal çalışır. <b>Sabah</b> sayımında herkes erken gelir; yarısı sayımdan sonra çıkıp akşam kapanışa döner, diğerleri öğleden sonraya kadar kalır.</p>
+      <div class="field"><span>Akşam sayımında sabahçı çıkar</span><select class="tsel" id="cntOut" data-tsel></select></div>
+      <div class="field"><span>…ve sayıma döner</span><select class="tsel" id="cntBack" data-tsel></select></div>
+      <div class="field"><span>Sabah sayımında herkes gelir</span><select class="tsel" id="cntMStart" data-tsel></select></div>
+      <div class="field"><span>…yarısı çıkar (akşam döner)</span><select class="tsel" id="cntMEndShort" data-tsel></select></div>
+      <div class="field"><span>…diğerleri çıkar</span><select class="tsel" id="cntMEndLong" data-tsel></select></div>
+      <div id="cntList" style="margin-top:8px"></div>
+      <div class="hol-add"><input type="date" id="cntDate" aria-label="Sayım tarihi"><select id="cntPart" class="tsel" style="width:auto" aria-label="Sayım zamanı"><option value="aksam">Akşam (kapanışta)</option><option value="sabah">Sabah (açılışta)</option><option value="gun">Tüm gün</option></select><input type="text" id="cntName" placeholder="Not" aria-label="Not" style="display:none"><button type="button" class="btn small" id="cntAdd">Ekle</button></div>
+    </details>
+
+    <details class="box sect"><summary><h2>Kurallar</h2></summary>
+      <label class="check"><input type="checkbox" id="yetkili">
+        <span>Açılışta ve kapanışta M.S., M.S.Y. veya G.T.'den biri bulunsun</span></label>
+      <label class="check"><input type="checkbox" id="oneOff">
+        <span>Aynı gün birden fazla kişiye izin (B) verme</span></label>
+      <label class="check"><input type="checkbox" id="genderMix">
+        <span>Kadın-erkek dengesi: açılışta ve kapanışta mümkünse karma ekip olsun (çalışanlarda cinsiyet seçili olmalı)</span></label>
+      <label class="check"><input type="checkbox" id="izinRule">
+        <span>İzinden önceki gün sabahçı, sonraki gün akşamcı; izin ile tam gün yan yana gelmesin</span></label>
+      <label class="check"><input type="checkbox" id="preFullE">
+        <span>Tam günden önceki gün akşamcı olsun (akşam kapatıp ertesi sabah tam güne gelir)</span></label>
+      <label class="check"><input type="checkbox" id="staggerE">
+        <span>Akşamcılar aynı saatte gelmesin, sabahçılar aynı saatte çıkmasın (biri 14:15, diğeri 14:45 gibi)</span></label>
+      <label class="check"><input type="checkbox" id="noCloseOpen">
+        <span>Akşam kapanışı yapan, ertesi sabah açılışa yazılmasın</span></label>
+    </details>
+
+    <details class="box sect"><summary><h2>Cuma (aktüel günü)</h2></summary>
+      <div class="field" style="margin-top:0"><span>Sabahçı en erken çıkar</span><select class="tsel" id="friMinEnd" data-tsel></select></div>
+      <p class="hint" style="margin:10px 0 0;font-weight:600;color:var(--ink)">Cuma aracı</p>
+      <p class="hint">Bir kişi Cuma günü bölünmüş çalışır: açılışta kısa süre gelir, akşam tekrar gelip kapanışa kadar kalır.</p>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="araciOn"><span>Cuma bir kişiyi aracı yaz</span></label>
+      <div class="field"><span>Sabah kısmı biter</span><select class="tsel" id="araciMEnd" data-tsel></select></div>
+      <div class="field"><span>Akşam kısmı normalde başlar</span><select class="tsel" id="araciEStart" data-tsel></select></div>
+      <p class="hint" style="margin:12px 0 4px">Aracı her hafta değişir: en uzun süredir aracı olmayan kişi seçilir.</p>
+      <div id="araciHistList" style="font-size:14px"></div>
+    </details>
+  </aside>
+
+  <main>
+    <div class="vd-next" id="vdNext" hidden></div>
+    <section class="sheet" id="sheet"></section>
+  </main>
+</div>
+<section id="sktView" class="skt" hidden>
+  <div class="salert" id="sAlert" role="alert" hidden></div>
+  <div class="salert" id="fireAlert" role="alert" hidden></div>
+  <div class="skt-sum" id="sktSum"></div>
+  <div class="box mskt" id="turBox" style="margin-top:12px">
+    <div class="mskt-head"><div><h2>Sabah SKT turu</h2><p class="hint" id="turInfo" style="margin:2px 0 0"></p></div><span class="mskt-badge" id="turBadge"></span></div>
+    <div id="turBody"></div>
+  </div>
+  <div class="skt-go"><button type="button" class="btn primary" id="sGoScan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 8v8M11 8v8M14 8v8M17 8v8"/></svg>Barkod okut</button><button type="button" class="btn" id="sGoAdd">Elle ekle</button><button type="button" class="btn" id="sGoSeri">Sevkiyat girişi (art arda ekle)</button></div>
+
+  <details class="box sect" id="sktAddBox">
+    <summary><h2>Ürün ekle</h2></summary>
+    <div class="seri-ban" id="sSeri" hidden><span id="sSeriT"></span><button type="button" class="btn small" id="sSeriEnd">Bitir</button></div>
+    <div class="sf">
+      <label>Barkod
+        <input id="sBar" inputmode="numeric" autocomplete="off" placeholder="Barkod numarası">
+        <div class="srow scan-btns"><button type="button" class="btn" id="sPhotoBtn">Fotoğrafla okut</button><button type="button" class="btn" id="sScan">Canlı kamera</button></div>
+        <input type="file" id="sPhoto" accept="image/*" capture="environment" hidden>
+      </label>
+      <div id="sKnown" class="sknown" hidden></div>
+      <div id="sCam" class="scam" hidden>
+        <video id="sVideo" playsinline muted></video>
+        <div class="scam-line" aria-hidden="true"></div>
+        <p class="hint" id="sCamMsg" aria-live="polite"></p>
+        <button type="button" class="btn small" id="sCamClose">Kamerayı kapat</button>
+      </div>
+      <div class="s-nm"><label>Ürün adı<input id="sName" autocomplete="off" placeholder="Örn. Süt 1 L"></label>
+      <label>Ürün grubu<select id="sGroup" class="ssel"></select></label></div>
+      <div class="srow2">
+        <label>Son kullanma tarihi<input type="date" id="sDate"></label>
+        <label>Adet<input type="number" id="sQty" min="1" value="1" inputmode="numeric"></label>
+      </div>
+      <details class="s-more"><summary>Diğer bilgiler <small>uyarı günü, reyon, fiyat</small></summary><div class="sf" style="margin-top:8px">
+      <div class="srow2">
+        <label>Kaç gün kala uyarsın<input type="number" id="sWarn" min="0" max="365" inputmode="numeric"></label>
+        <label>Reyon / raf<input id="sShelf" autocomplete="off" placeholder="İsteğe bağlı"></label>
+      </div>
+      <label>Satış fiyatı (₺)<input id="sPrice" inputmode="decimal" autocomplete="off" placeholder="Fire tutarı için"></label></div></details>
+      <div id="sPrev" class="sknown" hidden></div>
+      <div class="sadd-row"><button type="button" class="btn primary" id="sAdd">Listeye ekle</button><button type="button" class="btn" id="sSell" hidden>Satıldı</button></div>
+      <p class="hint" style="margin:0" id="sAddHint">Barkod bir kez girilince ürün bilgileri hatırlanır.</p>
+    </div>
+  </details>
+
+  <div class="box">
+    <div class="sfilter" role="group" aria-label="Liste">
+      <button type="button" data-sf="kontrol" aria-pressed="true">Kontrol et</button>
+      <button type="button" data-sf="tumu" aria-pressed="false">Tümü</button>
+      <button type="button" data-sf="done" aria-pressed="false">Geçmiş</button>
+    </div>
+    <input type="search" id="sSearch" class="ssearch" placeholder="Ara: ürün, barkod, reyon" aria-label="Ara">
+    <ul class="slist" id="sList"></ul>
+  </div>
+
+  <div class="box" id="fbBox">
+    <h2>Fire dönüşleri</h2>
+    <p class="hint" id="fbNext"></p>
+    <div id="fbList"></div>
+  </div>
+
+  <details class="box sect" id="fBox">
+    <summary><h2>Fire raporu</h2></summary>
+    <div class="fper" role="group" aria-label="Dönem"><button type="button" data-fper="hafta" aria-pressed="false">Haftalık</button><button type="button" data-fper="ay" aria-pressed="true">Aylık</button></div>
+    <div class="fnav"><button type="button" id="fPrev" aria-label="Önceki dönem">‹</button><b id="fMonth" aria-live="polite"></b><button type="button" id="fNext" aria-label="Sonraki dönem">›</button></div>
+    <div class="skt-sum" id="fSum"></div>
+    <div id="fWarn"></div>
+    <div id="fTop"></div>
+    <div id="fBreak"></div>
+    <ul class="slist" id="fList"></ul>
+    <div class="simp-act" style="margin-top:10px"><button type="button" class="btn small" id="fShare">Raporu paylaş</button><button type="button" class="btn small" id="fCopy">Excel için kopyala</button></div>
+    <p class="hint" style="margin:6px 0 0">“Excel için kopyala” tabloyu kopyalar; Excel'de ya da Google E-Tablolar'da bir hücreye yapıştırınca sütunlara ayrılır.</p>
+  </details>
+
+  <details class="box sect" id="logBox">
+    <summary><h2>Kim ne yaptı</h2></summary>
+    <p class="hint" style="margin:0 0 4px">Son 7 gün: ürün ekleme, raftan kaldırma, satış, indirim ve sabah turu. Sadece müdür ve yardımcısı görür.</p>
+    <div id="logWho" class="lg-who"></div>
+    <div id="logList"></div>
+  </details>
+
+  <details class="box sect" id="sCatBox">
+    <summary><h2>Ürün kataloğu <span class="ccount" id="sCatCount"></span></h2></summary>
+    <p class="hint">Barkodu okutulan ürünler burada. Bilgisi yanlışsa buradan düzelt.</p>
+    <input type="search" id="sCatSearch" class="ssearch" placeholder="Ara: ürün veya barkod" aria-label="Kayıtlı ürünlerde ara">
+    <ul class="slist" id="sCatList"></ul>
+<div class="s-imp" hidden>
+    <h3 style="font-size:16px;margin:16px 0 4px">Toplu ürün yükle</h3>
+    <p class="hint" style="margin:0 0 6px">Her satıra bir ürün: <b>barkod; ürün adı; grup; satış fiyatı</b> (grup ve fiyat isteğe bağlı). Excel'den iki sütunu kopyalayıp yapıştırabilir ya da .csv / .txt dosyası seçebilirsin.</p>
+    <textarea id="sImpText" class="simp" rows="4" placeholder="8690000000011; Süt 1 L&#10;8690000000028; Tavuk but; Tavuk / beyaz et"></textarea>
+    <div class="simp-act"><label class="btn small simp-file">Dosya seç<input type="file" id="sImpFile" accept=".csv,.txt,text/plain,text/csv" hidden></label><button type="button" class="btn small" id="sImpBtn">Listeye ekle</button><button type="button" class="btn small" id="sExpBtn">Listeyi paylaş</button></div>
+    <p class="hint" style="margin:6px 0 0">“Listeyi paylaş” kayıtlı ürünleri bu biçimde metin olarak verir; mağazadaki diğer telefonlara WhatsApp ile gönderip oraya yapıştırabilirsin.</p>
+  </div>
+  </details>
+
+  <details class="box sect">
+    <summary><h2>SKT ayarları</h2></summary>
+    <div class="field"><span>Varsayılan uyarı (gün)</span><input type="number" id="sDefWarn" min="0" max="365"></div>
+    <p class="hint" style="margin:8px 0 0">Yeni bir ürünün uyarı günü boş bırakılırsa bu değer kullanılır.</p>
+    <h3 style="font-size:16px;margin:16px 0 4px">Fire günleri</h3>
+    <p class="hint" style="margin:0 0 6px">Kaldırılan ürünler bir sonraki fire gününün listesinde toplanır.</p>
+    <div class="dchips" id="fDays" role="group" aria-label="Fire günleri"></div>
+    <h3 style="font-size:16px;margin:16px 0 4px">Ürün grupları</h3>
+    <p class="hint" style="margin:0 0 6px">Bazı ürünler SKT'den önce raftan kalkar. Örneğin tavuk 2 gün önce: SKT 10 Ekim ise 8 Ekim akşamı kaldırılır.</p>
+    <ul class="slist" id="sGrpList"></ul>
+    <div class="grp-add"><input id="sGrpName" placeholder="Grup adı (ör. Kırmızı et)" aria-label="Grup adı"><input id="sGrpOff" type="number" min="0" max="60" inputmode="numeric" placeholder="Gün" aria-label="SKT'den kaç gün önce kalkar"><button type="button" class="btn small" id="sGrpAdd">Ekle</button></div>
+    <h3 style="font-size:16px;margin:16px 0 4px">Fire sebepleri</h3>
+    <p class="hint" style="margin:0 0 6px">Raftan kaldırırken seçilen sebepler. Eklediğin sebep fire raporunda ayrı satır olarak görünür.</p>
+    <ul class="slist" id="fRsnList"></ul>
+    <div class="grp-add" style="grid-template-columns:minmax(0,1fr) auto"><input id="fRsnName" placeholder="Yeni sebep (ör. Küflü)" aria-label="Yeni sebep"><button type="button" class="btn small" id="fRsnAdd">Ekle</button></div>
+    <label class="check"><input type="checkbox" id="sOnline"><span>Bilinmeyen barkodu internette ara (Open Food Facts ürün veritabanı)</span></label>
+    <label class="check"><input type="checkbox" id="sRemOn"><span>Her gün SKT özeti ile hatırlat</span></label>
+    <div class="field"><span>Hatırlatma saati</span><select class="tsel" id="sRemTime"></select></div>
+    <button type="button" class="btn small" id="sNotifBtn" style="margin-top:10px" hidden>Bildirim izni ver</button>
+    <p class="hint" id="sRemInfo" style="margin:8px 0 0"></p>
+  </details>
+</section>
+<section id="akView" class="skt" hidden>
+  <div class="box" style="padding:10px 16px">
+    <div class="fnav" style="margin:0"><button type="button" id="akPrev" aria-label="Önceki hafta">‹</button><b id="akWeek" aria-live="polite"></b><button type="button" id="akNext" aria-label="Sonraki hafta">›</button></div>
+    <div class="ak-days" id="akDays" role="tablist" aria-label="Aktüel günü"></div>
+  </div>
+  <div class="box">
+    <div class="ak-grid" id="akList"></div>
+    <div class="simp-act" style="margin-top:12px"><button type="button" class="btn small" id="akShare">Listeyi paylaş</button><a class="btn small" href="https://www.bim.com.tr/" target="_blank" rel="noopener" style="text-decoration:none">BİM sitesini aç</a></div>
+  </div>
+  <details class="box sect" id="akAddBox" open>
+    <summary><h2 id="akFormT">Ürün ekle</h2></summary>
+    <div class="sf">
+      <div class="ak-photo"><img id="akImgPrev" alt="" hidden><label class="btn" style="cursor:pointer;flex:1;text-align:center">Fotoğraf çek / seç<input type="file" id="akImg" accept="image/*" capture="environment" hidden></label><button type="button" class="btn small" id="akImgDel" hidden>Fotoğrafı kaldır</button></div>
+      <label>Ürün adı<input id="akName" autocomplete="off" placeholder="Örn. Katlanır ütü masası"></label>
+      <div class="srow2"><label>Fiyat (₺)<input id="akPrice" inputmode="decimal" placeholder="0,00"></label><label>Gelen adet<input id="akQty" inputmode="numeric" placeholder="İsteğe bağlı"></label></div>
+      <label>Not<input id="akNote" autocomplete="off" placeholder="İsteğe bağlı (reyon, stand…)"></label>
+      <div class="simp-act"><button type="button" class="btn primary" id="akSave" style="flex:1">Ekle</button><button type="button" class="btn" id="akCancel" hidden>Vazgeç</button></div>
+    </div>
+  </details>
+  <details class="box sect">
+    <summary><h2>Listeyi toplu ekle</h2></summary>
+    <p class="hint">Her satıra bir ürün: <b>ürün adı; fiyat; adet</b> (adet isteğe bağlı). Seçili güne eklenir; fotoğrafları sonra tek tek ekleyebilirsin.</p>
+    <textarea id="akBulk" class="simp" rows="5" placeholder="Katlanır ütü masası; 449&#10;Çelik çaydanlık; 329,90; 12"></textarea>
+    <div class="simp-act" style="margin-top:6px"><button type="button" class="btn small" id="akBulkBtn">Listeye ekle</button></div>
+    <p class="hint" id="akStore" style="margin:10px 0 0"></p>
+    <div class="simp-act" style="margin-top:6px"><button type="button" class="btn small" id="akClean">4 haftadan eski fotoğrafları sil</button></div>
+  </details>
+</section>
+<section id="homeView" class="skt hm" hidden><div id="homeBody"></div></section>
+<section id="icView" class="skt ic" hidden>
+  <div class="box ic-bar">
+    <div class="sfilter" role="group" aria-label="Görünüm" style="margin:0"><button type="button" data-icrole="magaza" aria-pressed="true">Mağaza</button><button type="button" data-icrole="bs" aria-pressed="false">Bölge sorumlusu</button></div>
+    <span class="ic-demo" title="Diğer mağazalar örnek veridir">Demo</span>
+  </div>
+  <div id="icBody"></div>
+</section>
+<div class="ic-note" id="icNote" hidden role="status"></div>
+<section id="bsView" class="skt" hidden>
+  <div class="box" style="padding:10px 12px">
+    <div class="sfilter" role="group" aria-label="BS bölümü" style="margin:0"><button type="button" data-bsm="daily" aria-pressed="true">Günlük rapor</button><button type="button" data-bsm="rc" aria-pressed="false">Kontrol / iade</button><button type="button" data-bsm="col" aria-pressed="false">Bilgi toplama</button></div>
+  </div>
+  <div id="bsDaily" class="bs-pane">
+  <div class="box mskt" id="msBox">
+    <div class="mskt-head"><div><h2>Sabah SKT dönüşü</h2><p class="hint" id="msInfo" style="margin:2px 0 0"></p></div><span class="mskt-badge" id="msBadge"></span></div>
+    <div class="sf" style="margin-top:10px">
+      <label>Kontrol edilen mağaza<input id="msStore" autocomplete="off" placeholder="BS'nin söylediği mağaza"></label>
+    </div>
+    <button type="button" class="btn primary" id="msSend" style="width:100%;margin-top:10px">SKT kontrolü yapıldı, BS'ye gönder</button>
+    <button type="button" class="btn" id="msWa" style="width:100%;margin-top:8px">WhatsApp'ta da paylaş</button>
+  </div>
+  <div class="box" id="rpHead">
+    <h2>Bugünün özeti</h2>
+    <div class="sf">
+      <div class="srow2"><label>Tarih<input type="date" id="rpDate"></label><label>Mağaza<input id="rpStore" autocomplete="off" placeholder="Örn. BAĞYAKA - FİNİKE K700"></label></div>
+      <div class="srow2" id="rpCiroRow"><label>Ciro (₺)<input id="rpCiro" inputmode="numeric" placeholder="₺"></label><label>Müşteri<input id="rpMus" inputmode="numeric"></label></div>
+    </div>
+  </div>
+  <div class="box" id="irsBox">
+    <h2>İrsaliyeler</h2>
+    <p class="hint">Bugün gelen irsaliyeler sisteme girilip takıldıysa işaretle; BS mesajına kendiliğinden yazılır.</p>
+    <div class="irs">
+      <label class="irs-n">Adet<input id="irsN" inputmode="numeric" placeholder="0"></label>
+      <button type="button" class="irs-t" id="irsG" aria-pressed="false"><i aria-hidden="true"></i>Girildi</button>
+      <button type="button" class="irs-t" id="irsT" aria-pressed="false"><i aria-hidden="true"></i>Takıldı</button>
+    </div>
+    <label class="check" style="margin-top:10px"><input type="checkbox" id="irsNone"><span>Bugün irsaliye gelmedi</span></label>
+  </div>
+  <div class="box" id="ayinBox">
+    <h2>Ayın ürünleri</h2>
+    <p class="hint">Bugün satılan adedi yaz; fiyatla çarpılıp tutarı yanına yazılır.</p>
+    <ul class="slist" id="rpList"></ul>
+    <div class="rp-tot" id="rpTot"></div>
+  </div>
+  <details class="box sect" id="rpEdit">
+    <summary><h2>Ayın ürünlerini düzenle</h2></summary>
+    <p class="hint">BİM'in bu ay seçtiği ürünleri bir kez ekle; her ayın listesi ayrı tutulur.</p>
+    <ul class="slist" id="rpItems"></ul>
+    <div class="sf" style="margin-top:8px">
+      <div class="srow2"><label>Ürün kodu<input id="rpCode" inputmode="numeric" autocomplete="off"></label><label>Fiyat (₺)<input id="rpPrice" inputmode="decimal" autocomplete="off" placeholder="Örn. 34,50"></label></div>
+      <label>Ürün adı<input id="rpName" autocomplete="off"></label>
+      <div class="simp-act"><button type="button" class="btn primary" id="rpAdd">Ekle</button><button type="button" class="btn" id="rpCancel" hidden>Vazgeç</button><button type="button" class="btn" id="rpCopyPrev">Geçen ayın ürünlerini getir</button></div>
+      <p class="hint" style="margin:0">Bir kez eklediğin ürünün kodunu tekrar yazınca adı ve fiyatı kendiliğinden dolar.</p>
+    </div>
+  </details>
+  <div class="box rp-send">
+    <button type="button" class="btn primary" id="rpSend">Kaydet ve portaldan BS'ye gönder</button>
+    <button type="button" class="btn" id="rpWa">WhatsApp'ta da paylaş</button>
+    <button type="button" class="btn" id="rpSave">Sadece kaydet</button>
+    <p class="hint" style="margin:0">Rapor BS'nin portalına mağaza sohbetinize düşer. WhatsApp'a da aynı metin gider. Ciro ve müşteri Ay başı sekmesindeki aylık tabloya da yazılır.</p>
+  </div>
+  </div>
+  <div id="bsRc" class="bs-pane" hidden>
+    <div class="box" id="rcHome">
+      <h2>Kontrol / iade listeleri</h2>
+      <p class="hint">BS gruba “bu ürünleri kontrol edin, varsa kaldırın ya da depoya iade kesin” dediğinde mesajı buraya yapıştır. Her ürünü işaretle, dönüşü tek dokunuşla gönder.</p>
+      <ul class="slist" id="rcLists"></ul>
+      <div class="sf" style="margin-top:10px">
+        <label>BS'nin mesajı<textarea id="rcPaste" class="simp" rows="5" placeholder="Örn.&#10;5012 Çikolatalı gofret&#10;7781 Zeytinyağı 1 L"></textarea></label>
+        <label>Liste adı (isteğe bağlı)<input id="rcTitle" autocomplete="off" placeholder="Örn. Geri çağırma 14 Ekim"></label>
+        <button type="button" class="btn primary" id="rcNew">Listeyi oluştur</button>
+      </div>
+    </div>
+    <div id="rcOpen" hidden>
+      <div class="box">
+        <div class="col-head"><button type="button" class="btn small" id="rcBack">‹ Listeler</button><h2 id="rcName"></h2></div>
+        <div class="rc-prog"><div class="ab-bar"><i id="rcBar"></i></div><span id="rcProg"></span></div>
+        <ul class="slist" id="rcItems" style="margin-top:6px"></ul>
+        <div class="hol-add" style="margin-top:10px"><input type="text" id="rcAddCode" inputmode="numeric" placeholder="Kod" aria-label="Ürün kodu" style="max-width:110px"><input type="text" id="rcAddName" placeholder="Ürün adı" aria-label="Ürün adı"><button type="button" class="btn small" id="rcAdd">Ekle</button></div>
+      </div>
+      <div class="box rp-send">
+        <button type="button" class="btn primary" id="rcSend">Dönüşü BS'ye gönder</button>
+        <button type="button" class="btn" id="rcWa">WhatsApp'ta da paylaş</button>
+        <button type="button" class="btn" id="rcXlsx">Excel dosyası</button>
+        <button type="button" class="btn" id="rcDel" style="color:var(--danger)">Listeyi sil</button>
+      </div>
+    </div>
+  </div>
+  <div id="bsCol" class="bs-pane" hidden>
+    <div class="box" id="colHome">
+      <h2>Bilgi toplama listeleri</h2>
+      <p class="hint">BS bir bilgi istediğinde (sayım, eksik ürün, kırık raf…) yeni bir liste aç, satırları doldur, BS'ye portaldan gönder. Excel ya da WhatsApp da olur.</p>
+      <ul class="slist" id="colLists"></ul>
+      <div class="sf" style="margin-top:10px">
+        <label>Liste adı<input id="colTitle" autocomplete="off" placeholder="Örn. Eksik ürün sayımı"></label>
+        <label>Sütunlar (virgülle ayır)<input id="colCols" autocomplete="off" value="Ürün kodu, Ürün adı, Adet, Not"></label>
+        <button type="button" class="btn primary" id="colNew">Liste oluştur</button>
+      </div>
+    </div>
+    <div id="colOpen" hidden>
+      <div class="box">
+        <div class="col-head"><button type="button" class="btn small" id="colBack">‹ Listeler</button><h2 id="colName"></h2></div>
+        <p class="hint" id="colInfo" style="margin:6px 0 0"></p>
+        <div class="scroll" style="margin-top:10px"><table class="col-tab" id="colTable"></table></div>
+      </div>
+      <div class="box">
+        <h2 id="colFormT" style="font-size:17px">Satır ekle</h2>
+        <div class="sf" id="colForm" style="margin-top:8px"></div>
+        <div class="simp-act" style="margin-top:10px"><button type="button" class="btn primary" id="colAdd">Ekle</button><button type="button" class="btn" id="colCancel" hidden>Vazgeç</button></div>
+      </div>
+      <div class="box rp-send">
+        <button type="button" class="btn primary" id="colSend">Listeyi BS'ye gönder</button>
+        <button type="button" class="btn" id="colXlsx">Excel dosyası olarak gönder</button>
+        <button type="button" class="btn" id="colShare">WhatsApp'ta metin olarak paylaş</button>
+        <button type="button" class="btn" id="colDel" style="color:var(--danger)">Listeyi sil</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="abView" class="skt ab" hidden>
+  <div class="box" style="padding:10px 16px">
+    <div class="fnav" style="margin:0"><button type="button" id="abPrev" aria-label="Önceki ay">‹</button><b id="abMonth" aria-live="polite"></b><button type="button" id="abNext" aria-label="Sonraki ay">›</button></div>
+  </div>
+  <div class="box gf" id="grafBox">
+    <div class="gf-head"><h2>Grafikler</h2><div class="ic-seg gf-seg"><button type="button" data-gf="ciro" aria-pressed="true">Ciro</button><button type="button" data-gf="fire" aria-pressed="false">Fire</button></div></div>
+    <div id="grafBody"></div>
+  </div>
+  <div class="box">
+    <h2>Ciro ve saat hedefi</h2>
+    <p class="hint">Ayın ciro ve çalışma saati hedefini yaz; ikisi de günlere dağıtılır. Aktüel günleri Salı ve Cuma ile Cumartesi yoğun olduğu için fazla, Çarşamba ve Pazar sakin olduğu için az ciro yazılır; saat de cironun yüksek olduğu günlere daha fazla dağıtılır. Bayram günlerine hedef yazılmaz.</p>
+    <div class="srow2">
+      <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600">Ciro hedefi (₺)<input id="cTarget" class="ssearch" style="margin:0" inputmode="numeric" placeholder="Örn. 4.030.000" aria-label="Aylık ciro hedefi"></label>
+      <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600">Saat hedefi<input id="hTarget" class="ssearch" style="margin:0" inputmode="decimal" aria-label="Aylık çalışma saati hedefi"></label>
+    </div>
+    <p class="hint" id="hHint" style="margin:6px 0 0"></p>
+    <button type="button" class="btn primary" id="cApply" style="width:100%;margin-top:10px">Dağıt</button>
+    <div class="skt-sum" id="cSum" style="margin-top:12px"></div>
+  </div>
+  <div class="box" style="padding:12px 0">
+    <h2 style="padding:0 16px">Aylık tablo</h2>
+    <p class="hint" style="padding:0 16px;margin-bottom:8px"><span style="color:#C0352A;font-weight:700">Kırmızı</span>: plan, <span style="color:#2F57B8;font-weight:700">mavi</span>: olan. Satıra dokununca o günün girişi açılır.</p>
+    <div class="scroll"><table class="ctab" id="cTable"></table></div>
+    <div class="simp-act" style="padding:10px 16px 0"><button type="button" class="btn small" id="cCopy">Excel için kopyala</button><button type="button" class="btn small" id="cShare">Özeti paylaş</button></div>
+  </div>
+  <details class="box sect" id="ygBox">
+    <summary><h2>Yıllık gelişim ve hedef ciro</h2></summary>
+    <div id="ygBody"></div>
+  </details>
+  <details class="box sect" id="mfBox">
+    <summary><h2>Masraf takip</h2></summary>
+    <div id="mfBody"></div>
+  </details>
+  <details class="box sect">
+    <summary><h2>Günlere dağıtım oranları</h2></summary>
+    <p class="hint">Pazartesi ve Perşembe 100 kabul edilir; diğer günler buna göre daha yüksek ya da düşüktür. Yazdığın oranlara göre ciro ve saat hedefi dağıtılır.</p>
+    <div id="cWeights" class="cw"></div>
+  </details>
+  <details class="box sect" id="abChkBox">
+    <summary><h2>Kontrol listesi <span class="ccount" id="abChkCount"></span></h2></summary>
+    <div class="ab-prog"><div class="ab-bar"><i id="abBar"></i></div><span id="abProgTxt"></span></div>
+    <div class="salert" id="abAlert" role="alert" hidden></div>
+    <ul class="slist" id="abList" style="margin-top:8px"></ul>
+    <div class="simp-act" style="margin-top:12px"><button type="button" class="btn small" id="abShare">Durumu paylaş</button><button type="button" class="btn small" id="abEditBtn" aria-pressed="false">Listeyi düzenle</button></div>
+  </details>
+  <details class="box sect" id="abAddBox">
+    <summary><h2 id="abFormTitle">Kontrol listesine görev ekle</h2></summary>
+    <div class="sf">
+      <label>Yapılacak iş<input id="abT" autocomplete="off" placeholder="Örn. Ay sonu raporunu gönder"></label>
+      <div class="srow2">
+        <label>Son gün (ayın kaçı)<input id="abDay" type="number" min="1" max="31" inputmode="numeric" placeholder="Yok"></label>
+        <label>Kim yapar<select id="abRole" class="ssel"><option value="">Herkes</option><option value="MS">Mağaza Sorumlusu</option><option value="MSY">Mağaza Sorumlu Yardımcısı</option><option value="GT">Günlük Temsilci</option><option value="PER">Personel</option></select></label>
+      </div>
+      <label>Açıklama (isteğe bağlı)<textarea id="abDesc" class="simp" rows="2"></textarea></label>
+      <div class="simp-act"><button type="button" class="btn primary" id="abSave" style="flex:1">Listeye ekle</button><button type="button" class="btn" id="abCancel" hidden>Vazgeç</button></div>
+      <p class="hint" style="margin:0">Görevler her ay tekrar eder; her ayın işaretleri ayrı tutulur.</p>
+    </div>
+  </details>
+</section>
+<div class="pf-wrap" id="pfDlg" hidden><div class="pf-in" role="dialog" aria-modal="true" aria-labelledby="pfT"><div class="pf-head"><h2 id="pfT"></h2><button type="button" class="btn" id="pfX">Kapat</button></div><div id="pfBody"></div></div></div>
+<div class="sdlg-wrap" id="fDlg" hidden>
+  <div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="fDlgT">
+    <h2 id="fDlgT">Raftan kaldır</h2>
+    <p class="hint" id="fDlgSub"></p>
+    <div class="sf">
+      <label><span id="fQtyL">Kaç adet kaldırıldı</span>
+        <div class="fqty"><button type="button" id="fMinus" aria-label="Azalt">−</button><input id="fQty" type="number" min="1" inputmode="numeric" aria-label="Adet"><button type="button" id="fPlus" aria-label="Artır">+</button></div>
+      </label>
+      <label id="fPriceRow">Birim satış fiyatı (₺)<input id="fPrice" inputmode="decimal" autocomplete="off" placeholder="Örn. 34,50"></label>
+      <label id="fReasonRow">Sebep<select id="fReason" class="ssel"></select></label>
+      <p class="hint" id="fTotal" style="margin:0"></p>
+    </div>
+    <div class="sdlg-act" style="margin-top:14px"><button type="button" class="btn" id="fCancel">Vazgeç</button><button type="button" class="btn primary" id="fOk">Kaldırıldı, kaydet</button></div>
+  </div>
+</div>
+<div class="sdlg-wrap" id="sDlg" hidden>
+  <div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="sDlgT">
+    <h2 id="sDlgT">Günün SKT özeti</h2>
+    <p class="hint" id="sDlgSub"></p>
+    <ul class="slist" id="sDlgList"></ul>
+    <div class="sdlg-act"><button type="button" class="btn" id="sDlgOk">Tamam</button><button type="button" class="btn primary" id="sDlgGo">Listeye git</button></div>
+  </div>
+</div>
+<div class="sdlg-wrap" id="clrDlg" hidden>
+  <div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="clrT">
+    <h2 id="clrT">Neyi temizleyelim?</h2>
+    <p class="hint">Sadece vardiya planları silinir. Çalışanlar, ayarlar, SKT listesi, fire ve ciro tablosu yerinde kalır.</p>
+    <div style="display:grid;gap:8px;margin:12px 0">
+      <button type="button" class="btn" data-clr="week" style="text-align:left;padding:14px"><b>Bu hafta</b><br><small id="clrWeekTxt" style="color:var(--muted)"></small></button>
+      <button type="button" class="btn" data-clr="month" style="text-align:left;padding:14px"><b>Bu ay</b><br><small id="clrMonthTxt" style="color:var(--muted)"></small></button>
+      <button type="button" class="btn" data-clr="all" style="text-align:left;padding:14px;border-color:var(--danger)"><b style="color:var(--danger)">Komple temizle</b><br><small style="color:var(--muted)">Tüm haftaların planları, aracı sırası ve uygulama dışı saatler</small></button>
+    </div>
+    <button type="button" class="btn" id="clrNo" style="width:100%">Vazgeç</button>
+  </div>
+</div>
+<div class="sdlg-wrap" id="cDlg" hidden>
+  <div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="cDayInfo">
+    <h2 id="cDayInfo" style="font-size:18px"></h2>
+    <div class="sf" style="margin-top:10px">
+      <select id="cDay" class="ssel" hidden aria-hidden="true"></select>
+      <div class="srow2"><label>Ciro (olan)<input id="cCiro" inputmode="numeric" placeholder="₺"></label><label>Müşteri<input id="cMus" inputmode="numeric"></label></div>
+      <label>Çalışma saati (olan)<input id="cSaat" inputmode="decimal" placeholder="Vardiyadan gelir"></label>
+    </div>
+    <div class="sdlg-act" style="margin-top:14px"><button type="button" class="btn" id="cClose">Vazgeç</button><button type="button" class="btn primary" id="cSave">Kaydet</button></div>
+  </div>
+</div>
+<div class="sdlg-wrap" id="yDlg" hidden>
+  <div class="sdlg" role="dialog" aria-modal="true" aria-labelledby="yT">
+    <h2 id="yT">Yıllık izin</h2>
+    <div class="sf" style="margin-top:10px">
+      <label>Kaç gün yıllık izin kullanacak?<input id="yDays" type="number" min="1" max="60" inputmode="numeric"></label>
+      <div id="ySubBox" hidden>
+        <p class="hint" style="margin:6px 0">İzin süresince G.T. onun yerine geçer (M.S. ↔ M.S.Y. tam gün eşleşmesine girer). G.T.'nin yerine gelecek personel varsa adını yaz; o tarihlerde vardiyaya eklenir.</p>
+        <label>Yerine gelecek personel (isteğe bağlı)<input id="ySub" autocomplete="off" placeholder="Ad soyad"></label>
+      </div>
+    </div>
+    <p class="hint" id="yInfo" style="margin:10px 0 14px"></p>
+    <div class="sdlg-act"><button type="button" class="btn" id="yNo">Vazgeç</button><button type="button" class="btn primary" id="yOk">Yıllık izni yaz</button></div>
+  </div>
+</div>
+<div class="sdlg-wrap" id="ntDlg" hidden>
+  <div class="sdlg nt-dlg" role="dialog" aria-modal="true" aria-labelledby="ntT">
+    <div class="nt-head"><h2 id="ntT">Bildirimler</h2><small id="ntCount"></small><button type="button" class="btn small" id="ntClose">Kapat</button></div>
+    <ul class="nt-list" id="ntList"></ul>
+    <button type="button" class="btn nt-all" id="ntAll">Tümünü sil</button>
+  </div>
+</div>
+<div class="sdlg-wrap" id="qDlg" hidden>
+  <div class="sdlg" role="alertdialog" aria-modal="true" aria-labelledby="qMsg">
+    <p id="qMsg" style="font-size:16px;font-weight:600;margin:0 0 16px;line-height:1.4"></p>
+    <div class="sdlg-act"><button type="button" class="btn" id="qNo">Vazgeç</button><button type="button" class="btn primary" id="qYes">Evet</button></div>
+  </div>
+</div>
+<footer class="credit">Bu uygulama <b>Samet Tüzün</b>'ün projesidir.</footer>
+<div class="menu" id="menu" role="dialog" aria-label="Vardiya seç" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- @dahil js/10-vardiya.js script -->
+<!-- @dahil js/20-barkod.js script -->
+<!-- @dahil js/21-skt.js script -->
+<!-- @dahil js/30-ay-basi.js script -->
+<!-- @dahil js/31-aktuel.js script -->
+<!-- @dahil js/40-kullanici-girisi.js script -->
+<!-- @dahil js/41-giris.js script -->
+<!-- @dahil js/42-grafikler.js script -->
+<!-- @dahil js/43-pano-formlari.js script -->
+
+<!-- @dahil js/50-ana-sayfa.js script -->
+<!-- @dahil js/60-iletisim.js script -->
+<!-- @dahil js/70-tema-ayarlari.js script -->
+</body>
+</html>
