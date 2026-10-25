@@ -11,17 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          mkdir -p deneme && cd deneme
+          mkdir -p deneme && cd deneme && rm -f *
           UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
-          curl -sSL -m 60 -A "$UA" -o iddaa.html -w "nesine-sayfa %{http_code} %{size_download}\n" "https://www.nesine.com/iddaa" >> durum.txt 2>&1 || true
-          grep -oE 'src="[^"]+\.js[^"]*"' iddaa.html | sed 's/src="//;s/"$//' | head -40 > js.txt || true
-          n=0; while read -r j; do case "$j" in http*) u="$j";; //*) u="https:$j";; *) u="https://www.nesine.com$j";; esac; n=$((n+1)); curl -sSL -m 30 -A "$UA" -o "js$n.js" "$u" || true; done < js.txt
-          cat js*.js 2>/dev/null | grep -oE '"[^"]{0,80}([Pp]ercent|[Oo]ynanma|[Yy]uzde|[Pp]layed)[^"]{0,80}"' | sort -u | head -80 > ipuclari.txt || true
-          cat js*.js 2>/dev/null | grep -oE 'https?://[a-z0-9.-]*nesine[a-z0-9./_-]*' | sort -u | head -80 > adresler.txt || true
-          cat js*.js iddaa.html 2>/dev/null | grep -oE '"/api/[^"]{1,80}"' | sort -u | head -150 > api.txt || true
-          for u in "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard" "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard"; do curl -sS -m 30 -o /dev/null -w "espn %{http_code} %{size_download} $u\n" "$u" >> durum.txt || true; done
-          curl -sS -m 30 -o espn-nba.json "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard" || true
-          rm -f js*.js iddaa.html
+          for e in geteventplaypercentages getOutcomePlayPercentages getprebultenall getlivebultenv3 getprebultenv3; do
+            curl -sSL -m 60 -A "$UA" -H "Referer: https://www.nesine.com/" -H "Origin: https://www.nesine.com" -o "$e.json" -w "$e %{http_code} %{size_download}\n" "https://bulten.nesine.com/api/bulten/$e" >> durum.txt 2>&1 || true
+            head -c 3000 "$e.json" > "$e.ornek.txt" || true
+            gzip -9 "$e.json" || true
+          done
+          curl -sS -m 30 -o espn-futbol.json "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard" || true
+          curl -sS -m 30 -o espn-wnba.json -w "wnba %{http_code}\n" "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard" >> durum.txt || true
+          curl -sS -m 30 -o espn-euro.json -w "euroleague %{http_code}\n" "https://site.api.espn.com/apis/site/v2/sports/basketball/euroleague/scoreboard" >> durum.txt || true
+          curl -sS -m 30 -o espn-nba-gecmis.json -w "nba-gecmis %{http_code}\n" "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260320" >> durum.txt || true
           cd ..
           git config user.name "github-actions[bot]"
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
