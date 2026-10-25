@@ -1,0 +1,49 @@
+name: iddaa-deneme
+on:
+  push:
+    branches: [claude/project-thread-brb60g]
+    paths: [.github/workflows/iddaa-deneme.yml]
+permissions:
+  contents: write
+jobs:
+  dene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          rm -rf deneme && mkdir -p deneme && cd deneme
+          cat > dene.py <<'PY'
+          import urllib.request, json, gzip
+          UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36", "Referer": "https://www.nesine.com/", "Origin": "https://www.nesine.com", "Accept-Encoding": "gzip"}
+          def al(u):
+              try:
+                  r = urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=25)
+                  b = r.read()
+                  if r.headers.get("Content-Encoding") == "gzip": b = gzip.decompress(b)
+                  return r.status, dict(r.headers), b
+              except Exception as e:
+                  return getattr(e, "code", str(e)), {}, (e.read() if hasattr(e, "read") else b"")
+          out = open("sonuc.txt", "w")
+          for ad, u in [("canli", "https://bulten.nesine.com/api/bulten/getlivebultenv3"), ("canli2", "https://cdnbulten.nesine.com/api/bulten/getlivebultenv3"),
+                        ("espn-all", "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard"),
+                        ("espn-eng", "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard"),
+                        ("espn-tur", "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard")]:
+              s, h, b = al(u)
+              out.write(f"\n=== {ad} {u} -> {s} {len(b)} cors={h.get('Access-Control-Allow-Origin')}\n{b[:1500]!r}\n")
+              open(ad + ".json", "wb").write(b[:3000000])
+          try:
+              ev = json.load(open("espn-eng.json"))["events"]
+              for e in ev[:3]:
+                  s, h, b = al("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=" + e["id"])
+                  open("ozet-" + e["id"] + ".json", "wb").write(b)
+                  out.write(f"ozet {e['id']} {e['name']} {e['status']['type']['name']} -> {s} {len(b)}\n")
+          except Exception as x:
+              out.write(f"ozet hata {x}\n")
+          PY
+          sed -i 's/^          //' dene.py
+          timeout 300 python3 dene.py || true
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add deneme && git commit -m "deneme" && (git pull --rebase origin claude/project-thread-brb60g; git push) || true
