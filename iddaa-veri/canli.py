@@ -66,6 +66,10 @@ ham = oku_json("nesine-canli.json") or {}
 sg = ham.get("sg") or {}
 ligler = {l["LID"]: l.get("N", "") for l in sg.get("LA", [])}
 onmac = (oku_json("onmac.json") or {}).get("maclar", {})
+# onmac.json yokken takip.json'daki son oranlar yedek
+for i, k in ((oku_json("takip.json") or {}).get("maclar") or {}).items():
+    if i not in onmac and k.get("son"):
+        onmac[i] = {"ms": k["son"].get("ms"), "au25": k["son"].get("au25")}
 futbol, basket = [], []
 for e in sg.get("EA", []):
     if e.get("GT") not in (1, 2):
