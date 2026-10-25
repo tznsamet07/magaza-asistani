@@ -1,6 +1,6 @@
 # iddaa analiz aracının verisini günceller. Mağaza Asistanı uygulamasına dokunmaz;
 # her şey claude/project-thread-brb60g dalındaki iddaa-veri/ klasörüne yazılır.
-# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi) + football-data fikstürü
+# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi), football-data fikstürü, ESPN basketbol çizgileri
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
 name: iddaa-gunluk
 on:
@@ -20,11 +20,14 @@ jobs:
         with:
           ref: claude/project-thread-brb60g
           fetch-depth: 5
-      - name: Bülten ve fikstür
+      - name: Bülten, fikstür, ESPN
         run: |
           cd iddaa-veri
           curl -sSfL -m 90 -A "Mozilla/5.0" -H "Referer: https://www.nesine.com/" -o nesine.json "https://cdnbulten.nesine.com/api/bulten/getprebultenfull" || echo "bülten alınamadı"
           curl -sSfL -m 60 -A "Mozilla/5.0" -o fixtures.csv "https://www.football-data.co.uk/fixtures.csv" || echo "fikstür alınamadı"
+          for l in nba wnba; do
+            curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
+          done
       - name: Geçmiş istatistikler (günde bir)
         run: |
           SAAT=$(date -u +%H); DAK=$(date -u +%M)
@@ -47,9 +50,10 @@ jobs:
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
           git add iddaa-veri
           git diff --cached --quiet && exit 0
-          # Sık güncellenen bülten tek bir kayıt üzerinde tutulur, depo şişmesin
+          # Sık güncellenen bülten tek bir kayıt üzerinde tutulur, depo şişmesin.
+          # force-with-lease: bu arada dala başka bir kayıt geldiyse onu silmez, gönderim reddedilir.
           if [ "$(git log -1 --format=%s)" = "iddaa bülteni" ]; then
-            git commit -q --amend -m "iddaa bülteni" && git push -f origin HEAD:claude/project-thread-brb60g
+            git commit -q --amend -m "iddaa bülteni" && git push --force-with-lease origin HEAD:claude/project-thread-brb60g
           else
             git commit -q -m "iddaa bülteni" && git push origin HEAD:claude/project-thread-brb60g
           fi
