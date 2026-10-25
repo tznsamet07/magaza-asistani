@@ -2,7 +2,7 @@ name: iddaa-veri
 on:
   push:
     branches: [claude/project-thread-brb60g]
-    paths: [.github/workflows/iddaa-veri.yml]
+    paths: [.github/workflows/iddaa-veri.yml, iddaa-veri/derle.py]
   workflow_dispatch:
 permissions:
   contents: write
@@ -22,7 +22,8 @@ jobs:
           for l in ARG AUT BRA DNK FIN IRL JPN NOR POL ROU SWE SWZ USA; do
             curl -sSfL -m 60 -A "Mozilla/5.0" -o "iddaa-veri/${l}.csv" "https://www.football-data.co.uk/new/${l}.csv" || echo "yok: $l"
           done
-          ls -la iddaa-veri
+          curl -sSfL -m 60 -A "Mozilla/5.0" -o iddaa-veri/fixtures.csv "https://www.football-data.co.uk/fixtures.csv" || echo "fikstür yok"
+          python3 iddaa-veri/derle.py
       - name: Kaydet
         run: |
           git config user.name "github-actions[bot]"
