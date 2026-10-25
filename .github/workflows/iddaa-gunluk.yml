@@ -3,6 +3,7 @@
 # - Her 5 dakikada: iddaa bülteni ve canlı bülten, oynanma yüzdeleri, Smarkets borsası, football-data fikstürü,
 #   ESPN canlı skor/istatistik/sonuçlar, açıklanan ilk 11'ler; avantaj çıkınca telefona bildirim (ntfy)
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
+# - Pazartesi sabahı: geçen haftanın karnesi telefona
 name: iddaa-gunluk
 on:
   schedule:
@@ -67,6 +68,8 @@ jobs:
         run: timeout 300 python3 iddaa-veri/canli.py || echo "canlı derlenemedi"
       - name: Telefona bildirim
         run: timeout 120 python3 iddaa-veri/bildir.py || echo "bildirim gönderilemedi"
+      - name: Haftalık karne
+        run: timeout 60 python3 iddaa-veri/karne.py || echo "karne gönderilemedi"
       - name: Kaydet
         run: |
           git config user.name "github-actions[bot]"
