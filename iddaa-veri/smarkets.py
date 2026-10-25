@@ -59,8 +59,10 @@ def pazar_adi(alan, t):
 def cek(alan, tip):
     olaylar = olaylari_al(alan, tip)
     pazarlar, turler = {}, collections.Counter()
-    for p in parca([e["id"] for e in olaylar], 40):
-        j = al("events/" + ",".join(p) + "/markets/?limit_by_event=40") or {}
+    # Basketbolda çeyrek pazarları çok; maç sonucu ve toplam ilk 40'a girmeyebiliyor
+    n = 40 if alan == "football" else 10
+    for p in parca([e["id"] for e in olaylar], n):
+        j = al("events/" + ",".join(p) + f"/markets/?limit_by_event={40 if alan == 'football' else 200}") or {}
         for m in j.get("markets", []):
             turler[m["market_type"]["name"]] += 1
             ad = pazar_adi(alan, m["market_type"])
