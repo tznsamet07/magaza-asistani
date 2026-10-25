@@ -1,7 +1,7 @@
 # iddaa analiz aracının verisini günceller. Mağaza Asistanı uygulamasına dokunmaz;
 # her şey claude/project-thread-brb60g dalındaki iddaa-veri/ klasörüne yazılır.
-# - Her 5 dakikada: canlı bülten, ESPN canlı skor/istatistik/sonuçlar ve açıklanan ilk 11'ler
-# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi, oynanma yüzdeleri), football-data fikstürü, Smarkets borsası
+# - Her 5 dakikada: iddaa bülteni ve canlı bülten, oynanma yüzdeleri, Smarkets borsası, football-data fikstürü,
+#   ESPN canlı skor/istatistik/sonuçlar, açıklanan ilk 11'ler; avantaj çıkınca telefona bildirim (ntfy)
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
 name: iddaa-gunluk
 on:
@@ -34,13 +34,9 @@ jobs:
           for l in nba wnba; do
             curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
           done
-      - name: Bülten, oynanma, fikstür (yarım saatte bir)
-        id: bulten
+      - name: Bülten, oynanma, fikstür, borsa
         run: |
           cd iddaa-veri
-          # Son bülten 25 dakikadan yeniyse atla
-          if [ "$GITHUB_EVENT_NAME" != "workflow_dispatch" ] && python3 -c "import json,datetime,sys; z=json.load(open('bulten.json'))['zaman']; t=datetime.datetime.strptime(z,'%Y-%m-%d %H:%M')-datetime.timedelta(hours=3); sys.exit(0 if datetime.datetime.utcnow()-t<datetime.timedelta(minutes=25) else 1)" 2>/dev/null; then echo "bülten güncel"; exit 0; fi
-          echo "cek=1" >> "$GITHUB_OUTPUT"
           NES="-sSfL --compressed -m 90 -A Mozilla/5.0 -H Referer:https://www.nesine.com/"
           curl $NES -o nesine.json "https://cdnbulten.nesine.com/api/bulten/getprebultenfull" || echo "bülten alınamadı"
           for s in 1 2; do
@@ -65,11 +61,12 @@ jobs:
           done
           python3 iddaa-veri/derle.py
       - name: Bülteni derle
-        if: steps.bulten.outputs.cek == '1'
         run: |
           [ -f iddaa-veri/nesine.json ] && python3 iddaa-veri/bulten.py || echo "bülten yok, atlandı"
       - name: Canlı ve ilk 11
         run: timeout 300 python3 iddaa-veri/canli.py || echo "canlı derlenemedi"
+      - name: Telefona bildirim
+        run: timeout 120 python3 iddaa-veri/bildir.py || echo "bildirim gönderilemedi"
       - name: Kaydet
         run: |
           git config user.name "github-actions[bot]"
