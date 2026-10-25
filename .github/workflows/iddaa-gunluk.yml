@@ -1,7 +1,7 @@
 # iddaa analiz aracının verisini günceller. Mağaza Asistanı uygulamasına dokunmaz;
 # her şey claude/project-thread-brb60g dalındaki iddaa-veri/ klasörüne yazılır.
 # - Her 5 dakikada: canlı bülten, ESPN canlı skor/istatistik ve açıklanan ilk 11'ler
-# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi, oynanma yüzdeleri), football-data fikstürü
+# - Her 30 dakikada: iddaa bülteni (oranlar, oran hareketi, oynanma yüzdeleri), football-data fikstürü, Smarkets borsası
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
 name: iddaa-gunluk
 on:
@@ -48,6 +48,7 @@ jobs:
             curl $NES -o "kazananlar-$s.json" "https://bw.nesine.com/v1/BestWinnersBets?sportId=$s" || echo "kazananlar $s yok"
           done
           curl -sSfL -m 60 -A "Mozilla/5.0" -o fixtures.csv "https://www.football-data.co.uk/fixtures.csv" || echo "fikstür alınamadı"
+          timeout 300 python3 smarkets.py || echo "Smarkets alınamadı"
       - name: Geçmiş istatistikler (günde bir)
         run: |
           # 05 UTC'den sonra, veri.json bugün henüz güncellenmediyse bir kez çalışır
