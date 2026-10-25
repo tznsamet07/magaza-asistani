@@ -1,0 +1,16 @@
+https://broadcast.nesine.com/api
+https://bulten.nesine.com/api/bulten/get
+https://bulten.nesine.com/api/bulten/getchangedodds/0
+https://bulten.nesine.com/api/bulten/geteventplaypercentages
+https://bulten.nesine.com/api/bulten/getlivebultenv3
+https://bulten.nesine.com/api/bulten/getprebultenall
+https://bulten.nesine.com/api/bulten/getprebultendelta
+https://bulten.nesine.com/api/bulten/getprebultenfull
+https://bulten.nesine.com/api/bulten/getprebultenv3
+https://bw.nesine.com/v1/
+https://bwstage.nesine.com/v1/
+https://cs.nesine.com
+https://edt.nesine.com/api
+https://gwnesine.com/api/
+https://isc.nesine.com/savedcoupon
+https://nesine.com/yardim/

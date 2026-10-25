@@ -1,0 +1,3 @@
+"/api/v2/LiveScore/GetMatchDetailByBidList"
+"/api/v2/LiveScore/GetMatchDetailByCodeList"
+"/api/v4/LiveScore/GetMatchDetailByBidWithVersion"

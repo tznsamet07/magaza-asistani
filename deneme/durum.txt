@@ -1,0 +1,3 @@
+nesine-sayfa 200 310933
+espn 200 140381 https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard
+espn 200 21534 https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard
