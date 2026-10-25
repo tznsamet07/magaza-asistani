@@ -1,0 +1,28 @@
+name: iddaa-deneme
+on:
+  push:
+    branches: [claude/project-thread-brb60g]
+    paths: [.github/workflows/iddaa-deneme.yml]
+permissions:
+  contents: write
+jobs:
+  dene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p deneme && cd deneme
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+          curl -sSL -m 60 -A "$UA" -o iddaa.html -w "nesine-sayfa %{http_code} %{size_download}\n" "https://www.nesine.com/iddaa" >> durum.txt 2>&1 || true
+          grep -oE 'src="[^"]+\.js[^"]*"' iddaa.html | sed 's/src="//;s/"$//' | head -40 > js.txt || true
+          n=0; while read -r j; do case "$j" in http*) u="$j";; //*) u="https:$j";; *) u="https://www.nesine.com$j";; esac; n=$((n+1)); curl -sSL -m 30 -A "$UA" -o "js$n.js" "$u" || true; done < js.txt
+          cat js*.js 2>/dev/null | grep -oE '"[^"]{0,80}([Pp]ercent|[Oo]ynanma|[Yy]uzde|[Pp]layed)[^"]{0,80}"' | sort -u | head -80 > ipuclari.txt || true
+          cat js*.js 2>/dev/null | grep -oE 'https?://[a-z0-9.-]*nesine[a-z0-9./_-]*' | sort -u | head -80 > adresler.txt || true
+          cat js*.js iddaa.html 2>/dev/null | grep -oE '"/api/[^"]{1,80}"' | sort -u | head -150 > api.txt || true
+          for u in "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard" "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/scoreboard"; do curl -sS -m 30 -o /dev/null -w "espn %{http_code} %{size_download} $u\n" "$u" >> durum.txt || true; done
+          curl -sS -m 30 -o espn-nba.json "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard" || true
+          rm -f js*.js iddaa.html
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add deneme && git commit -m "deneme" && git push || true
