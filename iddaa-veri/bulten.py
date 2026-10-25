@@ -44,7 +44,7 @@ def pazar(mk, mtid):
     o = [x.get("O") for x in sorted(m["OCA"], key=lambda x: x["N"])]
     if any(not x or x <= 1 for x in o):
         return None
-    return {"c": m.get("SOV", 0), "o": o}
+    return {"c": m.get("SOV", 0), "o": o, "id": m.get("ID")}
 
 ham = oku_json("nesine.json")
 if ham is None:
@@ -117,6 +117,34 @@ def espn_eslestir(ev, dep, bas):
             return {"cizgi": x["cizgi"], "ust": x["ust"], "alt": x["alt"], "lig": x["lig"]}
     return None
 
+# Nesine oynanma yüzdeleri (her seçeneği oynayan kupon oranı) ve en çok kazananların tercihleri
+oyn = {}
+for ad in ("oynanma-1.json", "oynanma-2.json"):
+    for ev in oku_json(ad) or []:
+        for mk_ in ev.get("markets", []):
+            oyn[mk_["marketId"]] = {o["oddNo"]: o["percentage"] for o in mk_.get("outcomes", [])}
+mac_oyn = {}
+for ad in ("mac-oynanma-1.json", "mac-oynanma-2.json"):
+    for ev in oku_json(ad) or []:
+        mac_oyn[ev["eventId"]] = ev["percentage"]
+kazananlar = {}
+for ad in ("kazananlar-1.json", "kazananlar-2.json"):
+    for ev in (oku_json(ad) or {}).get("d") or []:
+        for mk_ in ev.get("markets", []):
+            for o in mk_.get("outcomes", []):
+                kazananlar[(mk_["marketId"], o["oddNo"])] = o["count"]
+
+def oynanma_ekle(m, e):
+    m["oyn"] = mac_oyn.get(e["C"])
+    for k, v in list(m.items()):
+        if isinstance(v, dict) and v.get("id") and "o" in v:
+            y = oyn.get(v["id"])
+            if y:
+                v["y"] = [y.get(i + 1, 0) for i in range(len(v["o"]))]
+            kz = [kazananlar.get((v["id"], i + 1), 0) for i in range(len(v["o"]))]
+            if any(kz):
+                v["kz"] = kz
+
 onceki = oku_json("bulten.json") or {}
 eski = {str(m["id"]): m for m in onceki.get("futbol", []) + onceki.get("basket", [])}
 
@@ -144,6 +172,7 @@ for e in ham["sg"]["EA"]:
             continue
         m["oranlar"] = ["ms", "au25", "kg", "korner"]
         m["fd"] = eslestir(e["HN"], e["AN"], bas.date())
+        oynanma_ekle(m, e)
         hareket(m)
         futbol.append(m)
     else:
@@ -152,6 +181,7 @@ for e in ham["sg"]["EA"]:
             continue
         m["oranlar"] = ["ms", "toplam"]
         m["dk"] = espn_eslestir(e["HN"], e["AN"], bas)
+        oynanma_ekle(m, e)
         hareket(m)
         basket.append(m)
 
