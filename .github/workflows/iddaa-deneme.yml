@@ -13,15 +13,14 @@ jobs:
       - run: |
           mkdir -p deneme && cd deneme && rm -f *
           UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
-          for e in geteventplaypercentages getOutcomePlayPercentages getprebultenall getlivebultenv3 getprebultenv3; do
-            curl -sSL -m 60 -A "$UA" -H "Referer: https://www.nesine.com/" -H "Origin: https://www.nesine.com" -o "$e.json" -w "$e %{http_code} %{size_download}\n" "https://bulten.nesine.com/api/bulten/$e" >> durum.txt 2>&1 || true
-            head -c 3000 "$e.json" > "$e.ornek.txt" || true
-            gzip -9 "$e.json" || true
-          done
-          curl -sS -m 30 -o espn-futbol.json "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard" || true
-          curl -sS -m 30 -o espn-wnba.json -w "wnba %{http_code}\n" "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard" >> durum.txt || true
-          curl -sS -m 30 -o espn-euro.json -w "euroleague %{http_code}\n" "https://site.api.espn.com/apis/site/v2/sports/basketball/euroleague/scoreboard" >> durum.txt || true
-          curl -sS -m 30 -o espn-nba-gecmis.json -w "nba-gecmis %{http_code}\n" "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260320" >> durum.txt || true
+          curl -sSL -m 60 -A "$UA" -o iddaa.html "https://www.nesine.com/iddaa" || true
+          grep -oE 'src="[^"]+\.js[^"]*"' iddaa.html | sed 's/src="//;s/"$//' | head -40 > js.txt || true
+          n=0; while read -r j; do case "$j" in http*) u="$j";; //*) u="https:$j";; *) u="https://www.nesine.com$j";; esac; n=$((n+1)); curl -sSL -m 30 -A "$UA" -o "js$n.js" "$u" || true; done < js.txt
+          cat js*.js | grep -oE '.{0,700}(PlayPercentages|playpercentages).{0,700}' | head -12 > baglam.txt || true
+          rm -f js*.js iddaa.html
+          curl -sSL --compressed -m 60 -A "$UA" -H "Referer: https://www.nesine.com/" -o canli.json "https://bulten.nesine.com/api/bulten/getlivebultenv3" || true
+          python3 -c "import json;d=json.load(open('canli.json'));print(str(d)[:2500])" > canli.ornek.txt || true
+          rm -f canli.json
           cd ..
           git config user.name "github-actions[bot]"
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
