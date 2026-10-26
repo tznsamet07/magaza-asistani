@@ -24,6 +24,12 @@ def tek(mk, mst):
     return None
 
 # ---------- ESPN futbol ----------
+def ilk_yari(tk):
+    # Devre skorları (linescores); İY/MS kuponlarının sonucu için
+    try:
+        return [int(float(tk[y]["linescores"][0]["value"])) for y in ("home", "away")]
+    except (KeyError, IndexError, TypeError, ValueError):
+        return None
 espn = []
 for ad in ("espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"):
     for ev in (oku_json(ad) or {}).get("events", []):
@@ -47,7 +53,7 @@ for ad in ("espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"):
                 "kor": [sayi_(sh, "wonCorners"), sayi_(sa, "wonCorners")],
                 "sut": [sayi_(sh, "totalShots"), sayi_(sa, "totalShots")],
                 "isabet": [sayi_(sh, "shotsOnTarget"), sayi_(sa, "shotsOnTarget")],
-                "top": [sayi_(sh, "possessionPct"), sayi_(sa, "possessionPct")], "kirmizi": kir})
+                "top": [sayi_(sh, "possessionPct"), sayi_(sa, "possessionPct")], "kirmizi": kir, "iy": ilk_yari(tk)})
         except (KeyError, ValueError, TypeError, IndexError):
             continue
 
@@ -66,14 +72,16 @@ kiyas = oku_json("kiyas.json")
 if kiyas:
     n = 0
     for k in kiyas["maclar"].values():
-        if k.get("sonuc") or k["t"] > simdi_ms - 105 * 60e3:
+        if (k.get("sonuc") and k.get("iy")) or k["t"] > simdi_ms - 105 * 60e3 or k["t"] < simdi_ms - 2 * 864e5:
             continue
         x = espn_bul(k["ev"], k["dep"], k["t"])
         if x and x["durum"] == "post":
-            k["sonuc"] = x["skor"]; n += 1
-    if n:
-        with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
-            json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
+            if not k.get("sonuc"):
+                k["sonuc"] = x["skor"]; n += 1
+            if x["iy"]:
+                k["iy"] = x["iy"]
+    with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
+        json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
     print(n, "maçın sonucu ESPN'den işlendi")
 
 # ---------- Canlı bülten ----------

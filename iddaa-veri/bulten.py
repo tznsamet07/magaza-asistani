@@ -220,7 +220,10 @@ for e in ham["sg"]["EA"]:
     if bas < simdi - datetime.timedelta(hours=2):
         continue
     mk = {m["MTID"]: m for m in e.get("MA", [])}
-    m = {"id": e["C"], "t": e["ED"], "lig": ligler.get(e.get("LC"), ""), "ev": e["HN"], "dep": e["AN"], "mbs": e.get("MBS")}
+    m = {"id": e["C"], "t": e["ED"], "lig": ligler.get(e.get("LC"), ""), "ev": e["HN"], "dep": e["AN"],
+         "mbs": e.get("MBS") or (mk.get(1) or mk.get(142) or {}).get("MBS")}
+    if not futbol and not basket and m["mbs"] is None:
+        print("MBS bulunamadı; olay alanları:", sorted(e.keys()), "pazar alanları:", sorted((e.get("MA") or [{}])[0].keys()))
     if e["GT"] == 1:
         m.update(ms=pazar(mk, 1), au15=pazar(mk, 11), au25=pazar(mk, 12), au35=pazar(mk, 13), kg=pazar(mk, 38),
                  korner=pazar(mk, 216), kart=pazar(mk, 218), iyms=pazar(mk, 5), golAralik=pazar(mk, 43))

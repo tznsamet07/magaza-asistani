@@ -1,0 +1,226 @@
+# Günün kuponları: her sabah (09:00 TR'den sonra, günde bir kez) uygulamadaki yöntemle o günün maçlarından 3 kupon kurar,
+# kaydeder ve telefona gönderir (ntfy). Maçlar bittikçe sonuçları işler (kiyas.json: ESPN skoru ve ilk yarı skoru).
+# 1) En sağlam: gerçek ihtimali en yüksek 3 seçenek  2) Dengeli: ihtimal %55-75, avantajı en iyi 3 seçenek
+# 3) Sürpriz: ihtimali en yüksek İY/MS 1/2 ya da 2/1 + 2 sağlam seçenek
+# -> kuponlar.json
+import json, os, math, datetime, urllib.request, base64
+from ortak import oku_json, K, TR, KONU, W
+
+IY_PAYI = 0.446
+IYMS_DUZELTME = {2: 1.18, 6: 1.15}
+AD = {"ms": ["MS 1", "MS X", "MS 2"], "au15": ["1.5 Alt", "1.5 Üst"], "au25": ["2.5 Alt", "2.5 Üst"], "au35": ["3.5 Alt", "3.5 Üst"],
+      "kg": ["KG Var", "KG Yok"], "iyms": ["İY/MS " + x for x in ("1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2")]}
+
+simdi = datetime.datetime.now(TR)
+simdi_ms = int(simdi.timestamp() * 1000)
+kayit = oku_json("kuponlar.json") or {"gunler": {}}
+
+# ---------- Olasılık motoru (uygulamadakinin aynısı) ----------
+def marjsiz(o):
+    if not o or not all(o):
+        return None
+    t = sum(1 / x for x in o)
+    return [1 / x / t for x in o]
+
+POI = {}
+def poisson(l, n=10):
+    a = round(l, 4)
+    if a not in POI:
+        d = [math.exp(-l)]
+        for k in range(1, n + 1):
+            d.append(d[-1] * l / k)
+        POI[a] = d
+    return POI[a]
+
+def ms_au(lh, la):
+    ph, pa = poisson(lh), poisson(la)
+    h = d = a = u = 0.0
+    for i, x in enumerate(ph):
+        for j, y in enumerate(pa):
+            p = x * y
+            if i > j: h += p
+            elif i == j: d += p
+            else: a += p
+            if i + j > 2.5: u += p
+    return h, d, a, u
+
+def lambda_coz(p1, p2, pu):
+    hata = lambda lh, la: (lambda r: (r[0] - p1) ** 2 + (r[2] - p2) ** 2 + (r[3] - pu) ** 2)(ms_au(lh, la))
+    en, eh = (1.4, 1.1), float("inf")
+    for i in range(43):
+        for j in range(38):
+            lh, la = 0.2 + i * 0.1, 0.2 + j * 0.1
+            e = hata(lh, la)
+            if e < eh:
+                eh, en = e, (lh, la)
+    adim = 0.05
+    while adim >= 0.005:
+        iyi = True
+        while iyi:
+            iyi = False
+            for dx, dy in ((adim, 0), (-adim, 0), (0, adim), (0, -adim)):
+                lh, la = en[0] + dx, en[1] + dy
+                if lh <= 0.05 or la <= 0.05:
+                    continue
+                e = hata(lh, la)
+                if e < eh:
+                    eh, en, iyi = e, (lh, la), True
+        adim /= 2
+    return en
+
+def tum_olasiliklar(lh, la):
+    ph, pa = poisson(lh), poisson(la)
+    r = {"ms": [0, 0, 0], "kg": [0, 0]}
+    top = [0.0] * 21
+    for i, x in enumerate(ph):
+        for j, y in enumerate(pa):
+            p = x * y
+            r["ms"][0 if i > j else 1 if i == j else 2] += p
+            top[i + j] += p
+            r["kg"][0 if i > 0 and j > 0 else 1] += p
+    for c in (1.5, 2.5, 3.5):
+        u = sum(p for k, p in enumerate(top) if k > c)
+        r["au" + str(c).replace(".", "")] = [1 - u, u]
+    h1, a1 = poisson(lh * IY_PAYI, 8), poisson(la * IY_PAYI, 8)
+    h2, a2 = poisson(lh * (1 - IY_PAYI), 8), poisson(la * (1 - IY_PAYI), 8)
+    sn = lambda x, y: 0 if x > y else 1 if x == y else 2
+    iy = [0.0] * 9
+    for i in range(9):
+        for j in range(9):
+            p1 = h1[i] * a1[j]
+            if p1 < 1e-7:
+                continue
+            for k in range(9):
+                for l in range(9):
+                    iy[sn(i, j) * 3 + sn(i + k, j + l)] += p1 * h2[k] * a2[l]
+    ek = 0
+    for i, c in IYMS_DUZELTME.items():
+        yeni = iy[i] * c; ek += yeni - iy[i]; iy[i] = yeni
+    kalan = sum(p for i, p in enumerate(iy) if i not in IYMS_DUZELTME)
+    r["iyms"] = [p if i in IYMS_DUZELTME else p * (kalan - ek) / kalan for i, p in enumerate(iy)]
+    return r
+
+def gercek(m):
+    f, sm, dk = m.get("fd") or {}, m.get("sm") or {}, m.get("dkf") or {}
+    tam = lambda o: o and all(o)
+    kms, kau = [], []
+    if sm.get("ms"): kms.append((sm["ms"], W["borsa"]))
+    if tam(f.get("avgMs")): kms.append((marjsiz(f["avgMs"]), W["piyasa"]))
+    if tam(dk.get("ms")): kms.append((marjsiz(dk["ms"]), W["dk"]))
+    if sm.get("au25"): kau.append((sm["au25"], W["borsa"]))
+    if tam(f.get("avgAu")): kau.append((marjsiz(f["avgAu"]), W["piyasa"]))
+    if tam(dk.get("au25")): kau.append((marjsiz(dk["au25"]), W["dk"]))
+    ort = lambda ks: [sum(k[0][i] * k[1] for k in ks) / sum(k[1] for k in ks) for i in range(len(ks[0][0]))]
+    ms = au = kaynak = None
+    if kms:
+        ms, kaynak = ort(kms), "piyasa"
+        au = ort(kau) if kau else marjsiz(m["au25"]["o"]) if m.get("au25") else None
+        if not au:
+            kaynak = None
+    if not kaynak and m.get("ms") and m.get("au25"):
+        ms, au, kaynak = marjsiz(m["ms"]["o"]), marjsiz(m["au25"]["o"]), "iddaa"
+    if not kaynak:
+        return None
+    r = tum_olasiliklar(*lambda_coz(ms[0], ms[2], au[1]))
+    if kaynak == "piyasa":
+        r["ms"] = ms
+        if kau: r["au25"] = au
+        for k in ("au15", "au35", "kg"):
+            if sm.get(k): r[k] = [(p + sm[k][i]) / 2 for i, p in enumerate(r[k])]
+    r["kaynak"] = kaynak
+    return r
+
+def secenekler(m):
+    g = gercek(m)
+    if not g:
+        return []
+    out = []
+    for k in ("ms", "au15", "au25", "au35", "kg", "iyms"):
+        if not m.get(k) or not g.get(k) or len(g[k]) != len(m[k]["o"]):
+            continue
+        for i, o in enumerate(m[k]["o"]):
+            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": g[k][i], "e": g[k][i] * o - 1, "dis": g["kaynak"] == "piyasa"})
+    return out
+
+def kuponlari_kur(maclar):
+    aday = [(m, x) for m in maclar for x in secenekler(m)]
+    sirala = lambda xs, f: sorted(xs, key=lambda v: (not v[1]["dis"], f(v)))
+    kul = set()
+    def sec(xs, n):
+        out = []
+        for m, x in xs:
+            if len(out) >= n: break
+            if m["id"] in kul: continue
+            kul.add(m["id"]); out.append((m, x))
+        return out
+    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2]
+    k1 = sec(sirala([v for v in normal if v[1]["p"] >= 0.7], lambda v: (-v[1]["p"], -v[1]["e"])), 3)
+    k2 = sec(sirala([v for v in normal if 0.55 <= v[1]["p"] < 0.75], lambda v: -v[1]["e"]), 3)
+    sur = sirala([v for v in aday if v[1]["k"] == "iyms" and v[1]["i"] in (2, 6)], lambda v: (-v[1]["p"], -v[1]["e"]))
+    k3 = sec(sur, 1)
+    if k3:
+        k3 += sec(sirala([v for v in normal if v[1]["p"] >= 0.6], lambda v: -v[1]["p"]), 2)
+    paket = lambda ad, xs: {"ad": ad, "secim": [{"id": str(m["id"]), "ev": m["ev"], "dep": m["dep"], "lig": m["lig"], "t": m["t"], "k": x["k"], "i": x["i"],
+                                                  "ad": x["ad"], "o": x["o"], "p": round(x["p"], 4)} for m, x in xs]}
+    return [paket(a, xs) for a, xs in (("En sağlam", k1), ("Dengeli", k2), ("Sürpriz", k3)) if xs]
+
+# ---------- Sonuçlar ----------
+def tuttu_mu(s, km):
+    if not km or not km.get("sonuc"):
+        return None
+    h, a = km["sonuc"]
+    if s["k"] == "ms": return s["i"] == (0 if h > a else 1 if h == a else 2)
+    if s["k"].startswith("au"): return s["i"] == (1 if h + a > int(s["k"][2:]) / 10 else 0)
+    if s["k"] == "kg": return s["i"] == (0 if h > 0 and a > 0 else 1)
+    if s["k"] == "iyms":
+        if not km.get("iy"):
+            return None
+        ih, ia = km["iy"]
+        return s["i"] == (0 if ih > ia else 1 if ih == ia else 2) * 3 + (0 if h > a else 1 if h == a else 2)
+    return None
+
+kiyas = (oku_json("kiyas.json") or {}).get("maclar", {})
+for gun in kayit["gunler"].values():
+    for kp in gun["kuponlar"]:
+        if kp.get("sonuc") in ("tuttu", "yattı"):
+            continue
+        for s in kp["secim"]:
+            if s.get("tuttu") is None:
+                s["tuttu"] = tuttu_mu(s, kiyas.get(s["id"]))
+                if s["tuttu"] is not None:
+                    s["skor"] = kiyas[s["id"]]["sonuc"]
+                    if kiyas[s["id"]].get("iy"): s["iy"] = kiyas[s["id"]]["iy"]
+        if any(s.get("tuttu") is False for s in kp["secim"]):
+            kp["sonuc"] = "yattı"
+        elif all(s.get("tuttu") for s in kp["secim"]):
+            kp["sonuc"] = "tuttu"
+        elif all(s["t"] < simdi_ms - 2 * 864e5 for s in kp["secim"]):
+            kp["sonuc"] = "sonuç yok"   # ESPN'de bulunamadı
+
+# ---------- Günün kuponları ----------
+bugun = simdi.strftime("%Y-%m-%d")
+if bugun not in kayit["gunler"] and simdi.hour >= 9:
+    bulten = oku_json("bulten.json") or {}
+    maclar = [m for m in bulten.get("futbol", []) if m["t"] > simdi_ms + 10 * 60e3
+              and datetime.datetime.fromtimestamp(m["t"] / 1000, TR).strftime("%Y-%m-%d") == bugun]
+    kuponlar = kuponlari_kur(maclar)
+    if kuponlar:
+        kayit["gunler"][bugun] = {"zaman": simdi.strftime("%H:%M"), "kuponlar": kuponlar}
+        bitis = lambda kp: max(s["t"] for s in kp["secim"])
+        satir = []
+        for kp in sorted(kuponlar, key=bitis):
+            oran = math.prod(s["o"] for s in kp["secim"]); p = math.prod(s["p"] for s in kp["secim"])
+            satir.append(f"{kp['ad']} · oran {oran:.2f} · tutma %{p * 100:.0f}" + "".join(
+                f"\n  {datetime.datetime.fromtimestamp(s['t'] / 1000, TR):%H:%M} {s['ev']} – {s['dep']}: {s['ad']} ({s['o']:.2f})" for s in kp["secim"]))
+        metin = "\n\n".join(satir) + "\n\nTutma ihtimali gerçek ihtimallerin çarpımı. Kupon iddaa'nın payını katlar; az parayla oyna."
+        try:
+            urllib.request.urlopen(urllib.request.Request("https://ntfy.sh/" + KONU, data=metin.encode("utf-8"), method="POST",
+                headers={"Title": "=?UTF-8?B?" + base64.b64encode("Günün kuponları".encode()).decode() + "?=", "Tags": "tickets"}), timeout=15).read()
+            kayit["gunler"][bugun]["gonderildi"] = True
+        except Exception as x:
+            print("kupon bildirimi gönderilemedi:", x)
+        print(len(kuponlar), "kupon kuruldu")
+
+kayit["gunler"] = {g: v for g, v in kayit["gunler"].items() if g >= (simdi - datetime.timedelta(days=120)).strftime("%Y-%m-%d")}
+with open(os.path.join(K, "kuponlar.json"), "w", encoding="utf-8") as f:
+    json.dump(kayit, f, ensure_ascii=False, separators=(",", ":"))
