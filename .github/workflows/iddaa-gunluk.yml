@@ -2,6 +2,8 @@
 # her şey claude/project-thread-brb60g dalındaki iddaa-veri/ klasörüne yazılır.
 # - Her 5 dakikada: iddaa bülteni ve canlı bülten, oynanma yüzdeleri, Smarkets borsası, football-data fikstürü,
 #   ESPN canlı skor/istatistik/sonuçlar, açıklanan ilk 11'ler; avantaj çıkınca telefona bildirim (ntfy)
+# - Yarım saatte bir: Polymarket tahmin piyasası
+# - Günde bir (16:00 TR sonrası, ODDS_API_KEY sırrı varsa): Pinnacle/Betfair oranları (The Odds API ücretsiz katman)
 # - 6 saatte bir: Understat xG (büyük 5 lig + Rusya)
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
 # - Her sabah 09:00'dan sonra: günün 3 kuponu telefona; sonuçları maçlar bittikçe işlenir
@@ -38,6 +40,8 @@ jobs:
             curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
           done
       - name: Bülten, oynanma, fikstür, borsa
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           cd iddaa-veri
           NES="-sSfL --compressed -m 90 -A Mozilla/5.0 -H Referer:https://www.nesine.com/"
@@ -49,6 +53,8 @@ jobs:
           done
           curl -sSfL -m 60 -A "Mozilla/5.0" -o fixtures.csv "https://www.football-data.co.uk/fixtures.csv" || echo "fikstür alınamadı"
           timeout 300 python3 smarkets.py || echo "Smarkets alınamadı"
+          timeout 180 python3 polymarket.py || echo "Polymarket alınamadı"
+          timeout 180 python3 oddsapi.py || echo "The Odds API alınamadı"
       - name: Geçmiş istatistikler (günde bir)
         run: |
           # 05 UTC'den sonra, veri.json bugün henüz güncellenmediyse bir kez çalışır
