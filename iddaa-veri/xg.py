@@ -66,9 +66,9 @@ for lig, maclar in ham.items():
             if m.get("isResult"):
                 xh, xa, gh, ga = float(m["xG"]["h"]), float(m["xG"]["a"]), int(m["goals"]["h"]), int(m["goals"]["a"])
                 gecmis[h].append((xh, xa, gh, ga, 1)); gecmis[a].append((xa, xh, ga, gh, 0))
-            elif t > simdi - datetime.timedelta(hours=3) and m.get("forecast"):
-                f = m["forecast"]
-                gelecek.append({"lig": lig, "ev": h, "dep": a, "t": t, "tahmin": [round(float(f["w"]), 3), round(float(f["d"]), 3), round(float(f["l"]), 3)]})
+            elif simdi - datetime.timedelta(days=3) < t < simdi + datetime.timedelta(days=4):
+                f = m.get("forecast")
+                gelecek.append({"lig": lig, "ev": h, "dep": a, "t": t, "tahmin": [round(float(f["w"]), 3), round(float(f["d"]), 3), round(float(f["l"]), 3)] if f else None})
         except (KeyError, ValueError, TypeError):
             continue
     for ad, xs in gecmis.items():
@@ -78,19 +78,22 @@ for lig, maclar in ham.items():
                      "g": round(sum(x[2] for x in s) / n, 2), "ga": round(sum(x[3] for x in s) / n, 2),
                      "son": [[round(x[0], 1), round(x[1], 1), x[2], x[3], x[4]] for x in xs[-5:]]}
 
-# Bültenle eşleştir
+# Bültenle eşleştir (iddaa'daki kısaltmalar)
+KISA = {"psg": "Paris Saint Germain", "man utd": "Manchester United", "man city": "Manchester City", "inter": "Inter", "atl. madrid": "Atletico Madrid", "atletico madrid": "Atletico Madrid", "b. munih": "Bayern Munich", "bayern munih": "Bayern Munich", "dortmund": "Borussia Dortmund", "m.gladbach": "Borussia M.Gladbach", "leverkusen": "Bayer Leverkusen"}
+uz = lambda ad: KISA.get(ad.lower().strip(), ad)
 bulten = oku_json("bulten.json") or {}
 eslesen = {}
 for m in bulten.get("futbol", []):
     bas = datetime.datetime.fromtimestamp(m["t"] / 1000, datetime.timezone.utc)
     en, puan = None, 0
     for g in gelecek:
-        if abs((g["t"] - bas).total_seconds()) > 4 * 3600:
+        # Understat ertelenen maçın tarihini geç güncelleyebiliyor; isimler iyi eşleşirse 2 gün fark kabul
+        if abs((g["t"] - bas).total_seconds()) > 48 * 3600:
             continue
-        b1, b2 = benzer(m["ev"], g["ev"]), benzer(m["dep"], g["dep"])
+        b1, b2 = benzer(uz(m["ev"]), g["ev"]), benzer(uz(m["dep"]), g["dep"])
         if min(b1, b2) >= 0.6 and b1 + b2 > puan:
             en, puan = g, b1 + b2
-    if en and puan >= 1.4:
+    if en and puan >= 1.5:
         eslesen[str(m["id"])] = {"lig": en["lig"], "ev": en["ev"], "dep": en["dep"], "tahmin": en["tahmin"]}
 
 # Understat'ın tahmini de kaynak karşılaştırmasına girer (sadece maç başlamadan)
@@ -99,7 +102,7 @@ if kiyas and eslesen:
     sm = int(simdi.timestamp() * 1000)
     for i, e in eslesen.items():
         k = kiyas["maclar"].get(i)
-        if k and k["t"] > sm and k.get("k") is not None:
+        if k and e["tahmin"] and k["t"] > sm and k.get("k") is not None:
             k["k"]["understat"] = {"ms": e["tahmin"]}
     with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
         json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
