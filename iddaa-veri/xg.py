@@ -2,7 +2,7 @@
 # Takımın son 10 maçta ürettiği ve yediği xG, gerçek golleriyle karşılaştırılır: gol > xG ise takım şanslı gidiyor olabilir.
 # Understat'ın kendi maç tahmini (galibiyet/beraberlik/mağlubiyet) de kaydedilir.
 # Ham veri 6 saatte bir çekilir (xg-ham.json); bültenle eşleştirme her çalışmada yapılır. -> xg.json
-import json, os, re, codecs, datetime, urllib.request, collections
+import json, os, re, codecs, gzip, datetime, urllib.request, collections
 from ortak import oku_json, benzer, K, TR
 
 LIGLER = ["EPL", "La_liga", "Bundesliga", "Serie_A", "Ligue_1", "RFPL"]
@@ -16,7 +16,11 @@ def al(lig):
         try:
             istek = urllib.request.Request(u, headers=dict(h, **{"User-Agent": "Mozilla/5.0", "Referer": f"https://understat.com/league/{lig}"}))
             with urllib.request.urlopen(istek, timeout=30) as r:
-                metin = r.read().decode("utf-8", "replace")
+                ham_b = r.read()
+            # Understat JSON'u istemesek de gzip'li gönderiyor
+            if ham_b[:2] == b"\x1f\x8b":
+                ham_b = gzip.decompress(ham_b)
+            metin = ham_b.decode("utf-8", "replace")
         except Exception as x:
             print(lig, u, "alınamadı:", x)
             continue
