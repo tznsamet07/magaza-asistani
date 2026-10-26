@@ -29,7 +29,11 @@ def al(lig):
         m = re.search(r"datesData\s*=\s*JSON\.parse\('(.*?)'\)", metin)
         if m:
             return json.loads(codecs.decode(m.group(1), "unicode_escape"))
-        print(lig, u, "veri bulunamadı")
+        try:
+            anahtar = list(json.loads(metin).keys())[:8]
+        except (ValueError, AttributeError):
+            anahtar = None
+        print(lig, u, "veri bulunamadı:", len(metin), "bayt, anahtarlar", anahtar, "| başı:", re.sub(r"\s+", " ", metin[:160]), "| script:", re.findall(r"(\w+Data)\s*=", metin)[:6])
     return None
 
 ham = oku_json("xg-ham.json") or {}
