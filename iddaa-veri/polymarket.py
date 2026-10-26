@@ -6,6 +6,7 @@ from ortak import oku_json, K
 API = "https://gamma-api.polymarket.com/"
 UA = {"User-Agent": "Mozilla/5.0", "Accept": "application/json"}
 simdi = datetime.datetime.now(datetime.timezone.utc)
+MIN_HACIM = 1000   # dolar
 
 def al(yol):
     for deneme in range(3):
@@ -29,7 +30,7 @@ def liste(x):
 
 def olaylar(etiket):
     out = []
-    for sayfa in range(10):
+    for sayfa in range(20):
         j = al("events?" + urllib.parse.urlencode({"tag_slug": etiket, "closed": "false", "active": "true", "limit": 100, "offset": sayfa * 100}))
         if not j:
             break
@@ -82,7 +83,8 @@ def mac_cozumle(e, uc_yollu):
             return None
         o = [p["ev"], p["dep"]]
     t = sum(o)
-    if not 0.85 < t < 1.15:
+    # Az işlem gören pazarın fiyatı güvenilmez; bitmiş ya da tarihi geçmiş maçlar alınmaz
+    if not 0.85 < t < 1.15 or hacim < MIN_HACIM or not bas or bas < (simdi - datetime.timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M"):
         return None
     return {"ev": ev, "dep": dep, "t": bas, "ms": [round(x / t, 4) for x in o], "hacim": round(hacim)}
 
