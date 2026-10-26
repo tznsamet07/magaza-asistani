@@ -216,9 +216,19 @@ def gonder(baslik, metin, etiket, oncelik="default"):
         print("bildirim gönderilemedi:", x)
         return False
 
+# Sonucu hiç gelmeyen ligler (ESPN o ligi izlemiyor): son maçlarından en az 2'si bittiği hâlde hiçbiri sonuçlanmadıysa
+# kupona alınmaz, yoksa kupon karnesine hiç yansımaz.
+def sonucsuz_ligler(kiyas):
+    say = {}
+    for k in kiyas.values():
+        if k["t"] < simdi_ms - 4 * 3600e3 and k.get("lig"):
+            a = say.setdefault(k["lig"], [0, 0]); a[0] += 1; a[1] += k.get("sonuc") is not None
+    return {l for l, (n, ok) in say.items() if n >= 2 and not ok}
+SONUCSUZ = sonucsuz_ligler(kiyas)
+
 bulten = oku_json("bulten.json") or {}
 bugun = simdi.strftime("%Y-%m-%d")
-bugunku = [m for m in bulten.get("futbol", []) if datetime.datetime.fromtimestamp(m["t"] / 1000, TR).strftime("%Y-%m-%d") == bugun]
+bugunku = [m for m in bulten.get("futbol", []) if m.get("lig") not in SONUCSUZ and datetime.datetime.fromtimestamp(m["t"] / 1000, TR).strftime("%Y-%m-%d") == bugun]
 gun = kayit["gunler"].get(bugun)
 if gun:
     mac = {str(m["id"]): m for m in bugunku}
