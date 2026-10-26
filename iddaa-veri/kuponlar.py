@@ -187,10 +187,12 @@ def tuttu_mu(s, km):
     return None
 
 kiyas = (oku_json("kiyas.json") or {}).get("maclar", {})
+biten = []   # bu çalışmada sonuçlanan kuponlar (telefona bildirilir)
 for gun in kayit["gunler"].values():
     for kp in gun["kuponlar"]:
         if kp.get("sonuc") in ("tuttu", "yattı"):
             continue
+        onceki = kp.get("sonuc")
         for s in kp["secim"]:
             if s.get("tuttu") is None:
                 s["tuttu"] = tuttu_mu(s, kiyas.get(s["id"]))
@@ -203,6 +205,8 @@ for gun in kayit["gunler"].values():
             kp["sonuc"] = "tuttu"
         elif all(s["t"] < simdi_ms - 2 * 864e5 for s in kp["secim"]):
             kp["sonuc"] = "sonuç yok"   # ESPN'de bulunamadı
+        if kp.get("sonuc") in ("tuttu", "yattı") and kp["sonuc"] != onceki:
+            biten.append(kp)
 
 # ---------- İlk 11'den sonra kontrol ----------
 # Başlamasına 90 dakikadan az kalan seçeneklerin ihtimali güncel bültenden yeniden hesaplanır (ilk 11 açıklanınca borsa hemen oynar).
@@ -258,6 +262,16 @@ if gun:
                 s["oneri"] = {"id": str(mm["id"]), "ev": mm["ev"], "dep": mm["dep"], "lig": mm["lig"], "t": mm["t"], "k": y["k"], "i": y["i"], "ad": y["ad"], "o": y["o"], "p": round(y["p"], 4)}
                 metin += f"\nKuponu henüz oynamadıysan yerine: {datetime.datetime.fromtimestamp(mm['t'] / 1000, TR):%H:%M} {mm['ev']} – {mm['dep']}: {y['ad']} ({y['o']:.2f}, %{y['p'] * 100:.0f})"
             gonder("Kupon uyarısı", metin, "warning", "high")
+
+# Kupon sonuçlanınca telefona: tuttu mu, hangi maç yaktı
+for kp in biten:
+    oran = 1
+    for s in kp["secim"]: oran *= s["o"]
+    if kp["sonuc"] == "tuttu":
+        gonder(f"{kp['ad']} kuponu tuttu", f"Toplam oran {oran:.2f}. " + ", ".join(f"{s['ev']}–{s['dep']} {s.get('skor', ['?', '?'])[0]}-{s.get('skor', ['?', '?'])[1]}" for s in kp["secim"]), "white_check_mark")
+    else:
+        yakan = [s for s in kp["secim"] if s.get("tuttu") is False]
+        gonder(f"{kp['ad']} kuponu yattı", "Yakan: " + ", ".join(f"{s['ev']}–{s['dep']} ({s['ad']}, skor {s.get('skor', ['?', '?'])[0]}-{s.get('skor', ['?', '?'])[1]})" for s in yakan), "x")
 
 # ---------- Günün kuponları ----------
 if bugun not in kayit["gunler"] and simdi.hour >= 9:
