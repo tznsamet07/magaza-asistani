@@ -7,6 +7,7 @@ import json, os, math, datetime, urllib.request, base64
 from ortak import oku_json, K, TR, KONU, W
 
 IY_PAYI = 0.446
+ESIK_PAY = 0.12
 IYMS_DUZELTME = {2: 1.18, 6: 1.15}
 AD = {"ms": ["MS 1", "MS X", "MS 2"], "au15": ["1.5 Alt", "1.5 Üst"], "au25": ["2.5 Alt", "2.5 Üst"], "au35": ["3.5 Alt", "3.5 Üst"],
       "kg": ["KG Var", "KG Yok"], "iyms": ["İY/MS " + x for x in ("1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2")]}
@@ -154,8 +155,10 @@ def kuponlari_kur(maclar):
             kul.add(m["id"]); out.append((m, x))
         return out
     normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2]
-    k1 = sec(sirala([v for v in normal if v[1]["p"] >= 0.7], lambda v: (-v[1]["p"], -v[1]["e"])), 3)
-    k2 = sec(sirala([v for v in normal if 0.55 <= v[1]["p"] < 0.75], lambda v: -v[1]["e"]), 3)
+    # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
+    ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
+    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= 0.7]), lambda v: (-v[1]["p"], -v[1]["e"])), 3)
+    k2 = sec(sirala(ucuz([v for v in normal if 0.55 <= v[1]["p"] < 0.75]), lambda v: -v[1]["e"]), 3)
     sur = sirala([v for v in aday if v[1]["k"] == "iyms" and v[1]["i"] in (2, 6)], lambda v: (-v[1]["p"], -v[1]["e"]))
     k3 = sec(sur, 1)
     if k3:
@@ -197,12 +200,54 @@ for gun in kayit["gunler"].values():
         elif all(s["t"] < simdi_ms - 2 * 864e5 for s in kp["secim"]):
             kp["sonuc"] = "sonuç yok"   # ESPN'de bulunamadı
 
-# ---------- Günün kuponları ----------
+# ---------- İlk 11'den sonra kontrol ----------
+# Başlamasına 90 dakikadan az kalan seçeneklerin ihtimali güncel bültenden yeniden hesaplanır (ilk 11 açıklanınca borsa hemen oynar).
+# İhtimal 5 puandan fazla düştüyse telefona uyarı ve yerine aynı türden, henüz başlamamış bir seçenek önerilir.
+def gonder(baslik, metin, etiket, oncelik="default"):
+    try:
+        urllib.request.urlopen(urllib.request.Request("https://ntfy.sh/" + KONU, data=metin.encode("utf-8"), method="POST",
+            headers={"Title": "=?UTF-8?B?" + base64.b64encode(baslik.encode()).decode() + "?=", "Tags": etiket, "Priority": oncelik}), timeout=15).read()
+        return True
+    except Exception as x:
+        print("bildirim gönderilemedi:", x)
+        return False
+
+bulten = oku_json("bulten.json") or {}
 bugun = simdi.strftime("%Y-%m-%d")
+bugunku = [m for m in bulten.get("futbol", []) if datetime.datetime.fromtimestamp(m["t"] / 1000, TR).strftime("%Y-%m-%d") == bugun]
+gun = kayit["gunler"].get(bugun)
+if gun:
+    mac = {str(m["id"]): m for m in bugunku}
+    for kp in gun["kuponlar"]:
+        kullanilan = {s["id"] for s in kp["secim"]}
+        for s in kp["secim"]:
+            m = mac.get(s["id"])
+            if not m or not (simdi_ms + 5 * 60e3 < s["t"] < simdi_ms + 90 * 60e3):
+                continue
+            x = next((x for x in secenekler(m) if x["k"] == s["k"] and x["i"] == s["i"]), None)
+            if not x:
+                continue
+            s["p_son"], s["o_son"] = round(x["p"], 4), x["o"]
+            if s.get("uyari") or x["p"] >= s["p"] - 0.05:
+                continue
+            # Yerine: aynı kupon türünün ölçütüne uyan, en az 15 dakika sonra başlayan, kuponda olmayan en iyi seçenek
+            alt, ust = (0.55, 0.75) if kp["ad"] == "Dengeli" else (0.7, 1.01)
+            tum = [(mm, y) for mm in bugunku if str(mm["id"]) not in kullanilan and mm["t"] > simdi_ms + 15 * 60e3
+                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2]
+            # Ölçüte uyan yoksa 5 puan gevşetilir; öneri yine de düşen seçenekten daha olası olmalı
+            aday = [v for v in tum if alt <= v[1]["p"] < ust] or [v for v in tum if alt - 0.05 <= v[1]["p"] < ust and v[1]["p"] > x["p"]]
+            aday.sort(key=lambda v: (not v[1]["dis"], -v[1]["e"] if kp["ad"] == "Dengeli" else -v[1]["p"]))
+            s["uyari"] = True
+            metin = f"{kp['ad']} kuponundaki {s['ev']} – {s['dep']} ({s['ad']}) ihtimali %{s['p'] * 100:.0f} → %{x['p'] * 100:.0f} oldu (oran {s['o']:.2f} → {x['o']:.2f}). İlk 11 ya da bir haber piyasayı oynattı."
+            if aday:
+                mm, y = aday[0]
+                s["oneri"] = {"id": str(mm["id"]), "ev": mm["ev"], "dep": mm["dep"], "lig": mm["lig"], "t": mm["t"], "k": y["k"], "i": y["i"], "ad": y["ad"], "o": y["o"], "p": round(y["p"], 4)}
+                metin += f"\nKuponu henüz oynamadıysan yerine: {datetime.datetime.fromtimestamp(mm['t'] / 1000, TR):%H:%M} {mm['ev']} – {mm['dep']}: {y['ad']} ({y['o']:.2f}, %{y['p'] * 100:.0f})"
+            gonder("Kupon uyarısı", metin, "warning", "high")
+
+# ---------- Günün kuponları ----------
 if bugun not in kayit["gunler"] and simdi.hour >= 9:
-    bulten = oku_json("bulten.json") or {}
-    maclar = [m for m in bulten.get("futbol", []) if m["t"] > simdi_ms + 10 * 60e3
-              and datetime.datetime.fromtimestamp(m["t"] / 1000, TR).strftime("%Y-%m-%d") == bugun]
+    maclar = [m for m in bugunku if m["t"] > simdi_ms + 10 * 60e3]
     kuponlar = kuponlari_kur(maclar)
     if kuponlar:
         kayit["gunler"][bugun] = {"zaman": simdi.strftime("%H:%M"), "kuponlar": kuponlar}
@@ -211,14 +256,13 @@ if bugun not in kayit["gunler"] and simdi.hour >= 9:
         for kp in sorted(kuponlar, key=bitis):
             oran = math.prod(s["o"] for s in kp["secim"]); p = math.prod(s["p"] for s in kp["secim"])
             satir.append(f"{kp['ad']} · oran {oran:.2f} · tutma %{p * 100:.0f}" + "".join(
-                f"\n  {datetime.datetime.fromtimestamp(s['t'] / 1000, TR):%H:%M} {s['ev']} – {s['dep']}: {s['ad']} ({s['o']:.2f})" for s in kp["secim"]))
-        metin = "\n\n".join(satir) + "\n\nTutma ihtimali gerçek ihtimallerin çarpımı. Kupon iddaa'nın payını katlar; az parayla oyna."
-        try:
-            urllib.request.urlopen(urllib.request.Request("https://ntfy.sh/" + KONU, data=metin.encode("utf-8"), method="POST",
-                headers={"Title": "=?UTF-8?B?" + base64.b64encode("Günün kuponları".encode()).decode() + "?=", "Tags": "tickets"}), timeout=15).read()
+                f"\n  {datetime.datetime.fromtimestamp(s['t'] / 1000, TR):%H:%M} {s['ev']} – {s['dep']}: {s['ad']} ({s['o']:.2f}, %{s['p'] * 100:.0f})" for s in kp["secim"]))
+            if len(kp["secim"]) == 3 and kp["ad"] != "Sürpriz":
+                iki = sorted(kp["secim"], key=lambda s: -s["p"])[:2]
+                satir[-1] += f"\n  2'li istersen ilk ikisi: oran {iki[0]['o'] * iki[1]['o']:.2f}, tutma %{iki[0]['p'] * iki[1]['p'] * 100:.0f}"
+        metin = "\n\n".join(satir) + "\n\nMaçlardan 1 saat önce ilk 11'ler açıklanınca tekrar bakılır; ihtimal düşerse uyarı gelir. Kupon iddaa'nın payını katlar; az parayla oyna."
+        if gonder("Günün kuponları", metin, "tickets"):
             kayit["gunler"][bugun]["gonderildi"] = True
-        except Exception as x:
-            print("kupon bildirimi gönderilemedi:", x)
         print(len(kuponlar), "kupon kuruldu")
 
 kayit["gunler"] = {g: v for g, v in kayit["gunler"].items() if g >= (simdi - datetime.timedelta(days=120)).strftime("%Y-%m-%d")}
