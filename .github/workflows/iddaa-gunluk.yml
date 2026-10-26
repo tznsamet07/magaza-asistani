@@ -4,6 +4,7 @@
 #   ESPN canlı skor/istatistik/sonuçlar, açıklanan ilk 11'ler; avantaj çıkınca telefona bildirim (ntfy)
 # - 6 saatte bir: Understat xG (büyük 5 lig + Rusya)
 # - Günde bir (05:xx UTC) ve elle çalıştırınca: geçmiş maç istatistikleri
+# - Her sabah 09:00'dan sonra: günün 3 kuponu telefona; sonuçları maçlar bittikçe işlenir
 # - Pazartesi sabahı: geçen haftanın karnesi telefona
 name: iddaa-gunluk
 on:
@@ -71,6 +72,8 @@ jobs:
         run: timeout 180 python3 iddaa-veri/xg.py || echo "xG alınamadı"
       - name: Telefona bildirim
         run: timeout 120 python3 iddaa-veri/bildir.py || echo "bildirim gönderilemedi"
+      - name: Günün kuponları
+        run: timeout 120 python3 iddaa-veri/kuponlar.py || echo "kuponlar kurulamadı"
       - name: Haftalık karne
         run: timeout 60 python3 iddaa-veri/karne.py || echo "karne gönderilemedi"
       - name: Kaydet
