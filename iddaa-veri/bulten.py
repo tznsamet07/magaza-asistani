@@ -220,7 +220,7 @@ for e in ham["sg"]["EA"]:
     if bas < simdi - datetime.timedelta(hours=2):
         continue
     mk = {m["MTID"]: m for m in e.get("MA", [])}
-    m = {"id": e["C"], "t": e["ED"], "lig": ligler.get(e.get("LC"), ""), "ev": e["HN"], "dep": e["AN"]}
+    m = {"id": e["C"], "t": e["ED"], "lig": ligler.get(e.get("LC"), ""), "ev": e["HN"], "dep": e["AN"], "mbs": e.get("MBS")}
     if e["GT"] == 1:
         m.update(ms=pazar(mk, 1), au15=pazar(mk, 11), au25=pazar(mk, 12), au35=pazar(mk, 13), kg=pazar(mk, 38),
                  korner=pazar(mk, 216), kart=pazar(mk, 218), iyms=pazar(mk, 5), golAralik=pazar(mk, 43))
