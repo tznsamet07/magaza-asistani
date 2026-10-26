@@ -104,7 +104,11 @@ def tum_olasiliklar(lh, la):
 def gercek(m):
     f, sm, dk = m.get("fd") or {}, m.get("sm") or {}, m.get("dkf") or {}
     tam = lambda o: o and all(o)
+    pin, pm = m.get("pin") or {}, m.get("pm") or {}
     kms, kau = [], []
+    if pin.get("ms"): kms.append((pin["ms"], W["pinnacle"]))
+    if pin.get("au25"): kau.append((pin["au25"], W["pinnacle"]))
+    if pm.get("ms"): kms.append((pm["ms"], W["polymarket"]))
     if sm.get("ms"): kms.append((sm["ms"], W["borsa"]))
     if tam(f.get("avgMs")): kms.append((marjsiz(f["avgMs"]), W["piyasa"]))
     if tam(dk.get("ms")): kms.append((marjsiz(dk["ms"]), W["dk"]))

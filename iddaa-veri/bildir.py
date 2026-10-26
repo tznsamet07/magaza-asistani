@@ -14,9 +14,12 @@ def marjsiz(o):
     return [1 / x / t for x in o]
 
 def gercek(m, k):
-    # Uygulamadaki gibi: Smarkets 3, piyasa ortalaması 2, DraftKings 1 ağırlıkla
+    # Uygulamadaki gibi: Pinnacle 4, Smarkets 3, piyasa ortalaması 2, DraftKings ve Polymarket 1 ağırlıkla
     ks = []
     sm, f, dk = m.get("sm") or {}, m.get("fd") or {}, m.get("dkf") or {}
+    for ad, x in (("pinnacle", m.get("pin")), ("polymarket", m.get("pm"))):
+        if x and x.get(k):
+            ks.append((x[k], W[ad]))
     if sm.get(k):
         ks.append((sm[k], W["borsa"]))
     p = marjsiz(f.get({"ms": "avgMs", "au25": "avgAu"}.get(k, "-")))

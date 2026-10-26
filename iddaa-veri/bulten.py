@@ -103,6 +103,10 @@ def _zamanli(xs):
             continue
     return out
 borsa, borsa_basket = _zamanli(_sm.get("maclar", [])), _zamanli(_sm.get("basket", []))
+# Polymarket tahmin piyasası ve The Odds API (Pinnacle/Betfair); ikisi de sadece veri
+_pm, _pin = oku_json("polymarket.json") or {}, oku_json("oddsapi.json") or {}
+pm_futbol, pm_basket = _zamanli(_pm.get("futbol", [])), _zamanli(_pm.get("basket", []))
+pin_futbol, pin_basket = _zamanli(_pin.get("futbol", [])), _zamanli(_pin.get("basket", []))
 
 def borsa_eslestir(ev, dep, bas, liste=None, alanlar=("ms", "au15", "au25", "au35", "kg")):
     en, puan = None, 0
@@ -233,6 +237,8 @@ for e in ham["sg"]["EA"]:
         m["fd"] = eslestir(e["HN"], e["AN"], bas.date())
         m["sm"] = borsa_eslestir(e["HN"], e["AN"], bas)
         m["dkf"] = dk_eslestir(e["HN"], e["AN"], bas)
+        m["pm"] = borsa_eslestir(e["HN"], e["AN"], bas, pm_futbol, ("ms",)) or None
+        m["pin"] = borsa_eslestir(e["HN"], e["AN"], bas, pin_futbol, ("ms", "au25")) or None
         oynanma_ekle(m, e)
         hareket(m)
         futbol.append(m)
@@ -243,6 +249,8 @@ for e in ham["sg"]["EA"]:
         m["oranlar"] = ["ms", "toplam"]
         m["dk"] = espn_eslestir(e["HN"], e["AN"], bas)
         m["smb"] = borsa_eslestir(e["HN"], e["AN"], bas, borsa_basket, ("ms", "toplam")) or None
+        m["pinb"] = borsa_eslestir(e["HN"], e["AN"], bas, pin_basket, ("ms", "toplam")) or None
+        m["pmb"] = borsa_eslestir(e["HN"], e["AN"], bas, pm_basket, ("ms",)) or None
         oynanma_ekle(m, e)
         hareket(m)
         basket.append(m)
@@ -281,7 +289,7 @@ with open(os.path.join(K, "borsa-gecmis.json"), "w", encoding="utf-8") as f:
 cikti = {"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "onceZaman": ONCE_ZAMAN, "veriGuncelleme": veri.get("guncelleme"), "futbol": futbol, "basket": basket}
 with open(os.path.join(K, "bulten.json"), "w", encoding="utf-8") as f:
     json.dump(cikti, f, ensure_ascii=False, separators=(",", ":"))
-print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "football-data,", sum(1 for m in futbol if m["sm"]), "Smarkets,", sum(1 for m in futbol if m["dkf"]), "DraftKings,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings,", sum(1 for m in basket if m.get("smb")), "basketbol Smarkets")
+print(len(futbol), "futbol,", len(basket), "basketbol,", sum(1 for m in futbol if m["fd"]), "football-data,", sum(1 for m in futbol if m["sm"]), "Smarkets,", sum(1 for m in futbol if m["dkf"]), "DraftKings,", sum(1 for m in basket if m.get("dk")), "basketbol DraftKings,", sum(1 for m in basket if m.get("smb")), "basketbol Smarkets,", sum(1 for m in futbol if m.get("pm")), "Polymarket,", sum(1 for m in futbol if m.get("pin")), "Pinnacle")
 
 # Maç öncesi son oranlar; maç başlayınca bültenden düştüğü için canlı hesapta buradan okunur
 onmac = (oku_json("onmac.json") or {}).get("maclar", {})
@@ -356,6 +364,10 @@ for m in futbol:
         k["piyasa"] = {"ms": oran_ol(f.get("avgMs")), "au25": oran_ol(f.get("avgAu"))}
     if m.get("dkf"):
         k["dk"] = {"ms": oran_ol(m["dkf"]["ms"]), "au25": oran_ol(m["dkf"].get("au25"))}
+    if m.get("pin"):
+        k["pinnacle"] = {"ms": m["pin"].get("ms"), "au25": m["pin"].get("au25")}
+    if m.get("pm"):
+        k["polymarket"] = {"ms": m["pm"].get("ms")}
     k = {a: {p: v for p, v in b.items() if v} for a, b in k.items()}
     k = {a: b for a, b in k.items() if b}
     kayit = kiyas["maclar"].setdefault(str(m["id"]), {"t": m["t"], "ev": m["ev"], "dep": m["dep"], "lig": m["lig"]})

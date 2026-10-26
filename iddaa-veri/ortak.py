@@ -34,11 +34,11 @@ def benzer(a, b):
 KONU = "iddaa-analiz-7e4d51316682"
 ESIK = 0.05  # dış kaynaklı gerçek olasılıkta en az %5 avantaj
 # Gerçek olasılıkta kaynak ağırlıkları (uygulamadaki varsayılanla aynı)
-W = {"borsa": 3, "piyasa": 2, "dk": 1}
+W = {"pinnacle": 4, "borsa": 3, "piyasa": 2, "dk": 1, "polymarket": 1}
 
 def gercek_k(k, pz):
     # kiyas.json kaydındaki kaynaklardan ağırlıklı ortalama olasılık
-    ks = [(k[a][pz], W[a]) for a in ("borsa", "piyasa", "dk") if k.get(a, {}).get(pz)]
+    ks = [(k[a][pz], W[a]) for a in W if k.get(a, {}).get(pz)]
     if not ks:
         return None
     w = sum(x[1] for x in ks)
