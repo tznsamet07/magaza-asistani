@@ -24,12 +24,40 @@ def tek(mk, mst):
     return None
 
 # ---------- ESPN futbol ----------
-def ilk_yari(tk):
-    # Devre skorları (linescores); İY/MS kuponlarının sonucu için
+def gol_dakika(d):
+    try:
+        return int(re.match(r"\s*(\d+)", (d.get("clock") or {}).get("displayValue") or "").group(1))
+    except (AttributeError, ValueError):
+        return None
+
+def ilk_yari(tk, c):
+    # Devre skoru; İY/MS kuponlarının sonucu için. Önce linescores, yoksa gol olaylarının dakikasından
+    # (45'+2' ilk yarı sayılır). Gol olayları toplamı maç skoruyla tutmuyorsa (eksik olay, kendi kalesine gol karışıklığı) boş.
     try:
         return [int(float(tk[y]["linescores"][0]["value"])) for y in ("home", "away")]
     except (KeyError, IndexError, TypeError, ValueError):
-        return None
+        pass
+    try:
+        skor = [int(tk["home"].get("score") or 0), int(tk["away"].get("score") or 0)]
+        ev_id = tk["home"]["team"]["id"]
+        goller = [d for d in c.get("details", []) if d.get("scoringPlay") and not d.get("shootout")]
+        for kk_ters in (False, True):
+            top, iy = [0, 0], [0, 0]
+            for d in goller:
+                taraf = 0 if d.get("team", {}).get("id") == ev_id else 1
+                if kk_ters and d.get("ownGoal"):
+                    taraf = 1 - taraf
+                dk = gol_dakika(d)
+                if dk is None:
+                    raise ValueError
+                top[taraf] += 1
+                if dk <= 45:
+                    iy[taraf] += 1
+            if top == skor:
+                return iy
+    except (KeyError, TypeError, ValueError):
+        pass
+    return None
 espn = []
 for ad in ("espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"):
     for ev in (oku_json(ad) or {}).get("events", []):
@@ -53,7 +81,7 @@ for ad in ("espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"):
                 "kor": [sayi_(sh, "wonCorners"), sayi_(sa, "wonCorners")],
                 "sut": [sayi_(sh, "totalShots"), sayi_(sa, "totalShots")],
                 "isabet": [sayi_(sh, "shotsOnTarget"), sayi_(sa, "shotsOnTarget")],
-                "top": [sayi_(sh, "possessionPct"), sayi_(sa, "possessionPct")], "kirmizi": kir, "iy": ilk_yari(tk)})
+                "top": [sayi_(sh, "possessionPct"), sayi_(sa, "possessionPct")], "kirmizi": kir, "iy": ilk_yari(tk, c) if st["type"]["state"] == "post" else None})
         except (KeyError, ValueError, TypeError, IndexError):
             continue
 
@@ -82,7 +110,8 @@ if kiyas:
                 k["iy"] = x["iy"]
     with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
         json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
-    print(n, "maçın sonucu ESPN'den işlendi")
+    bitti = [x for x in espn if x["durum"] == "post"]
+    print(n, "maçın sonucu ESPN'den işlendi;", len(bitti), "biten ESPN maçının", sum(1 for x in bitti if x["iy"]), "tanesinde devre skoru var")
 
 # ---------- Canlı bülten ----------
 ham = oku_json("nesine-canli.json") or {}
