@@ -40,7 +40,7 @@ if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || { [ "$(date -u +%H)" -ge 5 
   done
   python3 iddaa-veri/derle.py
 fi
-[ -f iddaa-veri/.espn-ara-bitti ] || { timeout 120 python3 iddaa-veri/espn_lig_ara.py; touch iddaa-veri/.espn-ara-bitti; }
+[ -f iddaa-veri/lig-ara.txt ] || { timeout 120 python3 iddaa-veri/espn_lig_ara.py > iddaa-veri/lig-ara.txt 2>&1; touch iddaa-veri/.espn-ara-bitti; }
 [ -f iddaa-veri/nesine.json ] && python3 iddaa-veri/bulten.py || echo "bülten yok, atlandı"
 timeout 300 python3 iddaa-veri/canli.py || echo "canlı derlenemedi"
 timeout 180 python3 iddaa-veri/xg.py || echo "xG alınamadı"
