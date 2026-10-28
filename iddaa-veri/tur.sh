@@ -12,13 +12,6 @@ echo "=== tur $(date -u +%H:%M) ==="
   curl -sSfL -m 60 -o espn-futbol-0.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500&dates=$G0" || echo "espn futbol 0 yok"
   curl -sSfL -m 60 -o espn-futbol-1.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500&dates=$G1" || echo "espn futbol 1 yok"
   curl -sSfL -m 60 -o espn-futbol-2.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500&dates=$G2" || echo "espn futbol 2 yok"
-  # "all" tablosunda olmayan ligler (sonuçları gelmiyordu): dün ve bugün, 8 paralel istek
-  rm -f espn-futbol-ek-*.json
-  for d in $G0 $G1; do
-    echo eng.5 eng.trophy eng.fa_qual tur.2 ita.3 nor.3 uga.1 ger.3 fra.3 por.2 bel.2 aut.2 sui.1 sui.2 den.2 swe.2 pol.1 cze.1 rou.1 gre.2 isr.1 cyp.1 irl.1 sco.3 sco.4 wal.1 nir.1 aus.2 jpn.2 kor.1 uae.1 qat.1 egy.1 mar.1 tun.1 nga.1 ken.1 gha.1 rus.2 ukr.1 cro.1 srb.1 bul.1 hun.1 svk.1 slo.1 isl.1 fin.1 est.1 chn.2 tha.1 idn.1 mys.1 vie.1 sgp.1 uzb.1 irn.1 bhr.1 kuw.1 jor.1 | tr ' ' '\n' | \
-      xargs -P 8 -I{} sh -c "curl -sSL -m 30 -o espn-futbol-ek-{}-$d.json -w '{} %{http_code}\n' 'https://site.api.espn.com/apis/site/v2/sports/soccer/{}/scoreboard?dates=$d' 2>&1 || true"
-  done > ../iddaa-veri/espn-ek-durum.txt
-  echo "ESPN ek lig: $(ls espn-futbol-ek-*.json 2>/dev/null | wc -l) dosya"
   for l in nba wnba; do
     curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
   done
