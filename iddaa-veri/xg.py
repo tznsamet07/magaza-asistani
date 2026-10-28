@@ -79,7 +79,7 @@ for lig, maclar in ham.items():
                      "son": [[round(x[0], 1), round(x[1], 1), x[2], x[3], x[4]] for x in xs[-5:]]}
 
 # Bültenle eşleştir (iddaa'daki kısaltmalar)
-KISA = {"psg": "Paris Saint Germain", "man utd": "Manchester United", "man city": "Manchester City", "inter": "Inter", "atl. madrid": "Atletico Madrid", "atletico madrid": "Atletico Madrid", "b. munih": "Bayern Munich", "bayern munih": "Bayern Munich", "dortmund": "Borussia Dortmund", "m.gladbach": "Borussia M.Gladbach", "leverkusen": "Bayer Leverkusen"}
+KISA = {"psg": "Paris Saint Germain", "parma": "Parma Calcio 1913", "man utd": "Manchester United", "man city": "Manchester City", "inter": "Inter", "atl. madrid": "Atletico Madrid", "atletico madrid": "Atletico Madrid", "b. munih": "Bayern Munich", "bayern munih": "Bayern Munich", "dortmund": "Borussia Dortmund", "m.gladbach": "Borussia M.Gladbach", "leverkusen": "Bayer Leverkusen"}
 uz = lambda ad: KISA.get(ad.lower().strip(), ad)
 bulten = oku_json("bulten.json") or {}
 eslesen = {}
