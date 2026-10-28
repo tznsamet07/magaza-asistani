@@ -58,9 +58,14 @@ def ilk_yari(tk, c):
     except (KeyError, TypeError, ValueError):
         pass
     return None
-espn = []
-for ad in ("espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"):
+espn, goruldu = [], set()
+# "all" skor tablosu + "all"da olmayan ligler için ayrı çekilenler (espn-futbol-ek-*.json; tur.sh)
+dosyalar = ["espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"] + sorted(f for f in os.listdir(K) if f.startswith("espn-futbol-ek-"))
+for ad in dosyalar:
     for ev in (oku_json(ad) or {}).get("events", []):
+        if ev.get("id") in goruldu:
+            continue
+        goruldu.add(ev.get("id"))
         try:
             c = ev["competitions"][0]
             tk = {x["homeAway"]: x for x in c["competitors"]}
