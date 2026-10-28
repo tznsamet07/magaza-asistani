@@ -46,6 +46,7 @@ timeout 180 python3 iddaa-veri/xg.py || echo "xG alınamadı"
 timeout 120 python3 iddaa-veri/bildir.py || echo "bildirim gönderilemedi"
 timeout 120 python3 iddaa-veri/kuponlar.py || echo "kuponlar kurulamadı"
 timeout 60 python3 iddaa-veri/karne.py || echo "karne gönderilemedi"
+timeout 60 python3 iddaa-veri/arsiv.py || echo "kayıt yazılamadı"
 # Kaydet: sık güncellenen bülten tek kayıt üzerinde tutulur, depo şişmesin.
 # force-with-lease: bu arada dala başka bir kayıt geldiyse onu silmez, gönderim reddedilir (sonraki turda yeniden).
 git add iddaa-veri
