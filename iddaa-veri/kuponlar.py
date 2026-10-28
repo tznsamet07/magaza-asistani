@@ -144,8 +144,34 @@ def secenekler(m):
         if not m.get(k) or not g.get(k) or len(g[k]) != len(m[k]["o"]):
             continue
         for i, o in enumerate(m[k]["o"]):
-            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": g[k][i], "e": g[k][i] * o - 1, "dis": g["kaynak"] == "piyasa"})
+            # 13 bin maçlık geçmişte (football-data kapanış oranları) %65-70 ihtimalli "Alt"lar %67 değil %61 tuttu,
+            # "Üst"ler ise ihtimalinin biraz üstünde: Alt seçeneklerin ihtimali kupon için 3 puan kısılır.
+            p = g[k][i] - (0.03 if k in ("au15", "au25", "au35") and i == 0 else 0)
+            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": p, "e": p * o - 1, "dis": g["kaynak"] == "piyasa"})
     return out
+
+# xG kontrolü: gol pazarlarında (alt/üst, KG) iki takımın son maçlardaki xG'sinden Poisson ihtimali.
+# Piyasanın ihtimalinden 10 puandan fazla düşükse seçenek kupona alınmaz (xG verisi olan liglerde).
+XG = oku_json("xg.json") or {}
+def xg_olas(m, k, i):
+    e = (XG.get("maclar") or {}).get(str(m["id"]))
+    T = XG.get("takim") or {}
+    if not e or k not in ("au15", "au25", "au35", "kg"):
+        return None
+    a, b = T.get(e["ev"]), T.get(e["dep"])
+    if not a or not b or min(a["n"], b["n"]) < 5:
+        return None
+    ph, pa = poisson((a["xg"] + b["xga"]) / 2), poisson((b["xg"] + a["xga"]) / 2)
+    if k == "kg":
+        var = (1 - ph[0]) * (1 - pa[0])
+        return var if i == 0 else 1 - var
+    c = {"au15": 1, "au25": 2, "au35": 3}[k]
+    alt = sum(ph[x] * pa[y] for x in range(c + 1) for y in range(c + 1 - x))
+    return alt if i == 0 else 1 - alt
+
+def xg_uyar(m, x):
+    q = xg_olas(m, x["k"], x["i"])
+    return q is not None and q < x["p"] - 0.10
 
 def kuponlari_kur(maclar):
     aday = [(m, x) for m in maclar for x in secenekler(m)]
@@ -158,11 +184,12 @@ def kuponlari_kur(maclar):
             if m["id"] in kul: continue
             kul.add(m["id"]); out.append((m, x))
         return out
-    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2]
+    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v)]
+    # Sağlam ve dengeli kupon 2 maçlık: 3 maçta %70'lik seçimlerle bile kupon ancak %35 tutuyordu
     # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
-    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= 0.7]), lambda v: (-v[1]["p"], -v[1]["e"])), 3)
-    k2 = sec(sirala(ucuz([v for v in normal if 0.55 <= v[1]["p"] < 0.75]), lambda v: -v[1]["e"]), 3)
+    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= 0.7]), lambda v: (-v[1]["p"], -v[1]["e"])), 2)
+    k2 = sec(sirala(ucuz([v for v in normal if 0.55 <= v[1]["p"] < 0.75]), lambda v: -v[1]["e"]), 2)
     sur = sirala([v for v in aday if v[1]["k"] == "iyms" and v[1]["i"] in (2, 6)], lambda v: (-v[1]["p"], -v[1]["e"]))
     k3 = sec(sur, 1)
     if k3:
@@ -251,7 +278,7 @@ if gun:
             # Yerine: aynı kupon türünün ölçütüne uyan, en az 15 dakika sonra başlayan, kuponda olmayan en iyi seçenek
             alt, ust = (0.55, 0.75) if kp["ad"] == "Dengeli" else (0.7, 1.01)
             tum = [(mm, y) for mm in bugunku if str(mm["id"]) not in kullanilan and mm["t"] > simdi_ms + 15 * 60e3
-                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2]
+                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2 and not xg_uyar(mm, y)]
             # Ölçüte uyan yoksa 5 puan gevşetilir; öneri yine de düşen seçenekten daha olası olmalı
             aday = [v for v in tum if alt <= v[1]["p"] < ust] or [v for v in tum if alt - 0.05 <= v[1]["p"] < ust and v[1]["p"] > x["p"]]
             aday.sort(key=lambda v: (not v[1]["dis"], -v[1]["e"] if kp["ad"] == "Dengeli" else -v[1]["p"]))
