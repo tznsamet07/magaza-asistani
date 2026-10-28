@@ -149,3 +149,73 @@
 3246154;2026-10-28 20:30;İtalya Serie A;AC Milan;Bologna;2-1;2-4;1,48;3,28;4,82;1,54;1,86;57,8;25,4;16,8;1;hayır;Alt;hayır;borsa,piyasa,dk
 3246220;2026-10-28 20:30;İtalya Serie A;Parma;Udinese;0-0;0-0;2,5;2,78;2,34;1,56;1,82;32,6;30,6;36,8;2;hayır;Alt;evet;borsa,piyasa,dk
 3246456;2026-10-28 20:30;İtalya Serie A;Venezia;Inter;0-0;0-2;5,83;4,83;1,24;2,77;1,21;12,2;16,9;70,9;2;evet;Üst;hayır;borsa,piyasa,dk
+3246382;2026-10-28 20:45;UEFA Şamp. Ligi Kadınlar ;Servette (K);OH Leuven (K);3-0;5-1;2,87;3,11;1,78;2,02;1,35;28,1;24,8;47,1;2;hayır;Üst;evet;dk
+3246290;2026-10-28 21:00;İsveç  Allsvenskan;Brommapojkarna;BK Hacken;0-0;0-0;4,36;4,03;1,41;2,45;1,28;19,2;21,0;59,7;2;hayır;Üst;hayır;borsa,dk
+3246234;2026-10-28 21:00;İsveç  Allsvenskan;Halmstads;Malmö;0-2;0-3;4,08;3,62;1,5;2,09;1,41;20,0;22,1;57,9;2;evet;Üst;evet;borsa,dk
+3246336;2026-10-28 21:00;İtalya Serie B;AC Pisa;US Palermo;2-0;3-3;2,06;3,11;2,62;1,93;1,49;41,1;28,4;30,4;1;hayır;Üst;evet;borsa,piyasa,dk
+3246250;2026-10-28 21:00;İsveç  Allsvenskan;IFK Göteborg;Djurgarden;1-0;1-1;3,28;3,44;1,69;1,93;1,49;25,8;25,7;48,5;2;hayır;Üst;hayır;borsa,dk
+3246444;2026-10-28 21:00;İsveç  Allsvenskan;Degerfors IF;Vasteraas;0-1;0-3;2,54;3,01;2,16;1,61;1,76;32,5;28,4;39,1;2;evet;Alt;hayır;borsa,dk
+3246267;2026-10-28 21:15;AFC Kupası;AL Khalidiyah;AL Wahda;0-1;1-2;3,13;3,31;1,63;1,75;1,51;28,1;26,4;45,5;2;evet;Üst;evet;borsa
+3246420;2026-10-28 21:15;AFC Kupası;AL Faisaly (Ürd);AL Taawoun;0-0;0-2;2;3,02;2,49;1,63;1,61;40,5;30,0;29,5;1;hayır;Alt;evet;dk
+3274062;2026-10-28 20:45;Hollanda Kupası;S. Rotterdam;F. Sittard;1-0;2-2;1,67;3,24;3,09;1,94;1,39;51,6;24,6;23,8;1;hayır;Üst;evet;borsa,dk
+3246285;2026-10-28 22:00;İtalya Serie B;Juve Stabia;Hellas Verona;0-0;0-1;2,72;2,87;2,13;1,75;1,62;32,0;28,3;39,7;2;evet;Üst;hayır;borsa,piyasa,dk
+3274060;2026-10-28 22:00;Hollanda Kupası;Zwolle;TOP Oss;1-1;1-2;1,12;4,84;7,39;;;74,3;16,0;9,7;1;hayır;Üst;evet;borsa,dk
+3274065;2026-10-28 22:00;Hollanda Kupası;KVV Quick Boys;VV Eemdijk;2-0;4-0;1,06;5,84;8,76;;;77,6;12,2;10,2;1;evet;;;dk
+3274108;2026-10-28 22:00;Hollanda Kupası;Maastricht;Excelsior;0-1;0-3;5,21;4,1;1,26;;;14,4;19,7;65,9;2;evet;Üst;evet;borsa,dk
+3274126;2026-10-28 22:00;Hollanda Kupası;SC Genemuiden;Dordrecht;1-1;3-2;4,77;4,45;1,25;;;15,6;20,0;64,4;2;hayır;Üst;evet;borsa,dk
+3246468;2026-10-28 22:00;İtalya Serie B;Carrarese C. 1908;SS Arezzo;0-0;2-1;1,63;3,13;3,9;1,67;1,69;49,1;27,9;23,0;1;evet;Alt;hayır;borsa,piyasa,dk
+3274061;2026-10-28 22:00;Hollanda Kupası;VVV Venlo;Vitesse;0-2;0-2;1,92;3,31;2,45;;;42,9;24,3;32,9;1;hayır;Üst;hayır;borsa,dk
+3243611;2026-10-28 22:45;İngiltere Lig Kupası;Bournemouth;Aston Villa;1-0;3-0;1,88;3,3;2,84;2,09;1,41;45,1;25,8;29,1;1;evet;Üst;evet;borsa,dk
+3246378;2026-10-28 22:45;İskoçya Premiership;St. Mirren;Hibernian;0-0;1-1;2,92;3,07;1,93;1,75;1,62;27,9;27,0;45,1;2;hayır;Üst;hayır;borsa,piyasa,dk
+3243691;2026-10-28 22:30;İngiltere Lig Kupası;Man. City;Brighton;1-1;2-2;1,68;3,51;3,24;2,24;1,35;50,4;23,6;26,0;1;hayır;Üst;evet;borsa,dk
+3243588;2026-10-28 22:45;İngiltere Lig Kupası;Sunderland;Brentford;3-1;3-2;4,72;3,83;1,4;2,06;1,43;18,0;22,6;59,5;2;hayır;Üst;evet;borsa,dk
+3243721;2026-10-28 22:45;İngiltere Lig Kupası;Fulham;Crystal Palace;0-1;0-1;1,51;3,57;4,09;2,02;1,44;56,4;23,8;19,8;1;hayır;Üst;hayır;borsa,dk
+3246180;2026-10-28 22:45;Almanya Kupası;Hannover 96;Kaiserslautern;0-1;0-2;1,77;3,19;2,82;2;1,37;46,3;25,2;28,5;1;hayır;Üst;hayır;borsa,dk
+3246225;2026-10-28 22:45;İngiltere Ulusal Lig;Forest Green;Eastleigh;1-0;2-0;1,34;3,79;4,47;2,1;1,32;61,2;20,9;17,9;1;evet;Üst;hayır;borsa,piyasa,dk
+3246308;2026-10-28 22:45;İtalya Serie A;AC Monza;Napoli;1-1;1-4;4,9;3,91;1,37;2,06;1,42;18,4;22,5;59,1;2;evet;Üst;evet;borsa,piyasa,dk
+3246149;2026-10-28 22:45;İskoçya Premiership;Aberdeen;Falkirk;0-0;0-1;1,7;3,2;3,47;1,75;1,62;48,8;26,3;24,9;1;hayır;Üst;hayır;borsa,piyasa,dk
+3246191;2026-10-28 22:45;İskoçya Premiership;Dundee;Kilmarnock;1-0;3-1;1,73;3,36;3,22;1,92;1,5;48,3;25,5;26,2;1;evet;Üst;evet;borsa,piyasa,dk
+3246337;2026-10-28 22:45;İskoçya Premiership;Celtic;Dundee Utd;1-2;2-2;1,14;5,79;7,52;3,31;1,13;75,1;15,4;9,5;1;hayır;Üst;evet;borsa,piyasa,dk
+3246440;2026-10-28 22:45;İskoçya Premiership;St. Johnstone;Motherwell;1-1;2-2;2,24;3,1;2,39;1,75;1,62;38,2;27,9;33,9;1;hayır;Üst;evet;borsa,piyasa,dk
+3246216;2026-10-28 22:45;Almanya Kupası;B. Leverkusen;Nürnberg;1-2;5-2;1,07;5,74;8,35;2,85;1,14;79,1;13,0;7,9;1;evet;Üst;evet;borsa,dk
+3246362;2026-10-28 22:45;İngiltere Ulusal Lig;Carlisle;Harrogate;1-0;3-0;1,77;3,21;2,81;2;1,36;46,7;25,2;28,1;1;evet;Üst;evet;borsa,piyasa,dk
+3246374;2026-10-28 22:45;İtalya Serie A;Genoa;Juventus;2-0;2-0;4,68;3,04;1,55;1,38;2,17;16,9;26,7;56,4;2;hayır;Alt;evet;borsa,piyasa,dk
+3246411;2026-10-28 22:45;İngiltere Ulusal Lig;Sutton Utd;Aldershot;2-0;2-0;1,61;3,2;3,33;1,8;1,47;50,8;25,1;24,1;1;evet;Üst;hayır;borsa,piyasa,dk
+3246416;2026-10-28 23:00;İskoçya Premiership;Hearts;Rangers;0-1;2-2;3,31;3,4;1,69;2,06;1,42;27,6;25,9;46,5;2;hayır;Üst;evet;borsa,piyasa,dk
+3246156;2026-10-28 23:00;UEFA Şamp. Ligi Kadınlar ;Arsenal (K);Benfica (K);1-0;3-0;1,06;5,71;8,72;2,66;1,16;76,5;14,2;9,3;1;evet;Üst;evet;iddaa
+3274100;2026-10-28 23:00;Hollanda Kupası;Excelsior Maassluis;Heerenveen;0-0;0-2;8,81;5,5;1,07;;;7,2;11,9;81,0;2;evet;Üst;hayır;borsa,dk
+3243869;2026-10-28 23:00;İngiltere Lig Kupası;Liverpool;Chelsea;1-1;1-1;2,2;3,21;2,37;1,99;1,47;39,2;26,7;34,1;1;hayır;Üst;hayır;borsa,dk
+3243784;2026-10-28 23:30;Peru Prmr Ligi, Kapanış;Alianza Atl;Deportivo Garcilaso;3-0;3-2;1,47;3,24;4,11;1,8;1,47;59,3;22,7;18,0;1;evet;Üst;evet;borsa,dk
+3246479;2026-10-28 22:45;Almanya Kupası;Holstein Kiel;Hoffenheim;1-1;1-1;4,85;4,2;1,27;2,58;1,18;15,0;19,1;65,9;2;hayır;Üst;hayır;borsa,dk
+3236932;2026-10-29 00:00;Guatemala Ulusal Lig, Açılış;CSD Imperial;CD Suchitepequez;1-0;2-1;1,24;3,8;6;1,58;1,67;67,9;20,6;11,6;1;evet;Alt;hayır;dk
+3246472;2026-10-29 01:30;Brezilya Serie A;Bragantino;Chapecoense;1-0;3-0;1,14;5,64;7,66;2,97;1,18;74,4;15,5;10,1;1;evet;Üst;evet;borsa,dk
+3246447;2026-10-29 01:30;Brezilya Serie A;Santos SP;Palmeiras SP;0-0;0-0;3,29;3,19;1,75;1,8;1,59;25,5;26,3;48,2;2;hayır;Üst;hayır;borsa,dk
+3246209;2026-10-29 01:30;Brezilya Serie A;Fluminense;Internacional;0-0;2-1;1,6;3,2;3,96;1,67;1,7;53,8;26,0;20,2;1;evet;Alt;hayır;borsa,dk
+3246435;2026-10-29 02:00;Kolombiya Liga Dimayor, Final;Once Caldas;Alianza Valledupar;0-0;1-0;1,27;3,7;5,79;1,67;1,59;64,8;22,0;13,2;1;evet;Alt;evet;borsa,dk,polymarket
+3335668;2026-10-29 02:30;Venezuela Prmr Lig, Kapanış, Ana Tur;Metropolitan;Portuguesa;0-0;0-0;1,61;2,98;3,6;1,64;1,6;50,2;27,1;22,7;1;hayır;Üst;hayır;borsa,dk
+3335626;2026-10-29 00:30;Venezuela Prmr Lig, Kapanış, Ana Tur;Carabobo;Dep. La Gua.;1-1;3-1;1,44;2,96;4,94;1,42;1,89;58,0;26,6;15,5;1;evet;Alt;hayır;borsa,dk
+3246150;2026-10-29 02:30;ABD Major Lig;Toronto;DC Utd;0-1;2-1;1,67;3,44;3,37;2,16;1,38;51,3;24,8;23,9;1;evet;Üst;evet;borsa,dk
+3246214;2026-10-29 02:30;ABD Major Lig;Charlotte;Montreal I.;1-0;4-0;1,47;3,88;3,98;2,59;1,25;56,5;21,9;21,5;1;evet;Üst;evet;borsa,dk
+3246423;2026-10-29 02:30;ABD Major Lig;Inter Miami;Cincinnati;0-0;2-2;1,36;4,57;4,24;3,79;1,08;63,0;18,6;18,4;1;hayır;Üst;evet;borsa,dk
+3246311;2026-10-29 02:30;ABD Major Lig;N. E. Revolution;NY Red Bulls;1-0;3-2;1,94;3,5;2,59;2,61;1,24;44,2;24,4;31,4;1;evet;Üst;evet;dk
+3335660;2026-10-29 02:30;Şili Premier Lig;Uni. Catolica;Audax Ital.;1-0;1-1;1,42;3,37;4,27;1,76;1,5;57,9;23,8;18,3;1;hayır;Üst;hayır;borsa,dk
+3246396;2026-10-29 02:30;ABD Major Lig;New York C.;Atlanta Utd;0-0;2-1;1,58;3,5;3,72;2;1,46;53,7;24,7;21,6;1;evet;Üst;evet;borsa,dk
+3243663;2026-10-29 03:00;Peru Prmr Ligi, Kapanış;CS Cienciano;Atl Grau;0-0;3-0;1,09;5,02;8,23;;;74,0;16,8;9,2;1;evet;;;dk
+3237286;2026-10-29 03:00;Guatemala Ulusal Lig, Açılış;Malacateco;Aurora;0-1;0-2;1,41;3,3;4,54;1,67;1,58;57,3;24,2;18,4;1;hayır;Üst;hayır;dk
+3286490;2026-10-29 03:15;Arjantin Kupası;Atl Tucuman;CA Platense;1-0;1-1;2,64;2,64;2,33;1,31;2,35;31,2;34,2;34,6;2;hayır;Alt;evet;borsa
+3246477;2026-10-29 03:30;Brezilya Serie A;Clube do Remo;Botafogo RJ;1-0;2-1;2,18;3,16;2,43;1,9;1,51;38,4;27,6;34,0;1;evet;Üst;evet;borsa
+3247867;2026-10-29 03:30;Orta Amerika Kupası, Sıralama;D. Saprissa;Angel Firpo;1-0;2-1;1,24;3,84;6;1,75;1,51;65,9;21,7;12,4;1;evet;Üst;evet;borsa
+3246356;2026-10-29 03:30;Brezilya Serie A;Bahia BA;Sao Paulo SP;2-2;3-2;1,72;3,23;3,38;1,8;1,58;50,6;25,8;23,5;1;evet;Üst;evet;borsa
+3247878;2026-10-29 03:30;ABD Major Lig;Dallas;Columbus Cr.;0-1;0-2;1,97;3,37;2,61;2,41;1,29;42,9;25,2;31,9;1;hayır;Üst;hayır;borsa
+3247881;2026-10-29 03:30;ABD Major Lig;Minnesota Utd;Kansas City;0-1;3-1;1,26;4,7;5,53;3,12;1,15;66,8;17,9;15,2;1;evet;Üst;evet;iddaa
+3247924;2026-10-29 03:30;ABD Major Lig;Austin;Real Salt Lake;0-0;1-2;2,83;3,3;1,88;2,13;1,4;28,6;25,0;46,4;2;evet;Üst;evet;borsa
+3247945;2026-10-29 03:30;ABD Major Lig;Chicago Fire;Orlando City;0-2;2-2;1,28;4,98;5,01;3,91;1,08;66,0;17,2;16,8;1;hayır;Üst;evet;borsa
+3247946;2026-10-29 03:30;ABD Major Lig;Nashville SC;Phila. Union;0-0;0-0;1,76;3,24;3,23;1,93;1,49;49,6;26,2;24,3;1;hayır;Üst;hayır;borsa
+3247883;2026-10-29 03:30;ABD Major Lig;S. Louis City SC;Portland Tim;0-2;2-3;1,76;3,49;3,02;2,38;1,3;50,0;24,7;25,3;1;hayır;Üst;evet;borsa
+3247759;2026-10-29 04:05;Kolombiya Liga Dimayor, Final;Inter Bogota;I. Medellin;1-0;3-1;2,64;2,87;1,98;1,65;1,6;30,7;28,3;41,0;2;hayır;Üst;evet;iddaa
+3237489;2026-10-29 05:00;Guatemala Ulusal Lig, Açılış;Municipal;Comunicacion;0-1;3-1;1,34;3,43;5,08;1,57;1,67;60,4;23,6;15,9;1;evet;Alt;hayır;iddaa
+3247802;2026-10-29 05:30;ABD Major Lig;S. Sounders;Houston Dyn.;0-1;0-1;1,47;3,7;4,22;2;1,45;59,1;22,1;18,8;1;hayır;Üst;hayır;borsa
+3247914;2026-10-29 05:30;ABD Major Lig;San Jose E.;Colorado R.;1-1;2-2;2;3,19;2,67;2;1,46;42,1;26,4;31,5;1;hayır;Üst;evet;iddaa
+3247958;2026-10-29 05:30;ABD Major Lig;V. Whitecaps;San Diego;2-0;4-1;1,37;4,41;4,31;3,18;1,15;62,7;19,8;17,5;1;evet;Üst;evet;borsa
+3247999;2026-10-29 06:00;Meksika Prmr Ligi, Açılış;America;Club Tijuana;1-1;1-1;1,34;3,78;4,48;2,09;1,33;62,3;21,7;16,0;1;hayır;Üst;hayır;borsa,polymarket
+3247982;2026-10-29 06:00;Orta Amerika Kupası;CD Olimpia;CS Cartagines;1-1;2-2;1,47;3,37;3,92;1,67;1,58;57,6;25,5;16,9;1;hayır;Üst;evet;borsa
