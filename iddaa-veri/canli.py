@@ -61,7 +61,10 @@ def ilk_yari(tk, c):
 espn, goruldu = [], set()
 # "all" skor tablosu + "all"da olmayan ligler için ayrı çekilenler (espn-futbol-ek-*.json; tur.sh)
 dosyalar = ["espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"] + sorted(f for f in os.listdir(K) if f.startswith("espn-futbol-ek-"))
+ek_durum = {}
 for ad in dosyalar:
+    if ad.startswith("espn-futbol-ek-"):
+        ek_durum[ad[15:-5]] = len((oku_json(ad) or {}).get("events", []))
     for ev in (oku_json(ad) or {}).get("events", []):
         if ev.get("id") in goruldu:
             continue
@@ -115,6 +118,9 @@ if kiyas:
                 k["iy"] = x["iy"]
     with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
         json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
+    # Sağlık: ek liglerden kaç maç geldi (tur.sh), sonucu bekleyen maçlar
+    with open(os.path.join(K, "saglik.json"), "w", encoding="utf-8") as f:
+        json.dump({"zaman": datetime.datetime.now(TR).strftime("%Y-%m-%d %H:%M"), "espn_ek": ek_durum, "espn_toplam": len(espn)}, f, ensure_ascii=False)
     bitti = [x for x in espn if x["durum"] == "post"]
     print(n, "maçın sonucu ESPN'den işlendi;", len(bitti), "biten ESPN maçının", sum(1 for x in bitti if x["iy"]), "tanesinde devre skoru var")
 
