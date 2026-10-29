@@ -188,7 +188,9 @@ def kuponlari_kur(maclar):
     # Sağlam ve dengeli kupon 2 maçlık: 3 maçta %70'lik seçimlerle bile kupon ancak %35 tutuyordu
     # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
-    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= 0.7]), lambda v: (-v[1]["p"], -v[1]["e"])), 2)
+    # %70'lik 2 seçenek yoksa (sakin günler) eşik %65'e iner; yoksa sağlam kupon hiç çıkmıyordu
+    esik = 0.7 if len({v[0]["id"] for v in normal if v[1]["p"] >= 0.7}) >= 2 else 0.65
+    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= esik]), lambda v: (-v[1]["p"], -v[1]["e"])), 2)
     k2 = sec(sirala(ucuz([v for v in normal if 0.55 <= v[1]["p"] < 0.75]), lambda v: -v[1]["e"]), 2)
     sur = sirala([v for v in aday if v[1]["k"] == "iyms" and v[1]["i"] in (2, 6)], lambda v: (-v[1]["p"], -v[1]["e"]))
     k3 = sec(sur, 1)
@@ -319,6 +321,21 @@ if bugun not in kayit["gunler"] and simdi.hour >= 9:
         if gonder("Günün kuponları", metin, "tickets"):
             kayit["gunler"][bugun]["gonderildi"] = True
         print(len(kuponlar), "kupon kuruldu")
+
+# Sabah bir kupon türü çıkmadıysa (yeterli maç yoktu), 18:00'e kadar kalan maçlardan tamamlanmaya çalışılır
+gun = kayit["gunler"].get(bugun)
+if gun and 9 <= simdi.hour < 18:
+    mevcut = {kp["ad"] for kp in gun["kuponlar"]}
+    kullanilan = {s["id"] for kp in gun["kuponlar"] for s in kp["secim"]}
+    maclar = [m for m in bugunku if m["t"] > simdi_ms + 30 * 60e3 and str(m["id"]) not in kullanilan]
+    for kp in kuponlari_kur(maclar) if len(mevcut) < 3 else []:
+        if kp["ad"] in mevcut or kp["ad"] == "Sürpriz":
+            continue
+        gun["kuponlar"].append(kp)
+        oran = math.prod(x["o"] for x in kp["secim"]); p = math.prod(x["p"] for x in kp["secim"])
+        gonder(f"{kp['ad']} kuponu (yeni)", f"Sabah yeterli maç yoktu, kalan maçlardan kuruldu. Oran {oran:.2f} · tutma %{p * 100:.0f}" + "".join(
+            f"\n  {datetime.datetime.fromtimestamp(x['t'] / 1000, TR):%H:%M} {x['ev']} – {x['dep']}: {x['ad']} ({x['o']:.2f}, %{x['p'] * 100:.0f})" for x in kp["secim"]), "tickets")
+        print(kp["ad"], "kuponu sonradan kuruldu")
 
 kayit["gunler"] = {g: v for g, v in kayit["gunler"].items() if g >= (simdi - datetime.timedelta(days=120)).strftime("%Y-%m-%d")}
 with open(os.path.join(K, "kuponlar.json"), "w", encoding="utf-8") as f:
