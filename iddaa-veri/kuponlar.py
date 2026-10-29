@@ -175,7 +175,8 @@ def xg_uyar(m, x):
 
 def kuponlari_kur(maclar):
     aday = [(m, x) for m in maclar for x in secenekler(m)]
-    sirala = lambda xs, f: sorted(xs, key=lambda v: (not v[1]["dis"], f(v)))
+    # Önce dış kaynaklı, sonra sonucu daha önce gelmiş liglerdeki seçenekler (kupon karnesine yansısın)
+    sirala = lambda xs, f: sorted(xs, key=lambda v: (not v[1]["dis"], v[0].get("lig") not in BILINEN, f(v)))
     kul = set()
     def sec(xs, n):
         out = []
@@ -258,6 +259,7 @@ def sonucsuz_ligler(kiyas):
             a = say.setdefault(k["lig"], [0, 0]); a[0] += 1; a[1] += k.get("sonuc") is not None
     return {l for l, (n, ok) in say.items() if n >= 2 and not ok}
 SONUCSUZ = sonucsuz_ligler(kiyas)
+BILINEN = {k["lig"] for k in kiyas.values() if k.get("sonuc") and k.get("lig")}
 
 bulten = oku_json("bulten.json") or {}
 bugun = simdi.strftime("%Y-%m-%d")
