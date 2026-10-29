@@ -278,12 +278,13 @@ if gun:
             if s.get("uyari") or x["p"] >= s["p"] - 0.05:
                 continue
             # Yerine: aynı kupon türünün ölçütüne uyan, en az 15 dakika sonra başlayan, kuponda olmayan en iyi seçenek
-            alt, ust = (0.55, 0.75) if kp["ad"] == "Dengeli" else (0.7, 1.01)
+            dengeli = kp["ad"] in ("Dengeli", "Akşam dengeli")
+            alt, ust = (0.55, 0.75) if dengeli else (0.65, 1.01)
             tum = [(mm, y) for mm in bugunku if str(mm["id"]) not in kullanilan and mm["t"] > simdi_ms + 15 * 60e3
                    for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2 and not xg_uyar(mm, y)]
             # Ölçüte uyan yoksa 5 puan gevşetilir; öneri yine de düşen seçenekten daha olası olmalı
             aday = [v for v in tum if alt <= v[1]["p"] < ust] or [v for v in tum if alt - 0.05 <= v[1]["p"] < ust and v[1]["p"] > x["p"]]
-            aday.sort(key=lambda v: (not v[1]["dis"], -v[1]["e"] if kp["ad"] == "Dengeli" else -v[1]["p"]))
+            aday.sort(key=lambda v: (not v[1]["dis"], -v[1]["e"] if dengeli else -v[1]["p"]))
             s["uyari"] = True
             metin = f"{kp['ad']} kuponundaki {s['ev']} – {s['dep']} ({s['ad']}) ihtimali %{s['p'] * 100:.0f} → %{x['p'] * 100:.0f} oldu (oran {s['o']:.2f} → {x['o']:.2f}). İlk 11 ya da bir haber piyasayı oynattı."
             if aday:
@@ -336,6 +337,27 @@ if gun and 9 <= simdi.hour < 18:
         gonder(f"{kp['ad']} kuponu (yeni)", f"Sabah yeterli maç yoktu, kalan maçlardan kuruldu. Oran {oran:.2f} · tutma %{p * 100:.0f}" + "".join(
             f"\n  {datetime.datetime.fromtimestamp(x['t'] / 1000, TR):%H:%M} {x['ev']} – {x['dep']}: {x['ad']} ({x['o']:.2f}, %{x['p'] * 100:.0f})" for x in kp["secim"]), "tickets")
         print(kp["ad"], "kuponu sonradan kuruldu")
+
+# Akşam kuponu (emir istedi): 18:00'de, 19:00 sonrası başlayan ve sabah kuponlarında olmayan maçlardan sağlam + dengeli.
+# Maça yakın oranlar daha isabetli, büyük ligler de çoğunlukla akşam oynanıyor. 21:00'e kadar maç yoksa o gün atlanır.
+gun = kayit["gunler"].get(bugun)
+if gun and 18 <= simdi.hour < 21 and not gun.get("aksam"):
+    kullanilan = {s["id"] for kp in gun["kuponlar"] for s in kp["secim"]}
+    on9 = int(simdi.replace(hour=19, minute=0, second=0, microsecond=0).timestamp() * 1000)
+    maclar = [m for m in bugunku if m["t"] >= max(on9, simdi_ms + 30 * 60e3) and str(m["id"]) not in kullanilan]
+    aksam = [dict(kp, ad="Akşam " + ("sağlam" if kp["ad"] == "En sağlam" else "dengeli")) for kp in kuponlari_kur(maclar) if kp["ad"] != "Sürpriz"]
+    if aksam:
+        gun["kuponlar"] += aksam
+        gun["aksam"] = simdi.strftime("%H:%M")
+        satir = []
+        for kp in aksam:
+            oran = math.prod(x["o"] for x in kp["secim"]); p = math.prod(x["p"] for x in kp["secim"])
+            satir.append(f"{kp['ad']} · oran {oran:.2f} · tutma %{p * 100:.0f}" + "".join(
+                f"\n  {datetime.datetime.fromtimestamp(x['t'] / 1000, TR):%H:%M} {x['ev']} – {x['dep']}: {x['ad']} ({x['o']:.2f}, %{x['p'] * 100:.0f})" for x in kp["secim"]))
+        gonder("Akşam kuponu", "\n\n".join(satir) + "\n\nİlk 11'ler açıklanınca tekrar bakılır; ihtimal düşerse uyarı gelir.", "tickets")
+        print(len(aksam), "akşam kuponu kuruldu")
+elif gun and simdi.hour >= 21:
+    gun.setdefault("aksam", False)
 
 kayit["gunler"] = {g: v for g, v in kayit["gunler"].items() if g >= (simdi - datetime.timedelta(days=120)).strftime("%Y-%m-%d")}
 with open(os.path.join(K, "kuponlar.json"), "w", encoding="utf-8") as f:
