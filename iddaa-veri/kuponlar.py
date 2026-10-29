@@ -169,6 +169,21 @@ def xg_olas(m, k, i):
     alt = sum(ph[x] * pa[y] for x in range(c + 1) for y in range(c + 1 - x))
     return alt if i == 0 else 1 - alt
 
+# Oran hareketi: 2.250 maçlık geçmişte (football-data açılış -> kapanış) ihtimali maça doğru düşen seçenekler
+# beklenenden 5-10 puan az tuttu, yükselenler biraz fazla. iddaa'nın ilk oranından bu yana ihtimali 2 puandan fazla
+# düşen seçenek kupona alınmaz. 1.5 ve 3.5 için 2.5'in hareketi kullanılır (aynı yönde oynarlar).
+def trend(m, k, i):
+    kk = "au25" if k in ("au15", "au35") else k
+    ilk, simdi_o = (m.get("ilk") or {}).get(kk), (m.get(kk) or {}).get("o")
+    if kk not in ("ms", "au25", "kg") or not ilk or not simdi_o or len(ilk) != len(simdi_o):
+        return None
+    a, b = marjsiz(ilk), marjsiz(simdi_o)
+    return b[i] - a[i] if a and b else None
+
+def dusuyor(m, x):
+    d = trend(m, x["k"], x["i"])
+    return d is not None and d < -0.02
+
 def xg_uyar(m, x):
     q = xg_olas(m, x["k"], x["i"])
     return q is not None and q < x["p"] - 0.10
@@ -185,7 +200,7 @@ def kuponlari_kur(maclar):
             if m["id"] in kul: continue
             kul.add(m["id"]); out.append((m, x))
         return out
-    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v)]
+    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v)]
     # Sağlam ve dengeli kupon 2 maçlık: 3 maçta %70'lik seçimlerle bile kupon ancak %35 tutuyordu
     # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
@@ -240,7 +255,7 @@ for gun in kayit["gunler"].values():
 
 # ---------- İlk 11'den sonra kontrol ----------
 # Başlamasına 90 dakikadan az kalan seçeneklerin ihtimali güncel bültenden yeniden hesaplanır (ilk 11 açıklanınca borsa hemen oynar).
-# İhtimal 5 puandan fazla düştüyse telefona uyarı ve yerine aynı türden, henüz başlamamış bir seçenek önerilir.
+# İhtimal 3 puandan fazla düştüyse telefona uyarı ve yerine aynı türden, henüz başlamamış bir seçenek önerilir.
 def gonder(baslik, metin, etiket, oncelik="default"):
     try:
         urllib.request.urlopen(urllib.request.Request("https://ntfy.sh/" + KONU, data=metin.encode("utf-8"), method="POST",
@@ -277,13 +292,14 @@ if gun:
             if not x:
                 continue
             s["p_son"], s["o_son"] = round(x["p"], 4), x["o"]
-            if s.get("uyari") or x["p"] >= s["p"] - 0.05:
+            # Geçmişte 3 puandan fazla düşen seçenekler belirgin daha az tuttu: uyarı eşiği 3 puan
+            if s.get("uyari") or x["p"] >= s["p"] - 0.03:
                 continue
             # Yerine: aynı kupon türünün ölçütüne uyan, en az 15 dakika sonra başlayan, kuponda olmayan en iyi seçenek
             dengeli = kp["ad"] in ("Dengeli", "Akşam dengeli")
             alt, ust = (0.55, 0.75) if dengeli else (0.65, 1.01)
             tum = [(mm, y) for mm in bugunku if str(mm["id"]) not in kullanilan and mm["t"] > simdi_ms + 15 * 60e3
-                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2 and not xg_uyar(mm, y)]
+                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2 and not xg_uyar(mm, y) and not dusuyor(mm, y)]
             # Ölçüte uyan yoksa 5 puan gevşetilir; öneri yine de düşen seçenekten daha olası olmalı
             aday = [v for v in tum if alt <= v[1]["p"] < ust] or [v for v in tum if alt - 0.05 <= v[1]["p"] < ust and v[1]["p"] > x["p"]]
             aday.sort(key=lambda v: (not v[1]["dis"], -v[1]["e"] if dengeli else -v[1]["p"]))
