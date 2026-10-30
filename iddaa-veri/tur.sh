@@ -9,9 +9,9 @@ echo "=== tur $(date -u +%H:%M) ==="
   NES="-sSfL --compressed -m 60 -A Mozilla/5.0 -H Referer:https://www.nesine.com/"
   curl $NES -o nesine-canli.json "https://bulten.nesine.com/api/bulten/getlivebultenv3" || echo "canlı bülten alınamadı"
   G0=$(date -u -d yesterday +%Y%m%d); G1=$(date -u +%Y%m%d); G2=$(date -u -d tomorrow +%Y%m%d)
-  curl -sSfL -m 60 -o espn-futbol-0.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500&dates=$G0" || echo "espn futbol 0 yok"
-  curl -sSfL -m 60 -o espn-futbol-1.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500&dates=$G1" || echo "espn futbol 1 yok"
-  curl -sSfL -m 60 -o espn-futbol-2.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=500&dates=$G2" || echo "espn futbol 2 yok"
+  curl -sSfL -m 60 -o espn-futbol-0.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=1000&dates=$G0" || echo "espn futbol 0 yok"
+  curl -sSfL -m 60 -o espn-futbol-1.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=1000&dates=$G1" || echo "espn futbol 1 yok"
+  curl -sSfL -m 60 -o espn-futbol-2.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=1000&dates=$G2" || echo "espn futbol 2 yok"
   for l in nba wnba; do
     curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
   done
