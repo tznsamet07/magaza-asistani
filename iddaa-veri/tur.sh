@@ -12,6 +12,12 @@ echo "=== tur $(date -u +%H:%M) ==="
   curl -sSfL -m 60 -o espn-futbol-0.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=1000&dates=$G0" || echo "espn futbol 0 yok"
   curl -sSfL -m 60 -o espn-futbol-1.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=1000&dates=$G1" || echo "espn futbol 1 yok"
   curl -sSfL -m 60 -o espn-futbol-2.json "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?limit=1000&dates=$G2" || echo "espn futbol 2 yok"
+  # Kupalar ESPN'in "all" tablosunda eksik çıkıyor (Kral Kupası alt tur maçları gelmiyordu): ayrıca dün ve bugün
+  rm -f espn-futbol-ek-*.json
+  for d in $G0 $G1; do
+    echo esp.copa_del_rey eng.league_cup eng.fa eng.trophy ger.dfb_pokal ita.coppa_italia fra.coupe_de_france por.taca.portugal ned.cup sco.cis sco.tennents tur.1 ksa.kings.cup | tr ' ' '\n' | \
+      xargs -P 6 -I{} sh -c "curl -sSfL -m 30 -o espn-futbol-ek-{}-$d.json 'https://site.api.espn.com/apis/site/v2/sports/soccer/{}/scoreboard?dates=$d' 2>/dev/null || true"
+  done
   for l in nba wnba; do
     curl -sSfL -m 60 -o "espn-$l.json" "https://site.api.espn.com/apis/site/v2/sports/basketball/$l/scoreboard" || echo "espn $l alınamadı"
   done
