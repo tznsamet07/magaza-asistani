@@ -191,7 +191,9 @@ def xg_uyar(m, x):
 def kuponlari_kur(maclar):
     aday = [(m, x) for m in maclar for x in secenekler(m)]
     # Önce dış kaynaklı, sonra sonucu daha önce gelmiş liglerdeki seçenekler (kupon karnesine yansısın)
-    sirala = lambda xs, f: sorted(xs, key=lambda v: (not v[1]["dis"], v[0].get("lig") not in BILINEN, f(v)))
+    # 1.5 ve 3.5 ihtimali dış kaynakta doğrudan yok, 2.5 ve MS'den hesaplanıyor: eşit şartta doğrudan ölçülen pazar önce
+    # (kupon karnesi 30 Ekim: MS seçimleri 9'da 8 tuttu, 3.5 Alt'lar 9'da 3)
+    sirala = lambda xs, f: sorted(xs, key=lambda v: (not v[1]["dis"], v[0].get("lig") not in BILINEN, v[1]["k"] in ("au15", "au35"), f(v)))
     kul = set()
     def sec(xs, n):
         out = []
@@ -200,7 +202,9 @@ def kuponlari_kur(maclar):
             if m["id"] in kul: continue
             kul.add(m["id"]); out.append((m, x))
         return out
-    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v)]
+    # Kupa maçlarında (alt lig - üst lig eşleşmeleri) farklı skor sık: Kral Kupası 1-5, 1-3 gibi. Kupada "Alt" alınmaz.
+    kupa_alt = lambda m, x: x["k"].startswith("au") and x["i"] == 0 and any(w in (m.get("lig") or "") for w in ("Kupa", "Cup", "Copa"))
+    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v) and not kupa_alt(*v)]
     # Sağlam ve dengeli kupon 2 maçlık: 3 maçta %70'lik seçimlerle bile kupon ancak %35 tutuyordu
     # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
