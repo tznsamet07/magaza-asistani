@@ -129,8 +129,7 @@ if kiyas:
             eslesmeyen.append({"mac": f"{k['ev']} - {k['dep']}", "lig": k["lig"], "aday": [[round(a[0], 2), a[1], a[2], a[3]] for a in aday]})
     with open(os.path.join(K, "saglik.json"), "w", encoding="utf-8") as f:
         json.dump({"zaman": datetime.datetime.now(TR).strftime("%Y-%m-%d %H:%M"), "espn_toplam": len(espn),
-                   "espn_gun": {ad[6:-5]: len((oku_json(ad) or {}).get("events", [])) for ad in dosyalar}, "kupon_sonucsuz": eslesmeyen, "hatali": hatali[:15], "hatali_say": len(hatali),
-                   "kral_kupasi": [[x["ev"][0], x["dep"][0], x["t"].isoformat(), x["durum"]] for x in espn if any("Huesca" in n or "Cadiz" in n or "Cádiz" in n for n in x["ev"] + x["dep"])]}, f, ensure_ascii=False)
+                   "espn_gun": {ad[6:-5]: len((oku_json(ad) or {}).get("events", [])) for ad in dosyalar}, "kupon_sonucsuz": eslesmeyen, "hatali": hatali[:15], "hatali_say": len(hatali)}, f, ensure_ascii=False)
     bitti = [x for x in espn if x["durum"] == "post"]
     print(n, "maçın sonucu ESPN'den işlendi;", len(bitti), "biten ESPN maçının", sum(1 for x in bitti if x["iy"]), "tanesinde devre skoru var")
 

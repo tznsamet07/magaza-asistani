@@ -311,6 +311,7 @@ for m in futbol:
     if not f or m["t"] <= simdi_ms:
         continue
     k = takip["maclar"].setdefault(str(m["id"]), {"t": m["t"], "ev": m["ev"], "dep": m["dep"], "lig": m["lig"], "fd": {"lig": f["lig"], "ev": f["ev"], "dep": f["dep"]}})
+    k["t"] = m["t"]
     son = {"ms": m["ms"]["o"], "au25": m["au25"]["o"] if m.get("au25") else None, "avgMs": f["avgMs"], "avgAu": f["avgAu"], "sm": m.get("sm"), "zaman": simdi_ms}
     k.setdefault("ilk", son)
     k["son"] = son
@@ -371,6 +372,7 @@ for m in futbol:
     k = {a: {p: v for p, v in b.items() if v} for a, b in k.items()}
     k = {a: b for a, b in k.items() if b}
     kayit = kiyas["maclar"].setdefault(str(m["id"]), {"t": m["t"], "ev": m["ev"], "dep": m["dep"], "lig": m["lig"]})
+    kayit["t"] = m["t"]   # maç saati bültende değişebiliyor (ertelenen/öne alınan maç); eski saatle ESPN'de sonuç bulunamıyordu
     kayit["k"] = k
     kayit["o"] = {"ms": m["ms"]["o"], "au25": (m.get("au25") or {}).get("o")}
     if f:
