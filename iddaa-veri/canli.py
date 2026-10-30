@@ -61,7 +61,7 @@ def ilk_yari(tk, c):
 espn, goruldu = [], set()
 # "all" skor tablosu + "all"da olmayan ligler için ayrı çekilenler (espn-futbol-ek-*.json; tur.sh)
 dosyalar = ["espn-futbol-0.json", "espn-futbol-1.json", "espn-futbol-2.json"] + sorted(f for f in os.listdir(K) if f.startswith("espn-futbol-ek-"))
-ek_durum = {}
+ek_durum, hatali = {}, []
 for ad in dosyalar:
     if ad.startswith("espn-futbol-ek-"):
         ek_durum[ad[15:-5]] = len((oku_json(ad) or {}).get("events", []))
@@ -90,7 +90,8 @@ for ad in dosyalar:
                 "sut": [sayi_(sh, "totalShots"), sayi_(sa, "totalShots")],
                 "isabet": [sayi_(sh, "shotsOnTarget"), sayi_(sa, "shotsOnTarget")],
                 "top": [sayi_(sh, "possessionPct"), sayi_(sa, "possessionPct")], "kirmizi": kir, "iy": ilk_yari(tk, c) if st["type"]["state"] == "post" else None})
-        except (KeyError, ValueError, TypeError, IndexError):
+        except (KeyError, ValueError, TypeError, IndexError) as x:
+            hatali.append([ev.get("name"), ev.get("date"), repr(x)[:80]])
             continue
 
 def espn_bul(ev, dep, bas_ms):
@@ -128,7 +129,8 @@ if kiyas:
             eslesmeyen.append({"mac": f"{k['ev']} - {k['dep']}", "lig": k["lig"], "aday": [[round(a[0], 2), a[1], a[2], a[3]] for a in aday]})
     with open(os.path.join(K, "saglik.json"), "w", encoding="utf-8") as f:
         json.dump({"zaman": datetime.datetime.now(TR).strftime("%Y-%m-%d %H:%M"), "espn_toplam": len(espn),
-                   "espn_gun": {ad[6:-5]: len((oku_json(ad) or {}).get("events", [])) for ad in dosyalar}, "kupon_sonucsuz": eslesmeyen}, f, ensure_ascii=False)
+                   "espn_gun": {ad[6:-5]: len((oku_json(ad) or {}).get("events", [])) for ad in dosyalar}, "kupon_sonucsuz": eslesmeyen, "hatali": hatali[:15], "hatali_say": len(hatali),
+                   "kral_kupasi": [[x["ev"][0], x["dep"][0], x["t"].isoformat(), x["durum"]] for x in espn if any("Huesca" in n or "Cadiz" in n or "Cádiz" in n for n in x["ev"] + x["dep"])]}, f, ensure_ascii=False)
     bitti = [x for x in espn if x["durum"] == "post"]
     print(n, "maçın sonucu ESPN'den işlendi;", len(bitti), "biten ESPN maçının", sum(1 for x in bitti if x["iy"]), "tanesinde devre skoru var")
 
