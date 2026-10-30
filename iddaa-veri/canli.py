@@ -118,9 +118,16 @@ if kiyas:
                 k["iy"] = x["iy"]
     with open(os.path.join(K, "kiyas.json"), "w", encoding="utf-8") as f:
         json.dump(kiyas, f, ensure_ascii=False, separators=(",", ":"))
-    # Sağlık: ek liglerden kaç maç geldi (tur.sh), sonucu bekleyen maçlar
+    # Sağlık: kupondaki maçlardan sonucu gelmeyenler ve ESPN'de aynı saatteki en yakın adaylar (isim eşleşmesini düzeltmek için)
+    kupon_id = {s["id"] for g in ((oku_json("kuponlar.json") or {}).get("gunler") or {}).values() for kp in g["kuponlar"] for s in kp["secim"]}
+    eslesmeyen = []
+    for i, k in kiyas["maclar"].items():
+        if i in kupon_id and not k.get("sonuc") and simdi_ms - 2 * 864e5 < k["t"] < simdi_ms - 3 * 3600e3:
+            aday = sorted(((max(benzer(k["ev"], n) for n in x["ev"] if n) + max(benzer(k["dep"], n) for n in x["dep"] if n), x["ev"][0], x["dep"][0], x["durum"])
+                           for x in espn if abs(x["t"].timestamp() * 1000 - k["t"]) <= 3 * 3600e3), reverse=True)[:3]
+            eslesmeyen.append({"mac": f"{k['ev']} - {k['dep']}", "lig": k["lig"], "aday": [[round(a[0], 2), a[1], a[2], a[3]] for a in aday]})
     with open(os.path.join(K, "saglik.json"), "w", encoding="utf-8") as f:
-        json.dump({"zaman": datetime.datetime.now(TR).strftime("%Y-%m-%d %H:%M"), "espn_ek": ek_durum, "espn_toplam": len(espn)}, f, ensure_ascii=False)
+        json.dump({"zaman": datetime.datetime.now(TR).strftime("%Y-%m-%d %H:%M"), "espn_toplam": len(espn), "kupon_sonucsuz": eslesmeyen}, f, ensure_ascii=False)
     bitti = [x for x in espn if x["durum"] == "post"]
     print(n, "maçın sonucu ESPN'den işlendi;", len(bitti), "biten ESPN maçının", sum(1 for x in bitti if x["iy"]), "tanesinde devre skoru var")
 
