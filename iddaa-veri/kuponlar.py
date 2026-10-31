@@ -239,15 +239,16 @@ kiyas = (oku_json("kiyas.json") or {}).get("maclar", {})
 biten = []   # bu çalışmada sonuçlanan kuponlar (telefona bildirilir)
 for gun in kayit["gunler"].values():
     for kp in gun["kuponlar"]:
-        if kp.get("sonuc") in ("tuttu", "yattı"):
-            continue
         onceki = kp.get("sonuc")
         for s in kp["secim"]:
+            # Yatan kuponun kalan seçimleri de işlenir; yoksa seçim karnesine yalnız yatanlar girer (yanıltır)
             if s.get("tuttu") is None:
                 s["tuttu"] = tuttu_mu(s, kiyas.get(s["id"]))
                 if s["tuttu"] is not None:
                     s["skor"] = kiyas[s["id"]]["sonuc"]
                     if kiyas[s["id"]].get("iy"): s["iy"] = kiyas[s["id"]]["iy"]
+        if onceki in ("tuttu", "yattı"):
+            continue
         if any(s.get("tuttu") is False for s in kp["secim"]):
             kp["sonuc"] = "yattı"
         elif all(s.get("tuttu") for s in kp["secim"]):

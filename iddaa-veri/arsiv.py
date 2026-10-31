@@ -5,6 +5,7 @@ import csv, json, os, datetime
 from ortak import oku_json, gercek_k, K, TR
 
 A = os.path.join(K, "arsiv")
+simdi_ms = datetime.datetime.now(TR).timestamp() * 1000
 os.makedirs(A, exist_ok=True)
 MAC_BASLIK = ["id", "tarih", "lig", "ev", "deplasman", "ilk yarı", "maç sonu", "iddaa 1", "iddaa X", "iddaa 2", "iddaa 2.5 alt", "iddaa 2.5 üst",
               "ihtimal 1 %", "ihtimal X %", "ihtimal 2 %", "tahmin", "tahmin tuttu", "2.5 tahmini", "2.5 tuttu", "kaynaklar"]
@@ -64,6 +65,9 @@ for gun, v in sorted((oku_json("kuponlar.json") or {}).get("gunler", {}).items()
     for kp in v["kuponlar"]:
         anahtar = gun + "|" + kp["ad"]
         if anahtar in kup_yazilan or kp.get("sonuc") not in ("tuttu", "yattı", "sonuç yok"):
+            continue
+        # Yatan kuponda kalan maçların skoru da gelsin (en geç 2 gün beklenir), kayıtta "?" kalmasın
+        if any(s.get("tuttu") is None for s in kp["secim"]) and max(s["t"] for s in kp["secim"]) > simdi_ms - 2 * 864e5:
             continue
         oran = p = 1
         for s in kp["secim"]:
