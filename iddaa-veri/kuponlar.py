@@ -204,7 +204,9 @@ def kuponlari_kur(maclar):
         return out
     # Kupa maçlarında (alt lig - üst lig eşleşmeleri) farklı skor sık: Kral Kupası 1-5, 1-3 gibi. Kupada "Alt" alınmaz.
     kupa_alt = lambda m, x: x["k"].startswith("au") and x["i"] == 0 and any(w in (m.get("lig") or "") for w in ("Kupa", "Cup", "Copa"))
-    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v) and not kupa_alt(*v)]
+    # 3.5 Alt kuponda sürekli beklenenin altında kaldı (3 Kasım: 17 seçimde 9, beklenen 11,7; ilk yarıda 4 gol olanlar oldu): kupona alınmaz
+    alt35 = lambda m, x: x["k"] == "au35" and x["i"] == 0
+    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v) and not kupa_alt(*v) and not alt35(*v)]
     # Sağlam ve dengeli kupon 2 maçlık: 3 maçta %70'lik seçimlerle bile kupon ancak %35 tutuyordu
     # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
