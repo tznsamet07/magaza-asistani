@@ -277,7 +277,8 @@ def sonucsuz_ligler(kiyas):
     for k in kiyas.values():
         if k["t"] < simdi_ms - 4 * 3600e3 and k.get("lig"):
             a = say.setdefault(k["lig"], [0, 0]); a[0] += 1; a[1] += k.get("sonuc") is not None
-    return {l for l, (n, ok) in say.items() if n >= 2 and not ok}
+    # Ara sıra sonucu gelen ligler de (ör. Finlandiya: 4 maçın 1'i, o da elle girildi) güvenilmez: yarısından azı sonuçlandıysa alınmaz
+    return {l for l, (n, ok) in say.items() if (n >= 2 and not ok) or (n >= 3 and ok / n < 0.5)}
 SONUCSUZ = sonucsuz_ligler(kiyas)
 BILINEN = {k["lig"] for k in kiyas.values() if k.get("sonuc") and k.get("lig")}
 
