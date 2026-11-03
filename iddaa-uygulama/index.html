@@ -1148,7 +1148,7 @@ function gununKuponlari(){
 const kuponBitis = xs => Math.max(...xs.map(v => v.m.t)) + 115 * 60e3;   // son maçın bitişi (~115 dk)
 const kuponBas = xs => Math.min(...xs.map(v => v.m.t));
 // Kasa yönetimi: kupon türüne göre kasanın sabit küçük bir yüzdesi (beklenen değer eksi olduğu için Kelly sıfır çıkar)
-const KUPON_PAY = { "En sağlam": 0.02, "Dengeli": 0.01, "Sürpriz": 0.005, "Akşam sağlam": 0.02, "Akşam dengeli": 0.01 };
+const KUPON_PAY = { "Tek maç": 0.03, "Akşam tek maç": 0.03, "En sağlam": 0.02, "Dengeli": 0.01, "Sürpriz": 0.005, "Akşam sağlam": 0.02, "Akşam dengeli": 0.01 };
 function kuponTutar(ad){ const a = ayarlar(); return Math.max(1, Math.round(a.kasa * (KUPON_PAY[ad] || 0.01))); }
 function kuponOynadim(gun, ad){
   const kp = KUPONLAR && KUPONLAR.gunler[gun] && KUPONLAR.gunler[gun].kuponlar.find(k => k.ad === ad);
@@ -1260,6 +1260,13 @@ function kuponKarnesi(){
   const secimKarne = Object.keys(pz).length ? `<div class="tablo-kap"><table><thead><tr><th>Seçim türü</th><th>Seçim</th><th>Tuttu</th><th>Beklenen</th></tr></thead><tbody>` +
     Object.keys(PAZAR).filter(k => pz[k]).map(k => { const x = pz[k], fark = x.t - x.bek; return `<tr><td>${PAZAR[k]}</td><td>${x.n}</td><td>${x.t}</td><td class="${fark >= 0 ? "iyi" : fark < -1.5 ? "kotu" : ""}">${x.bek.toFixed(1)}</td></tr>`; }).join("") +
     `</tbody></table></div><p class="alt">Kuponlardaki tek tek seçimler. Az seçimde fark şanstan da olabilir; 30-40 seçimden sonra anlam kazanır.</p>` : "";
+  // Tek maç mı kupon mu: aynı seçimler tek tek oynansaydı ne olurdu
+  let n1 = 0, k1 = 0, n2 = 0, k2 = 0;
+  for (const [, g] of gunler) for (const kp of g.kuponlar){
+    for (const s of kp.secim) if (s.k !== "iyms" && s.tuttu != null){ n1++; k1 += s.tuttu ? s.o - 1 : -1; }
+    if (kp.secim.length > 1 && (kp.sonuc === "tuttu" || kp.sonuc === "yattı")){ n2++; k2 += kp.sonuc === "tuttu" ? kp.secim.reduce((a, s) => a * s.o, 1) - 1 : -1; }
+  }
+  const tekKupon = n1 >= 10 && n2 >= 5 ? `<p class="alt"><b>Tek maç mı, kupon mu?</b> Aynı seçimler tek tek oynansaydı her 100 TL'de ${k1 >= 0 ? "+" : ""}${Math.round(k1 / n1 * 100)} TL, kupon olarak oynanınca ${k2 >= 0 ? "+" : ""}${Math.round(k2 / n2 * 100)} TL. Kupon iddaa'nın payını katlar; tek maç daha az kaybettirir.</p>` : "";
   // Kapanış karşılaştırması: sabah alınan ihtimal, maç başlarken nereye gitti
   const kap = []; for (const [, g] of gunler) for (const kp of g.kuponlar) for (const s of kp.secim) if (s.p_son != null && s.k !== "iyms") kap.push(s.p_son - s.p);
   const clv = kap.length >= 5 ? `<p class="alt"><b>Kapanış karşılaştırması:</b> ${kap.length} seçenekte maç başlarken ihtimal ortalama ${(kap.reduce((a, b) => a + b, 0) / kap.length * 100).toFixed(1)} puan ${kap.reduce((a, b) => a + b, 0) >= 0 ? "arttı" : "düştü"}; seçeneklerin %${Math.round(kap.filter(x => x > 0).length / kap.length * 100)}'inde arttı. Artıyorsa sabah seçilen kuponlar piyasadan önde demektir.</p>` : "";
@@ -1267,7 +1274,7 @@ function kuponKarnesi(){
   const liste = gunler.slice(0, 14).map(([gun, g]) => `<p class="alt" style="margin:10px 0 4px"><b>${gun.split("-").reverse().join(".")}</b></p>` + g.kuponlar.map(kp =>
     `<div class="alt" style="margin:0 0 6px"><b>${esc(kp.ad)}</b> (${kp.secim.reduce((a, s) => a * s.o, 1).toFixed(2)}) ${kp.sonuc === "tuttu" ? `<span class="iyi">TUTTU</span>` : kp.sonuc === "yattı" ? `<span class="kotu">yattı</span>` : ""}<br>` +
     kp.secim.map(s => `${isaret(s.tuttu)} ${esc(s.ev)} – ${esc(s.dep)}${s.skor ? ` <b>${s.skor[0]}-${s.skor[1]}</b>${s.iy ? ` (İY ${s.iy[0]}-${s.iy[1]})` : ""}` : ""}: ${esc(s.ad)} ${s.o.toFixed(2)}`).join("<br>") + `</div>`).join("")).join("");
-  return ozet + secimKarne + clv + liste;
+  return ozet + tekKupon + secimKarne + clv + liste;
 }
 function kuponlarHtml(){
   const bugun = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Istanbul" });
@@ -1278,7 +1285,7 @@ function kuponlarHtml(){
     const xs = ks.map(([, kp]) => kayitliKupon(kp));
     return `<p class="alt" style="margin:0 4px 8px"><b>Bugünün</b> kuponları (saat ${esc(kayitli.zaman)}, telefona gönderilenlerle aynı). Bitiş saatine göre sıralı.</p>` + ks.map(([ad, kp], i) => {
       const sonraki = xs.slice(i + 1).findIndex(y => kuponBas(y) >= kuponBitis(xs[i]));
-      const aciklama = { "En sağlam": "tutma ihtimali en yüksek 2 seçenek", "Dengeli": "ihtimali %55-75, fiyatı en iyi 2 seçenek", "Sürpriz": "en olası İY/MS dönüşü + 2 sağlam", "Akşam sağlam": "18:00'de, 19:00 sonrası maçlardan en olası 2 seçenek", "Akşam dengeli": "18:00'de, 19:00 sonrası maçlardan ihtimali %55-75 olan 2 seçenek" }[ad] || "";
+      const aciklama = { "Tek maç": "en sağlam seçim tek başına: kupondan daha az kaybettirir", "Akşam tek maç": "19:00 sonrası en sağlam seçim tek başına", "En sağlam": "tutma ihtimali en yüksek 2 seçenek", "Dengeli": "ihtimali %55-75, fiyatı en iyi 2 seçenek", "Sürpriz": "en olası İY/MS dönüşü + 2 sağlam", "Akşam sağlam": "18:00'de, 19:00 sonrası maçlardan en olası 2 seçenek", "Akşam dengeli": "18:00'de, 19:00 sonrası maçlardan ihtimali %55-75 olan 2 seçenek" }[ad] || "";
       return kuponKarti(`${i + 1} · ${ad}${kp.sonuc === "tuttu" ? " ✓" : kp.sonuc === "yattı" ? " ✗" : ""}`, aciklama, xs[i], sonraki >= 0 ? `${i + sonraki + 2}. kupon` : "", { gun: bugun, ad });
     }).join("");
   }

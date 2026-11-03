@@ -220,7 +220,10 @@ def kuponlari_kur(maclar):
         k3 += sec(sirala([v for v in normal if v[1]["p"] >= 0.6], lambda v: -v[1]["p"]), 2)
     paket = lambda ad, xs: {"ad": ad, "secim": [{"id": str(m["id"]), "ev": m["ev"], "dep": m["dep"], "lig": m["lig"], "t": m["t"], "k": x["k"], "i": x["i"],
                                                   "ad": x["ad"], "o": x["o"], "p": round(x["p"], 4)} for m, x in xs]}
-    return [paket(a, xs) for a, xs in (("En sağlam", k1), ("Dengeli", k2), ("Sürpriz", k3)) if xs]
+    # Tek maç: en sağlam seçim tek başına. Kayıtta (3 Kasım) seçimler tek tek oynansa birim başına -%14, 2'li kupon -%36:
+    # kupon iddaa'nın payını katlıyor, tek maç en az kaybettiren yol.
+    tek = k1[:1]
+    return [paket(a, xs) for a, xs in (("Tek maç", tek), ("En sağlam", k1), ("Dengeli", k2), ("Sürpriz", k3)) if xs]
 
 # ---------- Sonuçlar ----------
 def tuttu_mu(s, km):
@@ -344,7 +347,7 @@ if bugun not in kayit["gunler"] and simdi.hour >= 9:
             if len(kp["secim"]) == 3 and kp["ad"] != "Sürpriz":
                 iki = sorted(kp["secim"], key=lambda s: -s["p"])[:2]
                 satir[-1] += f"\n  2'li istersen ilk ikisi: oran {iki[0]['o'] * iki[1]['o']:.2f}, tutma %{iki[0]['p'] * iki[1]['p'] * 100:.0f}"
-        metin = "\n\n".join(satir) + "\n\nMaçlardan 1 saat önce ilk 11'ler açıklanınca tekrar bakılır; ihtimal düşerse uyarı gelir. Kupon iddaa'nın payını katlar; az parayla oyna."
+        metin = "\n\n".join(satir) + "\n\nMaçlardan 1 saat önce ilk 11'ler açıklanınca tekrar bakılır; ihtimal düşerse uyarı gelir. Kupon iddaa'nın payını katlar: kayıtta tek maç oynamak kupondan çok daha az kaybettirdi. Az parayla oyna."
         if gonder("Günün kuponları", metin, "tickets"):
             kayit["gunler"][bugun]["gonderildi"] = True
         print(len(kuponlar), "kupon kuruldu")
@@ -355,7 +358,7 @@ if gun and 9 <= simdi.hour < 18:
     mevcut = {kp["ad"] for kp in gun["kuponlar"]}
     kullanilan = {s["id"] for kp in gun["kuponlar"] for s in kp["secim"]}
     maclar = [m for m in bugunku if m["t"] > simdi_ms + 30 * 60e3 and str(m["id"]) not in kullanilan]
-    for kp in kuponlari_kur(maclar) if len(mevcut) < 3 else []:
+    for kp in kuponlari_kur(maclar) if len(mevcut) < 4 else []:
         if kp["ad"] in mevcut or kp["ad"] == "Sürpriz":
             continue
         gun["kuponlar"].append(kp)
@@ -371,7 +374,7 @@ if gun and 18 <= simdi.hour < 21 and not gun.get("aksam"):
     kullanilan = {s["id"] for kp in gun["kuponlar"] for s in kp["secim"]}
     on9 = int(simdi.replace(hour=19, minute=0, second=0, microsecond=0).timestamp() * 1000)
     maclar = [m for m in bugunku if m["t"] >= max(on9, simdi_ms + 30 * 60e3) and str(m["id"]) not in kullanilan]
-    aksam = [dict(kp, ad="Akşam " + ("sağlam" if kp["ad"] == "En sağlam" else "dengeli")) for kp in kuponlari_kur(maclar) if kp["ad"] != "Sürpriz"]
+    aksam = [dict(kp, ad="Akşam " + {"Tek maç": "tek maç", "En sağlam": "sağlam"}.get(kp["ad"], "dengeli")) for kp in kuponlari_kur(maclar) if kp["ad"] != "Sürpriz"]
     if aksam:
         gun["kuponlar"] += aksam
         gun["aksam"] = simdi.strftime("%H:%M")
