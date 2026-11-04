@@ -296,3 +296,279 @@
 3266600;2026-11-04 13:00;AFC Kupası;Seoul;CLB Viettel;0-0;3-0;1,08;5,1;9,07;2,09;1,33;80,9;13,3;5,8;1;evet;Üst;evet;borsa
 3266768;2026-11-04 15:15;AFC Asya Şampiyonlar Ligi Doğu;Buriram Utd;Kashima;0-0;0-0;2,72;2,99;1,88;1,67;1,58;25,9;28,1;46,0;2;hayır;Üst;hayır;borsa
 3266780;2026-11-04 16:45;AFC Kupası;Arkadag FK;GOL Gohar;0-0;1-0;1,83;2,72;3,14;1,29;2,19;46,2;29,9;23,9;1;evet;Alt;evet;borsa,dk
+3264710;2026-11-03 21:15;AFC Asya Şampiyonlar Ligi Batı;Al Hilal;Al Ahli Dubai;1-0;2-0;1,32;3,87;4,62;2,09;1,33;63,9;20,8;15,3;1;evet;Üst;hayır;borsa
+3269096;2026-11-04 18:30;UEFA Avrupa Ligi;Rennes;Olympiakos;0-0;0-0;1,88;3,22;2,9;1,88;1,52;45,7;25,6;28,7;1;hayır;Üst;hayır;borsa,dk
+3266846;2026-11-04 19:00;AFC Kupası;Al Kuveyt SC;Nasaf;;2-3;3,1;3,05;1,72;1,66;1,59;26,4;25,7;47,9;2;evet;Üst;evet;borsa
+3266601;2026-11-04 19:00;AFC Kupası;AL Wahda;AL Khalidiyah;0-0;1-2;1,34;3,75;4,5;1,97;1,38;60,5;21,8;17,7;1;hayır;Üst;evet;borsa
+3266912;2026-11-04 19:00;AFC Kupası;AL Rayyan;AL Nahda;0-0;2-0;1,1;4,91;8,13;2,08;1,33;77,4;14,8;7,8;1;evet;Üst;hayır;borsa,dk
+3293292;2026-11-04 20:00;İspanya Kupası, Kadınlar;Levante (K);SD Eibar (K);0-0;0-0;3,44;3,99;1,44;;;23,5;20,3;56,2;2;hayır;;;iddaa
+3266570;2026-11-04 20:45;UEFA Şampiyonlar Ligi;Aek;Real Madrid;1-1;2-3;9,54;6,42;1,08;3,12;1,15;6,7;11,7;81,6;2;evet;Üst;evet;borsa,dk
+3266645;2026-11-04 20:45;UEFA Şampiyonlar Ligi;Fenerbahçe;Liverpool;1-1;3-2;4,68;4,12;1,37;2,46;1,28;16,7;20,4;62,9;2;hayır;Üst;evet;borsa,dk
+3359384;2026-11-04 21:00;İspanya Kral Kupası;Club Portugalete;Union Irun;0-0;0-0;2,69;2,78;1,99;1,48;1,79;30,3;29,0;40,7;2;hayır;Alt;evet;dk
+3293283;2026-11-04 21:00;İspanya Kupası, Kadınlar;CA Osasuna (K);Cdef Logrono (K);0-0;0-0;3,11;3,43;1,61;;;26,1;23,6;50,3;2;hayır;;;iddaa
+3266875;2026-11-04 21:15;AFC Kupası;AL Taawoun;AL Faisaly (Ürd);1-0;3-1;1,21;3,97;6,37;1,71;1,54;69,5;18,7;11,8;1;evet;Üst;evet;borsa,dk
+3266902;2026-11-04 21:15;AFC Kupası;Al Muharraq;AL Jazira (Bae);0-0;0-3;3,24;2,98;1,7;1,6;1,64;24,6;26,0;49,4;2;evet;Üst;evet;borsa,dk
+3359358;2026-11-04 22:00;İspanya Kral Kupası;Amorebieta;Logrones;0-0;0-0;3,21;3,09;1,67;1,68;1,56;25,2;26,2;48,5;2;hayır;Üst;hayır;iddaa
+3359372;2026-11-04 22:30;İspanya Kral Kupası;Utebo;CE Sabadell;0-0;0-0;4,75;3,08;1,43;1,46;1,83;17,1;26,3;56,6;2;hayır;Alt;evet;iddaa
+3359375;2026-11-04 22:30;İspanya Kral Kupası;Reus Reddis;Barakaldo;0-0;0-0;2,94;2,91;1,82;1,43;1,87;27,6;27,9;44,5;2;hayır;Alt;evet;iddaa
+3359385;2026-11-04 22:30;İspanya Kral Kupası;C. Dep. Minera;Cartagena;0-0;0-0;2,76;2,9;1,9;1,48;1,79;29,4;28,0;42,7;2;hayır;Alt;evet;iddaa
+3342553;2026-11-04 22:30;Belçika Pro Lig;Kortrijk;Mechelen;0-0;1-3;2,08;3,05;2,64;1,86;1,54;37,9;27,5;34,6;1;hayır;Üst;evet;borsa,piyasa,dk
+3359380;2026-11-04 22:45;İspanya Kral Kupası;C. Sotelo Puertollano;Albacete;0-0;0-0;4,74;3,64;1,34;1,88;1,42;17,1;22,3;60,6;2;hayır;Üst;hayır;iddaa
+3266574;2026-11-04 22:45;İngİltere 1. Lİg;Oxford;Reading;0-0;2-0;2,43;2,9;2,1;1,65;1,6;34,7;27,1;38,2;2;hayır;Üst;hayır;borsa,piyasa,dk,polymarket
+3266602;2026-11-04 22:45;İngİltere Championship;Wrexham;Middlesbrough;0-0;2-0;3,89;3,37;1,58;1,79;1,6;21,9;24,6;53,5;2;hayır;Üst;hayır;borsa,piyasa,dk
+3266612;2026-11-04 22:45;İngİltere Championship;Cardiff City;West Ham;3-0;3-3;2,96;3,59;1,75;2,59;1,25;28,4;23,0;48,6;2;hayır;Üst;evet;borsa,piyasa,dk
+3293294;2026-11-04 23:00;İspanya Kupası, Kadınlar;Cff Caceres (K);Deportivo Alaves (K);0-0;0-0;3,11;3,43;1,61;;;26,1;23,6;50,3;2;hayır;;;iddaa
+3266629;2026-11-04 23:00;UEFA Şampiyonlar Ligi;Leipzig;Man. City;0-1;2-3;4,13;4,32;1,41;3,32;1,13;18,3;19,9;61,8;2;evet;Üst;evet;borsa,dk
+3266906;2026-11-04 23:00;UEFA Şampiyonlar Ligi;PSV;Club Brugge;0-1;1-2;1,69;3,77;3,03;2,93;1,18;50,9;21,9;27,2;1;hayır;Üst;evet;borsa,dk
+3266632;2026-11-04 23:00;UEFA Şampiyonlar Ligi;Slavia Prag;Arsenal;0-2;1-2;10,2;5,09;1,12;1,8;1,58;6,9;15,2;77,9;2;evet;Üst;evet;borsa,dk
+3266848;2026-11-04 23:00;UEFA Şampiyonlar Ligi;Porto;Napoli;1-1;4-1;1,78;3,17;3,25;1,79;1,6;47,8;27,0;25,2;1;evet;Üst;evet;borsa,dk
+3266862;2026-11-04 23:00;UEFA Şampiyonlar Ligi;Viking;Sabah;1-1;4-1;1,37;4,31;4,42;2,99;1,17;62,5;19,7;17,8;1;evet;Üst;evet;borsa,dk
+3266582;2026-11-04 23:00;İngİltere Championship;Bristol City;Wolverhampton;1-0;1-2;3,17;3,14;1,81;1,67;1,7;25,4;26,5;48,1;2;evet;Alt;hayır;borsa,dk
+3266888;2026-11-04 23:00;UEFA Şampiyonlar Ligi;B. Dortmund;Real Betis;0-0;2-1;1,39;4;4,61;2,16;1,38;63,6;20,4;15,9;1;evet;Üst;evet;borsa,dk
+3266624;2026-11-04 23:00;UEFA Şampiyonlar Ligi;RC Lens;Como 1907;0-3;1-9;3,28;3,43;1,69;2,14;1,39;24,4;24,2;51,4;2;evet;Üst;evet;borsa,dk
+3351513;2026-11-05 00:00;Honduras Ulusal Lig, Açılış;Olancho;Lobos Upnfm;0-0;0-0;1,5;3,25;3,83;1,67;1,58;54,8;25,0;20,1;1;hayır;Üst;hayır;dk
+3307385;2026-11-05 01:00;Bolivya Profesyonel Lig Kupası, Playoff;Nacional Potosi;O. Petrolero;1-1;5-1;1,14;4,85;6,86;;;72,4;16,5;11,0;1;evet;Üst;evet;borsa
+3335691;2026-11-05 00:30;Venezuela Prmr Lig, Kapanış, Ana Tur;Portuguesa;Dep. La Gua.;0-2;0-3;2,28;2,82;2,27;1,44;1,85;34,9;29,3;35,9;2;evet;Alt;hayır;borsa,dk
+3346926;2026-11-05 01:00;Şili Kupası;D. Union La Calera;Coquimbo U.;0-1;0-2;2,35;2,83;2,19;1,53;1,73;32,9;29,0;38,1;2;evet;Alt;evet;borsa,dk
+3266603;2026-11-05 01:30;Brezilya Serie A;Paranaense;Vasco Da G.;1-0;1-3;2,18;3,02;2,52;1,7;1,67;38,7;27,9;33,4;1;hayır;Üst;evet;iddaa
+3370599;2026-11-05 02:00;Meksika Expansion MX Açılış, Playoff;Venados;Atl Morelia;1-1;1-2;1,87;2,98;2,75;1,8;1,47;43,1;27,3;29,6;1;hayır;Üst;evet;borsa,dk
+3355248;2026-11-05 02:15;Honduras Ulusal Lig, Açılış;CD Estrella Roja;Motagua;1-0;1-2;2,71;2,95;1,91;1,73;1,53;29,9;28,1;42,1;2;evet;Üst;evet;dk
+3335720;2026-11-05 02:30;Venezuela Prmr Lig, Kapanış, Ana Tur;Metropolitan;Carabobo;0-1;0-2;2,01;2,81;2,62;1,64;1,6;41,7;28,7;29,7;1;hayır;Üst;hayır;borsa,dk
+3269187;2026-11-05 03:00;Kosta Rika Prmr Ligi, Açılış;Puntarenas;AD San Carlos;0-1;0-1;1,93;2,97;2,65;1,68;1,57;43,0;27,6;29,4;1;hayır;Üst;hayır;dk
+3266919;2026-11-05 03:30;Brezilya Serie A;Botafogo RJ;Atl Mineiro;1-0;1-0;1,42;3,71;4,64;1,87;1,54;59,0;23,5;17,5;1;evet;Üst;hayır;borsa
+3307389;2026-11-05 03:30;Bolivya Profesyonel Lig Kupası, Playoff;Strongest;Always Ready;1-2;1-4;1,87;3,24;2,55;;;43,3;25,0;31,7;1;hayır;;;iddaa
+3266887;2026-11-05 03:30;Brezilya Serie A;Sao Paulo SP;Corinthians;0-0;0-0;2,27;2,71;2,65;1,36;2,2;37,7;30,9;31,4;1;hayır;Alt;evet;borsa
+3364982;2026-11-05 02:30;Kolombiya Liga Dimayor, Final;Cucuta D.;I. Santa Fe;0-0;1-0;2,24;2,83;2,31;1,59;1,66;32,9;29,0;38,1;2;hayır;Alt;evet;borsa,dk
+3370005;2026-11-05 04:00;El Salvador Primera Division, Açılış;Angel Firpo;Alianza;2-0;2-0;1,49;3,27;3,87;1,68;1,57;54,3;24,8;20,9;1;evet;Üst;hayır;iddaa
+3370597;2026-11-05 04:05;Meksika Expansion MX Açılış, Playoff;Tlaxcala;Atletico La Paz;;0-1;2,29;3,15;2,09;;;35,4;26,1;38,5;2;evet;Üst;hayır;borsa
+3301058;2026-11-05 04:00;El Salvador Primera Division, Açılış;Municipal L.;Fuerte San Francisco;0-0;1-1;1,65;3,11;3,29;1,7;1,54;49,2;26,1;24,7;1;hayır;Üst;hayır;iddaa
+3355263;2026-11-05 04:30;Honduras Ulusal Lig, Açılış;CD Olimpia;Juticalpa;4-0;8-0;1,06;5,62;9,11;;;76,6;14,4;8,9;1;evet;;;iddaa
+3335728;2026-11-05 04:30;Kolombiya Liga Dimayor, Final;Millonarios;America De Cali;0-0;0-0;1,58;3,02;3,7;1,54;1,7;51,3;26,8;21,9;1;hayır;Alt;evet;iddaa
+3269228;2026-11-05 05:00;Kosta Rika Prmr Ligi, Açılış;CD Esc. Belen;Alajuelense;1-1;1-4;5,05;3,85;1,29;1,91;1,41;16,1;21,1;62,9;2;evet;Üst;evet;iddaa
+3269023;2026-11-05 13:00;AFC Kupası;Machida Zelvia;Shanghai S.;1-0;2-1;1,12;4,79;7,49;2,08;1,33;73,1;17,5;9,4;1;evet;Üst;evet;borsa,dk
+3269052;2026-11-05 13:00;AFC Kupası;Kitchee SC;Phnom Penh Crown;1-0;2-1;1,83;3,12;2,72;2,11;1,32;46,7;24,4;28,9;1;evet;Üst;evet;borsa,dk
+3301007;2026-11-05 12:30;SAFF Şampiyonası, B Grubu;Pakistan;Hindistan;;2-3;4,1;3,3;1,46;1,64;1,6;19,8;24,6;55,6;2;evet;Üst;evet;iddaa
+3269026;2026-11-05 13:00;AFC Kupası;Lion C. Sailors;Adelaide Utd;3-0;5-0;1,28;4,11;4,7;2,35;1,24;66,5;18,0;15,4;1;evet;Üst;evet;borsa,dk
+3274473;2026-11-05 14:30;Hindistan Süper Ligi;Churchill B. SC;Northeast Utd;0-1;0-2;3,53;3,31;1,54;1,83;1,46;21,5;23,7;54,8;2;evet;Üst;hayır;dk
+3268969;2026-11-05 15:15;AFC Kupası;BG Pathum Utd;Wofoo Tai PO;2-0;4-1;1,09;5,07;8,06;2,3;1,25;80,9;12,9;6,1;1;evet;Üst;evet;borsa,dk
+3269034;2026-11-05 15:15;AFC Kupası;Kuching FA;Gangwon;2-0;2-0;1,8;2,98;2,93;;;47,1;26,8;26,2;1;evet;Üst;hayır;borsa,dk
+3274147;2026-11-05 17:00;Hindistan Süper Ligi;Mohun Bagan;Odisha;0-0;3-2;1,14;4,68;7,23;2,04;1,34;69,8;18,6;11,6;1;evet;Üst;evet;dk
+3301011;2026-11-05 17:00;SAFF Şampiyonası, A Grubu;Bhutan;Bangladeş;;0-1;7,04;4,61;1,15;1,92;1,41;8,8;16,1;75,1;2;evet;Üst;hayır;borsa
+3269263;2026-11-05 20:30;Suudi Arabistan Pro Lig;AL Qadisiyah;AL Fayha;0-0;0-0;1,2;4,6;5,6;2,77;1,15;67,8;17,7;14,5;1;hayır;Üst;hayır;iddaa
+3269056;2026-11-05 20:45;UEFA Konferans Ligi;Mjallby;Banja Luka;0-0;2-0;1,98;3,04;2,83;1,64;1,73;39,7;28,5;31,7;1;evet;Alt;evet;borsa,dk
+3269015;2026-11-05 20:45;UEFA Konferans Ligi;Kuopion;KAA Gent;0-0;0-0;4,53;3,5;1,47;1,67;1,69;18,3;23,4;58,3;2;hayır;Üst;hayır;dk
+3269047;2026-11-05 20:45;UEFA Avrupa Ligi;Lillestrom;Viktoria Plzen;0-1;0-1;2,59;3,37;1,99;2,16;1,38;28,6;24,7;46,7;2;evet;Üst;hayır;borsa,dk
+3269136;2026-11-05 20:45;UEFA Konferans Ligi;AGF Aarhus;Braga;0-0;0-0;3,72;3,26;1,63;1,71;1,66;20,5;24,8;54,7;2;hayır;Üst;hayır;borsa,dk
+3269173;2026-11-05 20:45;UEFA Konferans Ligi;Trabzonspor;Freiburg;0-1;0-1;2,16;3,25;2,4;2,11;1,41;38,7;27,5;33,8;1;hayır;Üst;hayır;borsa,dk
+3269180;2026-11-05 20:45;UEFA Avrupa Ligi;NEC Nijmegen;Omonia;0-1;3-1;1,56;3,57;3,74;2,09;1,41;59,4;21,9;18,8;1;evet;Üst;evet;borsa,dk
+3269201;2026-11-05 20:45;UEFA Avrupa Ligi;R. Sociedad;Lyon;1-0;1-1;1,39;4,04;4,6;2,32;1,32;56,0;23,0;21,0;1;hayır;Üst;hayır;borsa,dk
+3269202;2026-11-05 20:45;UEFA Avrupa Ligi;AC Milan;Ferencvaros;0-0;0-2;1,21;4,82;6,48;2,43;1,29;68,8;17,8;13,3;1;hayır;Üst;hayır;borsa,dk
+3269305;2026-11-05 20:45;UEFA Avrupa Ligi;Crystal Palace;Hoffenheim;0-1;1-1;1,6;3,65;3,48;2,43;1,29;51,2;24,1;24,7;1;hayır;Üst;hayır;borsa,dk
+3268960;2026-11-05 20:45;UEFA Avrupa Ligi;Levski Sofya;J. Bialystok;0-0;1-0;1,79;2,97;3,45;1,49;1,93;49,2;28,8;22,1;1;evet;Alt;evet;borsa,dk
+3269083;2026-11-05 20:45;UEFA Avrupa Ligi;Anderlecht;Salzburg;1-0;2-0;1,81;3,35;2,97;2,3;1,33;50,7;23,7;25,6;1;evet;Üst;hayır;borsa,dk
+3269161;2026-11-05 20:45;UEFA Avrupa Ligi;Sparta Prag;Bournemouth;1-0;1-3;6,52;4,61;1,22;2,18;1,38;17,9;22,2;59,9;2;evet;Üst;evet;borsa,dk
+3269247;2026-11-05 20:45;UEFA Konferans Ligi;Lincoln Red;Hajduk Split;0-0;1-0;8,33;4,93;1,15;2,02;1,45;7,8;15,8;76,3;2;hayır;Üst;hayır;borsa,dk
+3269300;2026-11-05 20:45;UEFA Konferans Ligi;Thun;Hearts;2-0;3-1;1,76;3,43;3,04;2,23;1,35;43,6;25,2;31,1;1;evet;Üst;evet;borsa,dk
+3269232;2026-11-05 20:45;UEFA Konferans Ligi;Midtjylland;Ajax;1-1;1-6;2,69;3,49;1,89;2,58;1,25;31,4;23,7;44,9;2;evet;Üst;evet;borsa
+3279654;2026-11-05 21:00;Arjantin Primera LPF, Kapanış;Aldosivi;River Plate;0-0;0-2;6,99;4,19;1,24;1,74;1,62;11,1;18,8;70,0;2;evet;Üst;hayır;borsa,dk
+3268939;2026-11-05 23:00;UEFA Avrupa Ligi;Sturm Graz;NK Celje;1-2;2-3;1,37;3,96;4,84;2,11;1,41;63,4;21,3;15,3;1;hayır;Üst;evet;borsa,dk
+3268947;2026-11-05 23:00;UEFA Konferans Ligi;Un. Craiova;KF Egnatia R.;2-0;2-0;1,17;4,82;7,75;2;1,46;71,0;18,3;10,7;1;evet;Üst;hayır;dk
+3268952;2026-11-05 23:00;UEFA Konferans Ligi;Riga;Jablonec;1-0;1-1;2,06;3,11;2,62;1,78;1,6;40,9;27,3;31,9;1;hayır;Üst;hayır;borsa,dk
+3268988;2026-11-05 23:00;UEFA Konferans Ligi;Lugano;Zalgiris Kaunas;3-0;3-0;1,06;6,65;11;2,84;1,2;79,6;12,7;7,7;1;evet;Üst;evet;iddaa
+3269097;2026-11-05 23:00;UEFA Konferans Ligi;Twente;Pafos;0-1;3-1;1,09;6,17;8,85;3,01;1,17;79,3;13,2;7,6;1;evet;Üst;evet;borsa,dk
+3269112;2026-11-05 23:00;UEFA Konferans Ligi;St. Truidense;Brann;0-0;1-1;1,45;4,06;3,99;2,8;1,21;58,9;21,1;20,1;1;hayır;Üst;hayır;borsa,dk
+3269128;2026-11-05 23:00;UEFA Konferans Ligi;Panathinaikos;CSKA Sofya;1-1;2-1;1,13;5,41;8,65;2,24;1,35;76,1;15,6;8,3;1;evet;Üst;evet;borsa,dk
+3269157;2026-11-05 23:00;UEFA Konferans Ligi;Getafe;Brighton;0-0;0-1;4,96;3,56;1,42;1,66;1,72;15,4;24,1;60,5;2;evet;Alt;evet;borsa,dk
+3269189;2026-11-05 23:00;UEFA Avrupa Ligi;Celta Vigo;U. S. Gilloise;1-1;1-2;2,13;2,98;2,61;1,67;1,7;41,0;28,9;30,1;1;hayır;Alt;hayır;borsa,dk
+3269194;2026-11-05 23:00;UEFA Avrupa Ligi;Celtic;Beşiktaş;0-0;3-2;2,59;3,38;1,98;2,35;1,31;32,9;24,6;42,5;2;hayır;Üst;evet;borsa,dk
+3269261;2026-11-05 23:00;UEFA Konferans Ligi;Monaco;Nordsjælland;1-0;2-0;1,21;4,79;6,38;2,43;1,29;70,7;17,0;12,3;1;evet;Üst;hayır;borsa,dk
+3268967;2026-11-05 23:00;UEFA Avrupa Ligi;Benfica;Lech Poznan;1-0;3-1;1,06;6,83;10;3,49;1,11;80,0;12,3;7,6;1;evet;Üst;evet;borsa,dk
+3269003;2026-11-05 23:00;UEFA Avrupa Ligi;B. Leverkusen;Marsilya;0-0;0-1;1,23;4,95;5,77;2,87;1,19;70,1;17,4;12,6;1;hayır;Üst;hayır;borsa,dk
+3269163;2026-11-05 23:00;UEFA Avrupa Ligi;Sunderland;D. Zagreb;0-2;0-2;1,37;3,92;4,94;1,98;1,47;64,1;20,5;15,4;1;hayır;Üst;hayır;borsa,dk
+3269181;2026-11-05 23:00;UEFA Avrupa Ligi;HB Sheva;Ofi Crete;0-1;0-2;1,93;3,12;2,87;1,8;1,59;44,9;27,1;28,0;1;hayır;Üst;hayır;borsa
+3269203;2026-11-05 23:00;UEFA Konferans Ligi;Kopenhag;Iberia 1999;2-1;2-1;1,06;6,47;11,9;2,54;1,26;79,8;13,1;7,1;1;evet;Üst;evet;iddaa
+3268951;2026-11-05 23:00;UEFA Avrupa Ligi;Torreense;Ararat;1-1;3-2;1,5;3,39;4,45;1,67;1,7;56,5;24,8;18,7;1;evet;Üst;evet;borsa,dk
+3269007;2026-11-05 23:00;UEFA Avrupa Ligi;AZ Alkmaar;Juventus;0-2;1-2;2,96;3,18;1,87;1,8;1,58;27,4;26,8;45,8;2;evet;Üst;evet;borsa,dk
+3355250;2026-11-06 00:00;Honduras Ulusal Lig, Açılış;Genesis PN;Real CD Espana;;1-1;2,62;2,87;1,99;1,54;1,71;29,6;28,2;42,1;2;hayır;Alt;evet;borsa
+3342532;2026-11-06 01:00;Şili Kupası;U. Chile;Antofagasta;1-0;4-0;1,14;4,77;6,86;;;71,2;17,0;11,8;1;evet;;;iddaa
+3279135;2026-11-06 01:15;Arjantin Primera LPF, Kapanış;Gimnasia;Belgrano;2-1;2-1;2,52;2,91;2,24;1,57;1,81;32,8;29,4;37,8;2;hayır;Alt;hayır;borsa,dk
+3266819;2026-11-06 01:30;Brezilya Serie A;Palmeiras SP;Clube do Remo;4-1;6-1;1,09;5,71;10,2;2,16;1,38;78,9;14,0;7,2;1;evet;Üst;evet;borsa,dk
+3274684;2026-11-06 01:30;Brezilya Serie B;Botafogo;Londrina PR;2-0;4-0;1,43;3,31;4,31;1,65;1,6;59,5;23,7;16,9;1;evet;Üst;evet;borsa,dk
+3269252;2026-11-06 02:00;Meksika Liga MX Kadınlar, Apertura;Club Necaxa (K);Atlas (K);1-1;1-1;9,33;5,36;1,07;;;8,8;14,2;77,0;2;hayır;;;dk
+3307383;2026-11-06 02:00;Bolivya Profesyonel Lig Kupası, Playoff;Club Bolivar;Real Potosi;1-0;1-0;1,06;5,51;9,67;;;83,4;11,2;5,4;1;evet;Üst;hayır;borsa
+3268943;2026-11-06 02:00;Kosta Rika Prmr Ligi, Açılış;Inter San Carlos;CS Cartagines;1-0;1-1;2,78;2,98;1,86;1,68;1,57;27,4;27,2;45,4;2;hayır;Üst;hayır;borsa,dk
+3355236;2026-11-06 02:15;Honduras Ulusal Lig, Açılış;CD Choloma;CA Independiente S.;0-0;0-0;1,45;3,37;4,09;2,02;1,35;60,9;21,5;17,5;1;hayır;Üst;hayır;borsa
+3266605;2026-11-06 03:30;Brezilya Serie A;Cruzeiro MG;Bahia BA;1-1;3-2;1,59;3,53;3,63;2,12;1,4;54,8;23,4;21,9;1;evet;Üst;evet;borsa
+3270859;2026-11-06 04:06;Meksika Liga MX Kadınlar, Apertura;Queretaro (K);Dep. Toluca (K);0-0;1-1;4,44;3,95;1,33;;;18,3;20,6;61,1;2;hayır;;;iddaa
+3369645;2026-11-06 04:00;Meksika Expansion MX Açılış, Playoff;Cancun;Piratas Veracruz;1-0;1-1;2,87;2,69;1,95;1,36;2;27,3;30,4;42,3;2;hayır;Alt;evet;borsa
+3355240;2026-11-06 04:30;Honduras Ulusal Lig, Açılış;Marathon;Platense;2-0;3-1;1,08;5,1;9,41;1,97;1,38;80,0;13,8;6,3;1;evet;Üst;evet;borsa
+3270925;2026-11-06 05:00;Kosta Rika Prmr Ligi, Açılış;CS Herediano;D. Saprissa;0-1;0-2;2,75;2,89;1,91;1,55;1,7;28,6;29,0;42,4;2;evet;Alt;evet;borsa
+3270706;2026-11-06 06:10;Meksika Liga MX Kadınlar, Apertura;C. Santos Laguna (K);Club Tijuana (K);4-0;4-2;2,65;3,27;1,82;;;30,6;24,8;44,6;2;hayır;;;iddaa
+3370598;2026-11-06 06:05;Meksika Expansion MX Açılış, Playoff;Alac. de Durango;Leones Negros;0-0;1-0;1,94;2,78;2,78;1,47;1,8;43,0;29,3;27,7;1;evet;Alt;evet;borsa
+3270912;2026-11-06 11:00;Avustralya A-Ligi Kadınlar;Adelaide Utd (K);Wellington P. (K);0-1;0-2;2,98;2,98;1,78;1,67;1,58;26,1;26,9;47,0;2;evet;Üst;hayır;borsa,dk
+3270788;2026-11-06 11:40;Avustralya A-Ligi;Sydney;C. C. Mariners;2-0;4-1;1,38;3,86;4,97;2,01;1,45;62,1;21,7;16,1;1;evet;Üst;evet;borsa,dk
+3274173;2026-11-06 17:00;Hindistan Süper Ligi;Goa;Bengaluru;1-1;1-2;2,46;2,88;2,09;1,57;1,68;34,3;27,2;38,5;2;evet;Alt;hayır;dk
+3270683;2026-11-06 19:30;Rusya Premier Lİg;L. Moskova;Rubin Kazan;0-0;0-1;2,07;2,98;2,7;1,61;1,77;40,6;28,2;31,1;1;hayır;Alt;evet;iddaa
+3271342;2026-11-06 20:00;Türkiye Süper Ligi;Gaziantep FK;Kasımpaşa;0-2;0-2;2,13;3,23;2,46;2,01;1,45;39,7;26,6;33,8;1;hayır;Üst;hayır;borsa,piyasa,dk
+3271153;2026-11-06 20:30;Almanya Bundesliga 2;D. Dresden;G. Furth;2-0;3-0;1,79;3,26;3,11;1,95;1,48;47,9;25,6;26,5;1;evet;Üst;evet;piyasa,dk
+3271250;2026-11-06 20:30;Almanya Bundesliga 2;Braunschweig;E. Cottbus;0-0;0-0;1,69;3,56;3,19;2,4;1,3;49,6;23,8;26,6;1;hayır;Üst;hayır;borsa,piyasa,dk
+3270903;2026-11-06 21:00;Danimarka Süper Ligi;Silkeborg;Lyngby BK;0-0;1-0;2,11;3,24;2,48;2,05;1,43;40,7;26,2;33,1;1;evet;Üst;hayır;borsa,dk
+3275057;2026-11-06 21:00;Fransa Kadınlar 1. Lig;Paris (K);Montpellier (K);2-0;5-0;1,08;5,09;8,59;2;1,36;74,7;16,1;9,2;1;evet;Üst;evet;dk
+3275323;2026-11-06 21:00;Fransa Kadınlar 1. Lig;Nantes (K);Toulouse (K);1-1;1-1;1,7;3,14;3,05;1,79;1,48;47,6;25,8;26,6;1;hayır;Üst;hayır;iddaa
+3279073;2026-11-06 21:00;Arjantin Primera LPF, Kapanış;Barracas;Racing Club;1-0;2-0;2,41;2,8;2,41;1,47;1,97;36,0;28,9;35,1;1;evet;Alt;evet;borsa,dk
+3270884;2026-11-06 21:30;Avusturya Bundesliga;Rapid Wien;Wolfsberger;2-0;6-0;1,09;6,17;8,98;2,83;1,2;75,8;14,4;9,8;1;evet;Üst;evet;dk
+3270798;2026-11-06 21:00;İsveç  Allsvenskan;Hammarby;IF Elfsborg;1-0;4-1;1,18;5;7,28;2,26;1,34;72,4;16,5;11,0;1;evet;Üst;evet;borsa,dk
+3270756;2026-11-06 22:00;Fransa Ligue 2;Dijon;Red Star;0-0;1-0;2,45;3,04;2,22;1,91;1,51;34,6;27,4;38,0;2;hayır;Üst;hayır;borsa,piyasa
+3270825;2026-11-06 22:00;Hollanda 1. Lig;Jong AZ Alkmaar;Almere City;0-1;1-3;2,39;3,48;1,89;3;1,11;35,3;22,7;42,1;2;evet;Üst;evet;borsa,dk
+3270879;2026-11-06 22:00;Fransa Ligue 2;US Boulogne;Annecy;1-0;3-0;1,99;2,79;3,06;1,41;2,08;42,0;31,1;26,9;1;evet;Alt;hayır;borsa,piyasa,dk
+3270959;2026-11-06 22:00;Hollanda 1. Lig;Heracles;Roda;3-1;5-1;1,27;4,02;5,07;2,07;1,33;67,3;18,9;13,8;1;evet;Üst;evet;borsa,dk
+3270986;2026-11-06 22:00;Hollanda 1. Lig;TOP Oss;Waalwijk;1-0;1-1;3,37;3,38;1,56;2,08;1,33;21,5;22,9;55,5;2;hayır;Üst;hayır;borsa,dk
+3271220;2026-11-06 22:00;Fransa Ligue 2;Dunkerque;Guingamp;1-0;3-0;2,45;3,16;2,17;1,82;1,56;33,5;27,4;39,1;2;hayır;Üst;evet;borsa,piyasa,dk
+3271247;2026-11-06 22:00;Hollanda 1. Lig;VVV Venlo;Jong PSV;0-1;1-1;1,47;3,68;3,57;2,6;1,18;55,6;21,2;23,2;1;hayır;Üst;hayır;borsa,dk
+3270778;2026-11-06 22:00;Hollanda 1. Lig;Eindhoven;Jong Ajax;0-1;0-3;2,16;3,38;2,11;2,63;1,17;37,8;23,7;38,4;2;evet;Üst;evet;borsa,dk
+3271031;2026-11-06 22:00;Hollanda 1. Lig;Helmond;Volendam;0-1;2-3;2,29;3,32;2,01;2,43;1,21;35,0;23,5;41,5;2;evet;Üst;evet;borsa,dk
+3271076;2026-11-06 22:00;Hollanda Eredivisie;Willem II;Zwolle;1-1;1-1;2,52;3,1;2,14;1,93;1,49;32,2;26,4;41,3;2;hayır;Üst;hayır;borsa,piyasa,dk
+3271131;2026-11-06 22:00;Fransa Ligue 2;Grenoble;Reims;2-1;3-2;3,86;3,2;1,62;1,61;1,76;22,4;26,2;51,4;2;hayır;Alt;hayır;borsa,piyasa,dk
+3271316;2026-11-06 22:00;Fransa Ligue 2;AS Nancy;Sochaux;0-0;1-0;1,42;3,54;4,93;1,66;1,72;58,1;24,9;17,1;1;evet;Alt;evet;borsa,piyasa,dk
+3275859;2026-11-06 22:00;Fransa Ligue 2;Montpellier;Metz;0-2;2-3;1,83;3,18;3,07;1,82;1,57;46,6;26,9;26,6;1;hayır;Üst;evet;borsa,piyasa,dk
+3270805;2026-11-06 22:00;Hollanda 1. Lig;Dordrecht;NAC Breda;0-0;0-0;4,64;3,94;1,31;2,11;1,32;16,7;19,7;63,6;2;hayır;Üst;hayır;borsa,dk
+3279710;2026-11-06 22:30;İspanya  La Liga 2;Castellon;Eibar;0-0;0-0;1,41;3,83;4,6;2,07;1,42;59,4;22,5;18,1;1;hayır;Üst;hayır;borsa,dk
+3270983;2026-11-06 22:30;Almanya Bundesliga;Hamburg;M'gladbach;1-1;3-1;2,09;3,11;2,58;1,87;1,54;40,3;26,3;33,4;1;evet;Üst;evet;piyasa
+3270687;2026-11-06 22:30;İskoçya Championship;Raith Rovers;Dunfermline;0-0;0-0;2,44;2,76;2,17;1,45;1,84;33,2;30,5;36,3;2;hayır;Alt;evet;borsa,piyasa,dk
+3270780;2026-11-06 22:30;İtalya Serie B;Ascoli;US Palermo;1-0;1-1;2,68;2,99;2,08;1,67;1,7;31,3;28,6;40,1;2;hayır;Üst;hayır;borsa,piyasa,dk
+3330621;2026-11-06 22:30;İngiltere Federasyon Kupası;Bristol Rovers;Cambridge;0-0;2-0;2,76;2,86;1,92;1,54;1,7;29,7;28,4;41,9;2;hayır;Alt;evet;borsa,dk
+3270939;2026-11-06 22:45;İtalya Serie A;Venezia;Udinese;0-0;2-1;2,08;3,01;2,67;1,79;1,6;40,1;28,7;31,3;1;evet;Üst;evet;borsa,piyasa,dk
+3271113;2026-11-06 22:45;Belçika Pro Lig;Standard Liege;SK Beveren;1-0;3-0;1,78;3,26;3,15;2,02;1,44;49,3;25,7;25,1;1;evet;Üst;evet;borsa,piyasa,dk
+3271239;2026-11-06 22:45;Fransa Ligue 1;Toulouse;Strasbourg;1-0;3-1;1,95;3,18;2,78;1,9;1,52;43,1;26,6;30,4;1;evet;Üst;evet;borsa,piyasa,dk
+3330603;2026-11-06 22:45;İngiltere Federasyon Kupası;Oxford City;Leicester City;1-1;2-4;6,52;4,88;1,15;;;11,0;15,2;73,7;2;evet;Üst;evet;borsa,dk
+3271262;2026-11-06 23:00;İngİltere Championship;Derby County;Bolton;0-1;3-1;2,16;3,04;2,52;1,8;1,59;38,3;27,1;34,6;1;evet;Üst;evet;borsa,piyasa,dk
+3270665;2026-11-06 23:00;İngİltere Premier Lİg;Everton;Coventry;0-0;3-1;1,47;3,63;4,23;1,97;1,47;57,8;23,6;18,6;1;evet;Üst;evet;borsa,piyasa,dk
+3279781;2026-11-06 23:00;İspanya La Liga;Sevilla;Alaves;0-0;0-0;1,75;2,9;3,68;1,42;2,06;49,1;29,2;21,6;1;hayır;Alt;evet;borsa,piyasa,dk
+3270948;2026-11-06 23:00;Peru Prmr Ligi, Kapanış;Atl Grau;Cusco;1-0;3-0;2,15;2,91;2,35;1,67;1,57;36,0;28,8;35,2;1;evet;Üst;evet;borsa,dk
+3278453;2026-11-06 23:45;Portekİz Premier Lİg;Famalicao;Arouca;0-0;1-0;2,26;2,82;2,56;1,47;1,97;38,7;30,3;31,1;1;evet;Alt;evet;borsa,piyasa,dk
+3278680;2026-11-07 01:15;Arjantin Primera LPF, Kapanış;Independiente;Dep. Riestra;1-0;2-1;1,57;2,89;4,91;1,25;2,6;56,2;28,4;15,4;1;evet;Alt;hayır;borsa,dk
+3279061;2026-11-07 01:15;Arjantin Primera LPF, Kapanış;Union De Santa Fe;V. Sarsfield;2-0;2-0;2,44;2,87;2,32;1,59;1,8;36,1;28,4;35,5;1;evet;Alt;evet;borsa,dk
+3279845;2026-11-07 01:15;Arjantin Primera LPF, Kapanış;San Lorenzo;CA Platense;0-1;0-2;2,4;2,66;2,52;1,31;2,36;35,2;33,0;31,8;1;hayır;Alt;evet;borsa,dk
+3266872;2026-11-07 02:00;Brezilya Serie A;Vitoria BA;Fluminense;0-2;0-3;2,87;2,85;2,05;1,47;1,98;29,5;29,5;41,0;2;evet;Alt;hayır;borsa,dk
+3351597;2026-11-07 02:00;Kolombiya Liga Dimayor, Final;Boyaca Chico;Inter Bogota;1-1;2-1;2,58;2,77;2,06;1,41;1,9;31,5;30,5;38,0;2;hayır;Alt;hayır;dk
+3270799;2026-11-07 02:00;Meksika Liga MX Kadınlar, Apertura;Pumas Unam (K);Atl San Luis (K);2-1;3-1;1,23;4,24;5,44;;;68,3;18,5;13,2;1;evet;;;dk
+3274387;2026-11-07 03:00;El Salvador Primera Division, Açılış;CD Inca;Metapan;0-1;1-1;4,32;3,24;1,44;1,56;1,69;15,9;25,0;59,1;2;hayır;Alt;evet;borsa
+3274325;2026-11-07 04:00;Meksika Prmr Ligi, Açılış;Atl San Luis;Juarez;0-0;0-1;1,36;3,6;4,48;1,86;1,44;60,8;21,7;17,5;1;hayır;Üst;hayır;borsa
+3274422;2026-11-07 04:00;Meksika Prmr Ligi, Açılış;Necaxa;Club Tijuana;1-0;1-0;2,16;2,96;2,31;1,75;1,51;37,8;26,9;35,3;1;evet;Üst;hayır;borsa
+3279164;2026-11-07 04:00;Arjantin Primera LPF, Kapanış;CA Tigre;CA Sarmiento;0-0;1-0;1,8;2,89;3,47;1,44;2,02;48,5;29,7;21,9;1;evet;Alt;evet;borsa
+3279374;2026-11-07 04:00;Arjantin Primera LPF, Kapanış;Banfield;Atl Tucuman;0-2;2-2;2,19;2,78;2,68;1,47;1,99;38,6;30,1;31,3;1;hayır;Alt;hayır;borsa
+3351546;2026-11-07 04:00;Kolombiya Liga Dimayor, Final;Fortaleza;I. Medellin;0-1;0-3;2,69;2,72;2,02;1,43;1,87;30,9;28,2;40,9;2;evet;Alt;hayır;borsa
+3274474;2026-11-07 04:06;Meksika Liga MX Kadınlar, Apertura;Guadalajara (K);America (K);0-1;1-3;4,29;3,8;1,35;;;18,8;21,3;59,9;2;evet;;;iddaa
+3274318;2026-11-07 04:10;Meksika Liga MX Kadınlar, Apertura;Cruz Azul (K);Club Leon (K);0-0;1-2;1,92;3,2;2,5;;;42,2;25,3;32,4;1;hayır;;;iddaa
+3266925;2026-11-07 05:00;Guatemala Ulusal Lig, Açılış;Dep. Guastatoya;CD Suchitepequez;1-0;4-0;1,34;3,3;5,42;1,4;1,93;63,2;25,1;11,7;1;evet;Alt;hayır;borsa
+3274491;2026-11-07 06:00;Meksika Prmr Ligi, Açılış;Atlante;Santos Laguna;0-0;0-2;1,83;3,14;2,72;2,01;1,36;44,8;25,9;29,3;1;hayır;Üst;hayır;borsa
+3274433;2026-11-07 06:10;Meksika Liga MX Kadınlar, Apertura;Juarez (K);Monterrey (K);1-0;1-2;3,34;2,98;1,67;1,55;1,7;24,3;27,2;48,5;2;evet;Alt;hayır;iddaa
+3304775;2026-11-07 07:00;Avustralya A-Ligi Kadınlar;C. Coast Marin. (K);Newcastle Jets (K);1-0;1-1;1,41;3,59;4,09;2,01;1,36;57,6;22,6;19,8;1;hayır;Üst;hayır;iddaa
+3274356;2026-11-07 07:00;Japonya J Ligi;Shimizu;Tokyo Verdy;0-0;0-1;2,2;2,81;2,64;1,41;2,11;38,0;30,3;31,7;1;hayır;Alt;evet;borsa
+3274333;2026-11-07 07:00;Avustralya A-Ligi;Auckland;Wellington P.;0-0;0-0;1,99;3,1;2,78;1,76;1,61;42,6;26,4;31,0;1;hayır;Üst;hayır;borsa
+3274274;2026-11-07 08:00;Japonya J Ligi;Yokohama M.;Fagiano;1-1;1-1;2,16;3,08;2,51;1,75;1,62;39,9;27,2;32,9;1;hayır;Üst;hayır;borsa,dk
+3274378;2026-11-07 08:00;Japonya J Ligi;Nagoya;Kyoto Sanga;0-1;0-2;1,64;3,4;3,54;1,88;1,53;51,8;25,1;23,1;1;hayır;Üst;hayır;borsa,dk
+3274259;2026-11-07 09:00;Japonya J Ligi;Fukuoka;V Varen;0-1;1-1;2,04;2,93;2,81;1,54;1,87;47,2;28,4;24,4;1;hayır;Alt;evet;borsa,dk
+3274436;2026-11-07 09:00;Japonya J Ligi;Tokyo;Kashima;0-0;2-0;1,8;3,2;3,15;1,88;1,53;44,8;26,4;28,8;1;evet;Üst;hayır;borsa,dk
+3274489;2026-11-07 09:00;Avustralya A-Ligi Kadınlar;Brisbane R. (K);Melbourne V. (K);2-0;2-0;4,13;3,57;1,41;1,86;1,44;19,7;22,8;57,6;2;hayır;Üst;hayır;iddaa
+3274248;2026-11-07 10:00;Japonya J Ligi;Kashiwa;Kawasaki Frontale;1-1;2-1;1,74;3,51;3,04;2,44;1,28;47,5;23,8;28,7;1;evet;Üst;evet;borsa,dk
+3274481;2026-11-07 11:00;Avustralya A-Ligi Kadınlar;Perth Glory (K);Canberra Utd (K);0-0;0-1;2,26;2,87;2,26;1,7;1,55;36,8;28,0;35,2;1;hayır;Üst;hayır;borsa,dk
+3274377;2026-11-07 11:40;Avustralya A-Ligi;Melbourne City;W. S. Wanderers;1-1;2-1;1,89;3,26;2,85;1,92;1,5;44,7;25,8;29,5;1;evet;Üst;evet;borsa,dk
+3275952;2026-11-07 13:30;Türkiye Süper Ligi;Eyüpspor;Kocaelispor;0-2;0-2;3,59;3,08;1,71;1,54;1,86;22,6;27,7;49,7;2;evet;Alt;evet;borsa,piyasa,dk
+3275894;2026-11-07 13:45;Avustralya A-Ligi;Perth Glory;Newcastle Utd Jets;1-0;2-1;2,14;3,47;2,32;2,35;1,31;40,9;23,8;35,3;1;evet;Üst;evet;borsa,dk
+3274913;2026-11-07 14:00;Rusya Premier Lİg;Fakel;D. Moskova;1-1;1-2;4,53;3,47;1,47;1,71;1,67;18,6;24,2;57,2;2;evet;Üst;evet;iddaa
+3278988;2026-11-07 14:00;İspanya Primera Ligi Kadınlar;Granada (K);RCD Espanyol (K);0-1;0-1;2,31;2,81;2,25;1,48;1,79;35,1;28,9;36,0;2;evet;Alt;evet;iddaa
+3275990;2026-11-07 15:00;Almanya Bundesliga 2;Nürnberg;Darmstadt 98;0-0;2-0;1,53;3,75;3,75;2,38;1,3;55,2;22,1;22,7;1;evet;Üst;hayır;borsa,piyasa,dk
+3276551;2026-11-07 15:00;Almanya Bundesliga 2;Holstein Kiel;A. Bielefeld;0-1;1-2;2,18;3,06;2,49;1,7;1,67;38,5;28,1;33,3;1;hayır;Üst;evet;borsa,piyasa,dk
+3276583;2026-11-07 15:00;Almanya Bundesliga 2;Osnabrück;Kaiserslautern;0-0;0-1;2,1;3,21;2,5;1,92;1,5;38,5;26,2;35,2;1;hayır;Üst;hayır;borsa,piyasa,dk
+3275012;2026-11-07 15:30;İngİltere Premier Lİg;Leeds Utd;Tottenham;0-0;1-0;2,46;2,94;2,27;1,65;1,72;34,1;28,3;37,6;2;hayır;Alt;evet;borsa,piyasa,dk
+3275366;2026-11-07 15:30;İngİltere Championship;Bristol City;Norwich City;0-1;0-5;2,47;3,04;2,2;1,79;1,6;34,4;27,5;38,2;2;evet;Üst;evet;borsa,piyasa,dk
+3275535;2026-11-07 15:30;İngİltere Championship;Portsmouth;Stoke City;1-0;1-2;2,09;2,81;2,82;1,42;2,06;40,3;29,9;29,8;1;hayır;Alt;hayır;borsa,piyasa,dk
+3275822;2026-11-07 15:30;İngİltere Championship;Wrexham;Wolverhampton;1-1;1-1;3,18;2,98;1,86;1,5;1,92;25,7;28,5;45,8;2;hayır;Alt;evet;borsa,dk
+3274527;2026-11-07 16:00;Türkiye Süper Ligi;Samsunspor;Konyaspor;1-0;1-0;2,13;3,06;2,55;1,78;1,6;39,6;28,7;31,6;1;evet;Üst;hayır;borsa,piyasa
+3275731;2026-11-07 16:00;Fransa Ligue 2;Clermont;Rodez AF;0-0;1-0;2,69;3,06;2,05;1,74;1,62;30,0;28,0;41,9;2;hayır;Üst;hayır;borsa,piyasa,dk
+3278582;2026-11-07 16:00;İspanya La Liga;Malaga;Santander;1-0;1-2;2,05;3,18;2,61;1,99;1,46;41,5;26,4;32,0;1;hayır;Üst;evet;borsa,piyasa,dk
+3279453;2026-11-07 16:00;İspanya  La Liga 2;Burgos;Celta Vigo B;0-1;2-1;1,55;3,21;4,28;1,59;1,8;56,1;24,6;19,3;1;evet;Üst;evet;piyasa
+3275893;2026-11-07 16:30;Rusya Premier Lİg;Akhmat Grozny;Rodina Moscow;1-0;1-0;1,66;3,34;3,5;1,87;1,53;50,7;25,2;24,1;1;evet;Üst;hayır;iddaa
+3274807;2026-11-07 17:00;İtalya Serie A;Cagliari;Frosinone;1-0;1-0;2,64;3,31;1,98;2,39;1,3;32,5;25,8;41,7;2;hayır;Üst;hayır;borsa,piyasa,dk
+3276413;2026-11-07 17:00;İtalya Serie B;AC Cesena;Catanzaro;0-0;1-0;1,87;3,09;3,06;1,84;1,55;45,8;27,0;27,2;1;evet;Üst;hayır;borsa,piyasa,dk
+3276647;2026-11-07 17:00;İtalya Serie B;AC Pisa;Sudtirol;1-1;2-2;1,35;3,8;5,45;1,76;1,61;61,3;23,0;15,8;1;hayır;Üst;evet;borsa,piyasa,dk
+3274642;2026-11-07 17:00;İtalya Serie B;Padova;Empoli;2-1;2-2;1,92;2,97;3,04;1,59;1,79;43,3;28,9;27,8;1;hayır;Alt;hayır;borsa,piyasa,dk
+3274957;2026-11-07 17:00;İtalya Serie B;Juve Stabia;SS Arezzo;1-0;1-0;1,61;3,14;4;1,65;1,72;52,5;27,1;20,4;1;evet;Alt;evet;borsa,piyasa,dk
+3275155;2026-11-07 17:00;Hindistan Süper Ligi;Chennaiyin;SC East Bengal;3-1;5-3;3,03;3,2;1,69;1,96;1,38;26,5;25,0;48,5;2;hayır;Üst;evet;dk
+3276170;2026-11-07 17:00;İtalya Serie A;Torino;Lecce;0-0;1-1;1,59;3,3;3,93;1,78;1,6;53,0;26,2;20,8;1;hayır;Üst;hayır;borsa,piyasa,dk
+3274964;2026-11-07 17:30;Almanya Bundesliga;Leipzig;Augsburg;3-1;5-2;1,25;5,06;5,29;3,65;1,09;66,6;17,8;15,6;1;evet;Üst;evet;borsa,piyasa,dk
+3276354;2026-11-07 17:30;Almanya Bundesliga;Paderborn;E. Frankfurt;1-1;2-2;2,38;3,37;2,13;2,37;1,31;32,6;25,2;42,1;2;hayır;Üst;evet;borsa,piyasa,dk
+3275593;2026-11-07 17:30;Almanya Bundesliga;B. Dortmund;Elversberg;0-0;2-1;1,16;5,32;7,26;2,69;1,22;73,1;16,2;10,7;1;evet;Üst;evet;borsa,piyasa,dk
+3275627;2026-11-07 17:30;Almanya Bundesliga;Mainz;Bayern Münih;0-1;1-2;8;6,28;1,11;3,7;1,09;11,2;14,2;74,6;2;evet;Üst;evet;borsa,piyasa,dk
+3275033;2026-11-07 18:00;İskoçya Premiership;Dundee Utd;Motherwell;1-1;1-1;1,86;3,37;2,85;2,26;1,34;46,3;24,7;29,0;1;hayır;Üst;hayır;borsa,piyasa,dk
+3275088;2026-11-07 18:00;İskoçya Championship;G. Morton;Stenhousemuir;2-2;4-3;2,31;2,88;2,2;1,51;1,75;35,3;28,8;35,9;2;hayır;Alt;hayır;borsa,piyasa,dk
+3275616;2026-11-07 18:00;İngİltere Championship;QPR;Lincoln City;1-1;2-1;1,45;3,6;4,56;1,73;1,65;58,2;23,6;18,3;1;evet;Üst;evet;borsa,piyasa,dk
+3275705;2026-11-07 18:00;İskoçya Premiership;St. Johnstone;Dundee;1-0;2-1;2,39;3,06;2,26;1,9;1,51;36,1;27,9;36,0;1;evet;Üst;evet;borsa,piyasa,dk
+3275837;2026-11-07 18:00;İngiltere Ulusal Lig, Güney;Chelmsford C.;Farnborough;0-0;0-0;1,33;3,95;4,4;2,31;1,25;62,6;20,4;17,0;1;hayır;Üst;hayır;borsa
+3275870;2026-11-07 18:00;İngİltere Championship;Watford;Middlesbrough;0-0;0-0;5,69;4,43;1,28;2,29;1,34;15,3;19,8;64,9;2;hayır;Üst;hayır;borsa,piyasa,dk
+3275912;2026-11-07 18:00;İskoçya Championship;Arbroath;Ayr Utd;2-0;4-1;2,52;2,78;2,09;1,47;1,81;31,1;29,6;39,3;2;hayır;Alt;hayır;borsa,piyasa,dk
+3276082;2026-11-07 18:00;İngİltere Championship;W. Bromwich;Millwall;0-0;3-0;1,79;3,13;3,24;1,68;1,69;46,7;26,7;26,6;1;evet;Üst;evet;piyasa,dk
+3276247;2026-11-07 18:00;İngİltere Championship;Blackburn R.;West Ham;0-0;2-1;4,42;3,77;1,44;2,1;1,41;18,4;22,9;58,8;2;hayır;Üst;evet;borsa,piyasa,dk
+3276603;2026-11-07 18:00;İskoçya Championship;Inverness;Livingston;0-0;1-1;2;2,88;2,59;1,6;1,65;39,0;28,7;32,3;1;hayır;Alt;evet;borsa,piyasa,dk
+3276705;2026-11-07 18:00;Yunanistan Süper Lig;Volos;AE Kifisia;1-1;1-3;2,73;2,89;1,92;1,54;1,72;29,9;28,4;41,8;2;evet;Alt;hayır;borsa,piyasa,dk
+3330596;2026-11-07 18:00;İngiltere Federasyon Kupası;Crewe Alexandra;Wimbledon;1-0;2-1;2;2,86;2,61;1,54;1,71;40,5;28,6;30,9;1;evet;Alt;hayır;borsa,dk
+3330602;2026-11-07 18:00;İngiltere Federasyon Kupası;Barnet;Tranmere;0-0;3-0;1,51;3,33;3,67;1,87;1,43;54,0;23,8;22,2;1;evet;Üst;evet;borsa,dk
+3330609;2026-11-07 18:00;İngiltere Federasyon Kupası;Oxford;Stevenage;0-1;0-1;1,79;2,89;3,04;1,54;1,73;45,5;28,4;26,1;1;hayır;Alt;evet;borsa,dk
+3330611;2026-11-07 18:00;İngiltere Federasyon Kupası;MK Dons;Swindon Town;2-1;2-1;1,28;3,96;5,01;;;65,4;19,7;14,9;1;evet;Üst;evet;borsa,dk
+3330613;2026-11-07 18:00;İngiltere Federasyon Kupası;York City;Northampton;3-0;4-0;1,57;3,11;3,64;1,61;1,62;52,4;25,1;22,4;1;evet;Üst;evet;borsa,dk
+3330614;2026-11-07 18:00;İngiltere Federasyon Kupası;Carlisle;Salford City;1-0;1-0;2,39;3,12;2,03;;;34,0;25,0;41,0;2;hayır;Üst;hayır;borsa,dk
+3330620;2026-11-07 18:00;İngiltere Federasyon Kupası;Cheltenham;Halifax Town;1-0;2-0;1,93;3,13;2,51;1,94;1,39;41,5;26,2;32,3;1;evet;Üst;hayır;borsa,dk
+3330625;2026-11-07 18:00;İngiltere Federasyon Kupası;Kidderminster Harriers;Doncaster;2-0;3-0;3,51;3,28;1,55;1,87;1,43;23,5;24,5;52,0;2;hayır;Üst;evet;borsa,dk
+3330628;2026-11-07 18:00;İngiltere Federasyon Kupası;Huddersfield;Exeter City;0-1;1-2;1,18;4,39;6,4;1,96;1,39;70,4;18,1;11,5;1;hayır;Üst;evet;borsa,dk
+3330631;2026-11-07 18:00;İngiltere Federasyon Kupası;Boreham Wood;Wigan Ath;0-2;0-3;1,53;3,51;3,41;;;54,3;22,5;23,2;1;hayır;Üst;evet;borsa,dk
+3335687;2026-11-07 18:00;İngiltere Federasyon Kupası;Mansfield;Macclesfield;1-0;3-0;1,19;4,42;6,12;;;71,4;17,4;11,2;1;evet;Üst;evet;borsa
+3335705;2026-11-07 18:00;İngiltere Federasyon Kupası;Colchester;Worcester City;1-0;1-0;1,15;4,67;6,86;;;72,9;16,7;10,3;1;evet;Üst;hayır;borsa,dk
+3335727;2026-11-07 18:00;İngiltere Federasyon Kupası;Harrogate;AFC Fylde;1-1;1-4;1,67;3,37;2,93;;;49,8;23,8;26,4;1;hayır;Üst;evet;borsa,dk
+3335730;2026-11-07 18:00;İngiltere Federasyon Kupası;Barnsley;Aldershot;4-0;7-2;1,09;5,37;7,64;;;76,3;14,5;9,1;1;evet;Üst;evet;borsa,dk
+3275098;2026-11-07 18:00;İngİltere Premier Lİg;Fulham;Newcastle Utd;0-0;1-1;1,78;3,26;3,16;1,91;1,51;47,1;26,0;26,8;1;hayır;Üst;hayır;borsa,piyasa,dk
+3275421;2026-11-07 18:00;Belçika Pro Lig;Westerlo;Charleroi;0-0;1-5;2,59;3,35;2;2,13;1,39;32,1;25,3;42,6;2;evet;Üst;evet;borsa,piyasa,dk
+3275634;2026-11-07 18:00;İskoçya Championship;Queen's Park;P. Thistle;0-0;0-1;6,25;4,15;1,2;1,93;1,4;12,6;18,9;68,4;2;evet;Üst;hayır;dk
+3275784;2026-11-07 18:00;İngİltere Championship;Charlton;Sheffield Utd;1-1;2-1;3,32;3,12;1,77;1,68;1,68;25,5;27,2;47,3;2;hayır;Üst;evet;borsa,piyasa,dk
+3276157;2026-11-07 18:00;İngiltere Kuzey Premier Ligi;Bamber Bridge;Bury;0-1;1-2;4,82;4,34;1,26;;;16,9;18,7;64,4;2;evet;;;iddaa
+3330599;2026-11-07 18:00;İngiltere Federasyon Kupası;Bradford;Marine;4-0;7-0;1,1;4,88;8,43;;;82,1;12,6;5,2;1;evet;Üst;evet;borsa
+3330607;2026-11-07 18:00;İngiltere Federasyon Kupası;Leyton Orient;Harborough Town;2-0;5-1;1,19;4,39;6,02;;;69,7;17,9;12,4;1;evet;Üst;evet;borsa,dk
+3330618;2026-11-07 18:00;İngiltere Federasyon Kupası;Accrington;Wycombe;0-1;0-2;2,69;3,05;1,87;1,89;1,41;29,1;26,0;44,9;2;evet;Üst;hayır;borsa,dk
+3330623;2026-11-07 18:00;İngiltere Federasyon Kupası;Port Vale;Scunthorpe;1-0;4-2;1,34;3,63;4,64;1,8;1,47;61,6;22,2;16,2;1;evet;Üst;evet;borsa,dk
+3330630;2026-11-07 18:00;İngiltere Federasyon Kupası;Salisbury;Sholing;3-0;6-0;1,2;4,16;6,4;1,93;1,4;68,2;19,7;12,1;1;evet;Üst;evet;borsa,dk
+3330635;2026-11-07 18:00;İngiltere Federasyon Kupası;Eastleigh;Shrewsbury;0-1;1-2;3,24;3,11;1,66;1,79;1,48;25,0;25,0;50,1;2;evet;Üst;evet;borsa,dk
+3330641;2026-11-07 18:00;İngiltere Federasyon Kupası;Dover;Wealdstone;2-0;2-0;3;3,37;1,66;;;25,5;23,1;51,4;2;hayır;Üst;hayır;borsa
+3335682;2026-11-07 18:00;İngiltere Federasyon Kupası;Luton Town;Forest Green;2-0;2-0;1,14;4,87;6,63;;;73,7;15,9;10,5;1;evet;Üst;hayır;borsa,dk
+3335697;2026-11-07 18:00;İngiltere Federasyon Kupası;Chesterfield;Yeovil Town;2-1;4-3;1,28;4,01;4,85;;;64,5;19,7;15,8;1;evet;Üst;evet;borsa,dk
+3335698;2026-11-07 18:00;İngiltere Federasyon Kupası;Gillingham;Barrow;0-0;0-1;1,84;2,96;2,85;1,65;1,6;43,6;28,2;28,2;1;hayır;Üst;hayır;borsa,dk
+3275194;2026-11-07 18:00;İngİltere Championship;Birmingham;Swansea City;1-0;2-1;1,63;3,26;3,73;1,76;1,61;51,7;26,0;22,3;1;evet;Üst;evet;borsa,piyasa,dk
+3275546;2026-11-07 18:00;İngİltere Championship;Preston;Southampton;1-0;1-0;4,63;3,75;1,42;1,92;1,5;18,1;22,6;59,3;2;hayır;Üst;hayır;borsa,piyasa,dk
+3275760;2026-11-07 18:00;İngİltere Championship;Cardiff City;Burnley;1-2;5-4;1,74;3,5;3,04;2,38;1,3;47,1;24,2;28,6;1;evet;Üst;evet;borsa,piyasa,dk
+3330617;2026-11-07 18:00;İngiltere Federasyon Kupası;Bromley;Rotherham;0-1;0-2;1,76;3,16;2,87;1,94;1,39;47,6;25,1;27,3;1;hayır;Üst;hayır;borsa,dk
+3330634;2026-11-07 18:00;İngiltere Federasyon Kupası;Newport;Walsall;2-1;3-1;2,21;2,91;2,28;1,8;1,48;37,1;27,0;35,8;1;evet;Üst;evet;borsa,dk
+3279000;2026-11-07 18:00;İspanya Primera Ligi Kadınlar;Ath Bilbao (K);Real Madrid (K);0-0;1-1;4,56;3,64;1,35;1,79;1,48;16,2;22,1;61,7;2;hayır;Üst;hayır;borsa
+3278556;2026-11-07 18:15;İspanya La Liga;Espanyol;Dep. La Coruna;0-0;0-0;2,21;2,89;2,57;1,59;1,8;39,9;29,3;30,8;1;hayır;Alt;evet;borsa,piyasa
+3330632;2026-11-07 18:00;İngiltere Federasyon Kupası;Guiseley;Sutton Utd;0-0;1-0;2,7;2,94;1,92;1,65;1,6;30,4;27,4;42,2;2;hayır;Üst;hayır;borsa,dk
+3279511;2026-11-07 18:15;İspanya  La Liga 2;Cadiz;Real Oviedo;0-2;1-2;2,57;2,99;2,16;1,61;1,76;32,2;29,1;38,8;2;evet;Alt;hayır;borsa,piyasa,dk
+3275553;2026-11-07 18:30;Hollanda 1. Lig;Den Bosch;Jong Utrecht;0-0;1-1;1,28;4,51;4,31;3,44;1,06;63,4;18,0;18,6;1;hayır;Üst;hayır;borsa,dk
+3276648;2026-11-07 18:30;Hollanda Eredivisie;F. Sittard;Telstar;2-2;2-2;1,84;3,18;3,04;1,91;1,51;46,3;25,9;27,8;1;hayır;Üst;evet;borsa,piyasa,dk
+3330622;2026-11-07 18:00;İngiltere Federasyon Kupası;Fleetwood;Rochdale;0-1;1-2;1,43;3,44;4,09;1,81;1,47;56,7;23,3;20,1;1;hayır;Üst;evet;borsa,dk
+3330639;2026-11-07 18:00;İngiltere Federasyon Kupası;Hornchurch;Blackpool;1-0;1-2;3,45;3,35;1,55;;;23,7;23,2;53,1;2;evet;Üst;evet;borsa,dk
+3274791;2026-11-07 19:00;Avusturya Bundesliga;Aus. Lustenau;Grazer AK;0-1;2-1;2,29;3,13;2,32;1,87;1,54;36,7;26,8;36,5;1;evet;Üst;evet;borsa,dk
+3275084;2026-11-07 19:00;Türkiye Süper Ligi;Galatasaray;Amed Sportif;2-0;4-3;1,28;4,51;5,48;2,51;1,27;67,3;18,7;14,0;1;evet;Üst;evet;borsa,piyasa,dk
+3275806;2026-11-07 19:00;Türkiye Süper Ligi;Göztepe;Başakşehir;1-1;1-2;1,79;3,22;3,15;1,91;1,51;47,4;25,8;26,7;1;hayır;Üst;evet;borsa,piyasa
+3279256;2026-11-07 19:00;İspanya Primera Ligi Kadınlar;SD Eibar (K);Real Sociedad (K);1-1;1-2;4,17;3,11;1,49;1,53;1,74;19,5;26,1;54,4;2;evet;Alt;hayır;iddaa
+3274828;2026-11-07 19:15;İtalya Serie B;Mantova 1911;Hellas Verona;0-0;0-0;2,4;2,98;2,29;1,77;1,6;35,4;28,5;36,1;2;hayır;Üst;hayır;borsa,piyasa,dk
+3276727;2026-11-07 19:30;İsveç  Allsvenskan;Orgryte;Vasteraas;0-0;0-0;3,31;3,29;1,72;1,86;1,54;27,0;24,4;48,6;2;hayır;Üst;hayır;borsa,dk
+3274627;2026-11-07 19:30;Rusya Premier Lİg;Krasnodar;CSKA Moskova;2-1;4-2;1,92;3,22;2,81;2,08;1,41;43,9;26,2;30,0;1;evet;Üst;evet;iddaa
+3276054;2026-11-07 19:30;İsveç  Allsvenskan;Degerfors IF;Gais;0-0;1-2;2,77;3,08;2;1,66;1,71;31,1;26,7;42,1;2;evet;Alt;hayır;borsa,dk
+3274928;2026-11-07 20:00;Danimarka Süper Ligi;Odense;Viborg;0-2;1-2;2,55;3,42;1,99;2,29;1,34;32,9;24,3;42,8;2;evet;Üst;evet;borsa,dk
+3274711;2026-11-07 20:00;İtalya Serie A;Parma;Bologna;0-0;1-2;4,75;3,21;1,5;1,48;1,95;18,0;26,6;55,3;2;evet;Alt;hayır;borsa,piyasa,dk
+3279210;2026-11-07 20:00;Norveç Eliteserien;Rosenborg;IK Start;2-0;4-1;1,08;6,15;9,89;2,71;1,22;78,4;13,6;8,0;1;evet;Üst;evet;borsa,dk
+3276537;2026-11-07 20:00;Fransa Kadınlar 1. Lig;Fleury (K);RC Strasbourg (K);1-0;2-1;1,52;3,33;3,63;1,7;1,55;53,3;24,3;22,3;1;evet;Üst;evet;iddaa
+3275665;2026-11-07 20:15;Belçika Pro Lig;O. H. Leuven;Mechelen;0-0;2-0;2,04;3,11;2,65;1,81;1,57;40,8;27,1;32,0;1;evet;Üst;hayır;borsa,piyasa,dk
+3275613;2026-11-07 20:30;Almanya Bundesliga;Stuttgart;Werder Bremen;1-0;1-0;1,61;3,76;3,31;2,78;1,21;53,9;22,5;23,6;1;evet;Üst;hayır;borsa,piyasa,dk
+3276730;2026-11-07 20:30;Yunanistan Süper Lig;Aris;Paneitolikos;1-0;3-0;1,21;3,96;6,43;1,74;1,53;69,7;19,3;11,0;1;evet;Üst;evet;borsa,piyasa,dk
+3276371;2026-11-07 20:30;İngİltere Premier Lİg;Nottingham F.;Man. City;2-0;3-1;4,22;3,6;1,48;1,96;1,47;19,0;22,6;58,4;2;hayır;Üst;evet;dk
+3279700;2026-11-07 20:30;İspanya  La Liga 2;Cordoba;AD Ceuta;2-0;3-0;1,3;4,36;5,21;2,47;1,28;63,7;20,1;16,2;1;evet;Üst;evet;borsa,piyasa,dk
+3279868;2026-11-07 20:30;İspanya La Liga;Osasuna;Ath Bilbao;0-0;1-1;3,39;3;1,79;1,51;1,9;24,8;27,9;47,3;2;hayır;Alt;evet;borsa,piyasa
