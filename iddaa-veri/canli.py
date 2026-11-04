@@ -102,6 +102,10 @@ def espn_bul(ev, dep, bas_ms):
         b1, b2 = max(benzer(ev, n) for n in x["ev"] if n), max(benzer(dep, n) for n in x["dep"] if n)
         if min(b1, b2) >= 0.6 and b1 + b2 > puan:
             en, puan = x, b1 + b2
+        # Bir takım aynı anda iki maç oynamaz: bir taraf kesin eşleşip saat de tutuyorsa öbür adın farklı yazılması yeter
+        # (ör. iddaa "Al Ahli Dubai", ESPN "Shabab Al Ahli")
+        elif max(b1, b2) >= 0.9 and min(b1, b2) >= 0.35 and abs(x["t"].timestamp() * 1000 - bas_ms) <= 30 * 60e3 and 1.4 > puan:
+            en, puan = x, 1.4
     return en if puan >= 1.4 else None
 
 # ---------- Kaynak karşılaştırması: biten maçların sonucu ESPN'den ----------
