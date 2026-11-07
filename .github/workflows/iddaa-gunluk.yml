@@ -1,7 +1,8 @@
 # iddaa analiz aracının verisini günceller. Mağaza Asistanı uygulamasına dokunmaz;
 # her şey claude/project-thread-brb60g dalındaki iddaa-veri/ klasörüne yazılır.
 # GitHub zamanlanmış işleri 5 dakikada bir başlatmıyor (pratikte saatte bir civarı). Bu yüzden her çalışma
-# ~50 dakika açık kalır ve iddaa-veri/tur.sh'yi 5 dakikada bir tekrarlar; biri bitince sıradaki başlar.
+# ~50 dakika açık kalır ve iddaa-veri/tur.sh'yi 5 dakikada bir tekrarlar. Kasım 2026'da zamanlanmış çalışmalar 6 saate kadar
+# aralıklı başladı; bu yüzden her çalışma bitmeden kendinden sonrakini başlatır (zincir), zamanlama yalnız yedek.
 # tur.sh: iddaa bülteni ve canlı bülten, oynanma, Smarkets, Polymarket, The Odds API (anahtar varsa), football-data,
 # ESPN canlı/sonuç, ilk 11, xG, bildirimler, günün kuponları, haftalık karne. Her turdan önce dal yeniden çekilir,
 # yani betikte yapılan değişiklik bir sonraki turda devreye girer.
@@ -10,8 +11,14 @@ on:
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
+    inputs:
+      zincir:
+        description: "Önceki çalışmanın başlattığı devam (zorla yenileme yapılmaz)"
+        required: false
+        default: "hayir"
 permissions:
   contents: write
+  actions: write
 concurrency:
   group: iddaa-veri
   cancel-in-progress: false
@@ -32,6 +39,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
           BAS=$(date +%s)
+          [ "${{ inputs.zincir }}" = "evet" ] && export GITHUB_EVENT_NAME=schedule
           while :; do
             git fetch -q origin "+refs/heads/$DAL:refs/remotes/origin/$DAL" && git reset -q --hard "origin/$DAL" || echo "dal çekilemedi"
             timeout 900 bash iddaa-veri/tur.sh || echo "tur hatayla bitti"
@@ -40,3 +48,8 @@ jobs:
             [ $(( $(date +%s) - BAS )) -gt 2880 ] && break
             sleep $(( 300 - $(date +%s) % 300 ))
           done
+      - name: Sonraki çalışmayı başlat (zincir)
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run iddaa-gunluk.yml --repo "$GITHUB_REPOSITORY" --ref main -f zincir=evet || echo "zincir başlatılamadı"
