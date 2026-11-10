@@ -816,3 +816,32 @@
 3275860;2026-11-07 18:00;İskoçya 2. Lig;Forfar;Edinburgh;;1.0-1.0;2,4;2,93;2,1;1,57;1,67;31,5;27,9;40,6;2;hayır;Alt;evet;borsa,piyasa
 3276497;2026-11-07 18:00;İskoçya 2. Lig;Clyde Bank;Spartans Edinburgh;;3.0-2.0;1,76;3,24;2,8;2;1,37;46,6;24,6;28,8;1;evet;Üst;evet;borsa,piyasa
 3275641;2026-11-07 20:00;Almanya Böl. Lig, Kuzey ;VfB Oldenburg;St. Pauli II;;4.0-1.0;1,22;4,75;4,85;;;39,8;26,2;34,0;1;evet;Üst;evet;piyasa
+3284293;2026-11-10 20:45;UEFA Şamp. Ligi Kadınlar ;Real Madrid (K);Paris (K);0-0;3-0;1,19;4,66;5,7;2,47;1,21;72,3;14,4;13,4;1;evet;Üst;evet;borsa,dk
+3284464;2026-11-10 20:45;UEFA Şamp. Ligi Kadınlar ;Hacken (K);Chelsea (K);0-0;0-0;8,94;5,57;1,06;2,3;1,25;6,9;12,7;80,4;2;hayır;Üst;hayır;borsa,dk
+3380161;2026-11-10 21:00;İspanya Kral Kupası;CD Pamplona;Eibar;0-2;0-3;8,16;4,9;1,1;1,97;1,38;8,9;16,2;74,9;2;evet;Üst;evet;borsa,dk
+3284434;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Oxford;Cheltenham;0-0;4-0;1,06;5,74;8,81;2,69;1,16;78,4;13,6;8,0;1;evet;Üst;evet;borsa,dk
+3284175;2026-11-10 22:00;İngiltere Trophy Kupası, Kuzey;Huddersfield;Liverpool U21;3-0;4-0;1,06;6,22;7,94;3,37;1,07;79,0;12,3;8,7;1;evet;Üst;evet;borsa,dk
+3284200;2026-11-10 22:00;İngiltere Trophy Kupası, Kuzey;Crewe Alexandra;Wigan Ath;0-0;1-2;2,65;3,03;1,9;1,8;1,47;29,1;27,3;43,6;2;evet;Üst;evet;borsa,dk
+3284201;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Northampton;Gillingham;0-1;1-2;2,17;3,02;2,26;1,68;1,56;39,0;26,3;34,7;1;hayır;Üst;evet;borsa,dk
+3284214;2026-11-10 22:00;İngiltere Trophy Kupası, Kuzey;Burton Albion;Notts County;0-1;0-3;2,38;3,34;1,94;2,1;1,32;35,5;24,4;40,2;2;evet;Üst;evet;borsa,dk
+3284344;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Leicester City;Walsall;2-1;2-1;1,06;6,09;7,83;3,38;1,07;79,2;12,3;8,6;1;evet;Üst;evet;borsa,dk
+3284375;2026-11-10 22:00;İngiltere Trophy Kupası, Kuzey;Grimsby Town;Nottingham F. U21;0-3;0-3;2,94;3,86;1,58;3,27;1,08;20,2;19,0;60,8;2;evet;Üst;evet;borsa,dk
+3368249;2026-11-10 22:00;İspanya Kral Kupası;Mijas Las Lagunas;Real Jaen;0-1;1-2;3,71;3,13;1,55;1,59;1,66;21,8;25,9;52,3;2;evet;Alt;hayır;iddaa
+3380160;2026-11-10 22:00;İspanya Kral Kupası;Amorebieta;Logrones;0-0;1-0;2,8;2,95;1,86;1,64;1,6;28,9;27,5;43,6;2;hayır;Üst;hayır;iddaa
+3284261;2026-11-10 22:00;İngiltere Trophy Kupası, Kuzey;Mansfield;Chesterfield;2-1;3-5;1,91;3,42;2,4;2,4;1,22;44,0;23,0;32,9;1;hayır;Üst;evet;borsa,dk
+3284450;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Barnet;Leyton Orient;2-1;4-2;2,38;3,34;1,95;2,24;1,28;35,2;23,8;41,0;2;hayır;Üst;evet;borsa,dk
+3284221;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Plymouth;Swindon Town;1-1;2-1;1,13;5,08;6,73;2,58;1,18;76,0;14,0;10,0;1;evet;Üst;evet;borsa,dk
+3284283;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Bristol Rovers;Reading;0-1;2-2;2,4;3,3;1,94;2,42;1,21;33,1;25,7;41,2;2;hayır;Üst;evet;borsa,dk
+3284291;2026-11-10 22:00;İngiltere Trophy Kupası, Kuzey;Stockport;Tranmere;0-0;0-0;1,37;3,92;4;2,61;1,18;60,0;21,7;18,3;1;hayır;Üst;hayır;borsa,dk
+3284443;2026-11-10 22:00;İngiltere Trophy Kupası, Güney;Stevenage;Fulham U21;1-1;2-2;1,09;5,68;7,03;3,3;1,08;77,3;13,1;9,6;1;hayır;Üst;evet;borsa,dk
+3284309;2026-11-10 22:30;İngiltere Trophy Kupası, Güney;Bromley;MK Dons;1-1;1-2;2,52;3,35;1,86;2,2;1,28;31,3;23,7;45,0;2;evet;Üst;evet;borsa,dk
+3284357;2026-11-10 22:30;İngiltere Trophy Kupası, Kuzey;Bradford;York City;1-0;4-0;1,21;4,46;5,34;2,49;1,21;69,8;17,3;12,9;1;evet;Üst;evet;borsa,dk
+3284481;2026-11-10 22:30;İngiltere Trophy Kupası, Güney;Crawley Town;Brentford U21;0-1;1-2;1,34;4,06;4,09;2,78;1,15;61,5;19,8;18,7;1;hayır;Üst;evet;borsa,dk
+3284343;2026-11-10 23:00;UEFA Şamp. Ligi Kadınlar ;Inter (K);Man. City (K);1-2;1-4;5,72;4,92;1,17;2,32;1,25;15,7;17,2;67,1;2;evet;Üst;evet;dk
+3284244;2026-11-10 23:00;UEFA Şamp. Ligi Kadınlar ;AS Roma (K);Servette (K);2-0;2-1;1,08;5,6;8,15;2,78;1,15;78,9;13,1;8,0;1;evet;Üst;evet;borsa
+3284204;2026-11-10 22:45;İngiltere Trophy Kupası, Güney;Colchester;Ipswich Town U21;0-0;0-0;1,82;3,61;2,46;2,98;1,11;45,1;21,3;33,6;1;hayır;Üst;hayır;borsa,dk
+3284446;2026-11-10 23:00;UEFA Şamp. Ligi Kadınlar ;PSG (K);B. Münih (K);0-2;1-2;4,59;4,22;1,28;2,56;1,19;17,6;19,2;63,2;2;evet;Üst;evet;iddaa
+3284206;2026-11-11 00:30;El Salvador Primera Division, Açılış;C.D. Cacahuatique;Angel Firpo;0-1;1-1;3,27;2,95;1,7;1,58;1,67;21,4;26,3;52,3;2;hayır;Üst;hayır;borsa
+3372487;2026-11-11 02:30;Kolombiya Kupası;Inter Bogota;America De Cali;1-2;1-2;2,68;2,75;2,01;1,36;2,01;30,3;30,3;39,4;2;evet;Alt;hayır;dk
+3286656;2026-11-11 04:00;El Salvador Primera Division, Açılış;Metapan;CD Platense Municipal;0-1;2-1;1,29;3,76;5,1;1,83;1,46;67,9;19,8;12,3;1;evet;Üst;evet;borsa
+3372531;2026-11-11 04:30;Kolombiya Kupası;Once Caldas;Atl. Nacional Medellin;1-0;1-1;2,13;2,72;2,52;1,42;1,88;37,3;31,5;31,2;1;hayır;Alt;evet;borsa
