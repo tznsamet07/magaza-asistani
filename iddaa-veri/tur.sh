@@ -32,6 +32,7 @@ echo "=== tur $(date -u +%H:%M) ==="
   timeout 300 python3 smarkets.py || echo "Smarkets alınamadı"
   timeout 180 python3 polymarket.py || echo "Polymarket alınamadı"
   timeout 180 python3 oddsapi.py || echo "The Odds API alınamadı"
+  timeout 120 python3 apifootball.py || echo "API-Football alınamadı"
 )
 # Geçmiş istatistikler: 05 UTC'den sonra, veri.json bugün henüz güncellenmediyse bir kez (elle çalıştırınca ilk turda hep)
 SON=$(python3 -c "import json; print(json.load(open('iddaa-veri/veri.json'))['guncelleme'])" 2>/dev/null || echo yok)
