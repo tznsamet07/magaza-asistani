@@ -149,8 +149,11 @@ def secenekler(m):
             # fazla yüksek olan %60-70'lik favoriler belirgin daha sık tuttu: MS %69 (borsa aynıyken %59), 2.5 A/Ü %77 (%59).
             # Bu seçenekler sıralamada 5 puan öne alınır (gösterilen ihtimal değişmez).
             sm, idd = (m.get("sm") or {}).get(k), marjsiz(m[k]["o"])
-            onay = bool(sm and idd and len(sm) == len(idd) and sm[i] > idd[i] + 0.02)
-            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": p, "e": p * o - 1, "dis": g["kaynak"] == "piyasa", "onay": onay})
+            # Tersi de geçerli: borsa iddaa'dan 2 puandan fazla düşükse %55-75'lik seçimler 236 maçta %58 tuttu (iddaa %65 diyordu):
+            # bu seçenekler kupona alınmaz ("borsa itirazı").
+            ok = bool(sm and idd and len(sm) == len(idd))
+            onay, itiraz = ok and sm[i] > idd[i] + 0.02, ok and sm[i] < idd[i] - 0.02
+            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": p, "e": p * o - 1, "dis": g["kaynak"] == "piyasa", "onay": onay, "itiraz": itiraz})
     return out
 
 # xG kontrolü: gol pazarlarında (alt/üst, KG) iki takımın son maçlardaki xG'sinden Poisson ihtimali.
@@ -209,7 +212,7 @@ def kuponlari_kur(maclar):
     kupa_alt = lambda m, x: x["k"].startswith("au") and x["i"] == 0 and any(w in (m.get("lig") or "") for w in ("Kupa", "Cup", "Copa"))
     # 3.5 Alt kuponda sürekli beklenenin altında kaldı (3 Kasım: 17 seçimde 9, beklenen 11,7; ilk yarıda 4 gol olanlar oldu): kupona alınmaz
     alt35 = lambda m, x: x["k"] == "au35" and x["i"] == 0
-    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v) and not kupa_alt(*v) and not alt35(*v)]
+    normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v) and not kupa_alt(*v) and not alt35(*v) and not v[1]["itiraz"]]
     # Sonucu hiç gelmemiş liglerin maçları (ör. İngiltere U21 Kupası, Kolombiya 2. lig) kupon karnesine giremiyor:
     # yeterli maç varsa yalnız sonucu daha önce gelmiş liglerden seçilir
     bilinen = [v for v in normal if v[0].get("lig") in BILINEN]
@@ -319,7 +322,7 @@ if gun:
             dengeli = kp["ad"] in ("Dengeli", "Akşam dengeli")
             alt, ust = (0.55, 0.75) if dengeli else (0.65, 1.01)
             tum = [(mm, y) for mm in bugunku if str(mm["id"]) not in kullanilan and mm["t"] > simdi_ms + 15 * 60e3
-                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2 and not xg_uyar(mm, y) and not dusuyor(mm, y)]
+                   for y in secenekler(mm) if y["k"] != "iyms" and y["o"] >= 1.2 and not xg_uyar(mm, y) and not dusuyor(mm, y) and not y["itiraz"]]
             # Ölçüte uyan yoksa 5 puan gevşetilir; öneri yine de düşen seçenekten daha olası olmalı
             aday = [v for v in tum if alt <= v[1]["p"] < ust] or [v for v in tum if alt - 0.05 <= v[1]["p"] < ust and v[1]["p"] > x["p"]]
             aday.sort(key=lambda v: (not v[1]["dis"], -v[1]["e"] if dengeli else -v[1]["p"]))
