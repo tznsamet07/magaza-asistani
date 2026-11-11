@@ -94,7 +94,7 @@ details.uyari[open] summary::after{content:""}
 .hero.kucuk .hero-ust{font-size:17px}
 .hero.kucuk .hero-ust b{font-size:22px}
 .hero.kucuk .hero-alt{font-size:13px}
-.tek{border-radius:20px;padding:16px;margin-bottom:14px;color:#fff;background:linear-gradient(135deg,#1d4ed8,#0f766e);box-shadow:0 8px 24px rgba(29,78,216,.25)}
+.tek{border-radius:20px;padding:16px;margin-bottom:0;color:#fff;background:linear-gradient(135deg,#1d4ed8,#0f766e);box-shadow:0 8px 24px rgba(29,78,216,.25)}
 .tek-baslik{font-size:13px;opacity:.85;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
 .tek-satir{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);border-radius:14px;padding:12px;margin-top:10px;cursor:pointer}
 .tek-satir .ts-sol{flex:1;min-width:0}
@@ -147,6 +147,54 @@ details.katla summary{font-weight:600;color:var(--yazi)}
   main{padding-bottom:90px}
   .hero-sayi{grid-template-columns:repeat(2,1fr)}
 }
+/* ---- Uygulama görünümü (telefon) ---- */
+@media (max-width:720px){
+  html{-webkit-tap-highlight-color:transparent}
+  body{overscroll-behavior-y:contain}
+  header{position:sticky;top:0;z-index:15;padding:calc(8px + env(safe-area-inset-top)) 14px 8px;gap:10px;
+    background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid color-mix(in srgb,var(--cizgi) 60%,transparent)}
+  header .logo{width:34px;height:34px;border-radius:10px;font-size:18px}
+  header h1{font-size:19px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #altBaslik{display:none}
+  #hepsiniYenileBtn{border-radius:999px;padding:7px 12px;font-size:13px}
+  main{padding-top:10px}
+  main > details.uyari{font-size:12px;padding:8px 12px;border-radius:12px}
+  body:not([data-sayfa="ozet"]):not(:has(#s-ozet:not(.gizli))) main > details.uyari{display:none}
+  main > section:not(.gizli){animation:sayfa .18s ease-out}
+  #altMenu{background:color-mix(in srgb,var(--kart) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  #altMenu button span{display:grid;place-items:center;width:56px;height:30px;border-radius:999px;transition:background .15s}
+  #altMenu button.aktif span{background:color-mix(in srgb,var(--ana) 16%,transparent)}
+  #altMenu button,.perde-ic button,.firsat,.tek-satir,.kupon-satir{-webkit-user-select:none;user-select:none}
+  .perde-ic{padding:18px 8px 8px}
+  .perde-ic::before{content:"";position:absolute;top:7px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:var(--cizgi)}
+  .perde-ic{animation:perde .2s ease-out}
+  .bolum h2{font-size:18px;margin:4px 4px 10px}
+  .kart{border:0;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 1px rgba(0,0,0,.03)}
+  .firsat{border-top:0;border-right:0;border-bottom:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .tek-satir:active,.kupon-satir:active{opacity:.85}
+}
+.menu-btn{display:none}
+.banner{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:0 16px;scrollbar-width:none}
+.banner::-webkit-scrollbar{display:none}
+.slayt{flex:0 0 100%;scroll-snap-align:center;display:flex}
+.slayt>*{flex:1;margin-bottom:0;cursor:pointer}
+.banner .hero{min-height:118px}
+.hero.karne{background:linear-gradient(135deg,#7c3aed,#2563eb);box-shadow:0 8px 24px rgba(124,58,237,.25)}
+.hero.canli{background:linear-gradient(135deg,#dc2626,#ea580c);box-shadow:0 8px 24px rgba(220,38,38,.25)}
+.nokta{display:flex;justify-content:center;gap:6px;margin:10px 0 16px}
+.nokta i{width:6px;height:6px;border-radius:6px;background:var(--cizgi);transition:width .2s}
+.nokta i.aktif{width:18px;background:var(--ana)}
+#altPanel{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,0);pointer-events:none;transition:background .2s}
+#altPanel.acik{background:rgba(0,0,0,.4);pointer-events:auto}
+.panel-ic{position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow-y:auto;background:var(--kart);border-radius:22px 22px 0 0;padding:8px 14px calc(18px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .25s ease-out;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+#altPanel.acik .panel-ic{transform:none}
+.panel-tut{width:40px;height:4px;border-radius:4px;background:var(--cizgi);margin:2px auto 10px}
+.panel-ust{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;position:sticky;top:-8px;background:var(--kart);padding:6px 0}
+.panel-ust b{flex:1;font-size:17px;line-height:1.3}
+.panel-kapat{border:0;background:var(--bg);color:var(--yazi);width:32px;height:32px;border-radius:50%;font-size:14px;cursor:pointer}
+@media (max-width:720px){ .menu-btn{display:grid;place-items:center;border:0;background:var(--kart);color:var(--yazi);width:36px;height:36px;border-radius:50%;font-size:17px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)} }
+@keyframes sayfa{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes perde{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 .kupon{padding:0;overflow:hidden;margin-bottom:12px}
 .kupon-ust{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:12px 14px;background:var(--ana);color:var(--ana-yazi)}
 .kupon-ust b{white-space:nowrap}.kupon-ust .alt{color:inherit;opacity:.85;text-align:right}
@@ -163,7 +211,8 @@ details.katla summary{font-weight:600;color:var(--yazi)}
 <body>
 <header>
   <div class="logo">⚽</div>
-  <div style="flex:1"><h1>İddaa Analiz</h1><div class="alt">Bütün bülten, dünya oranları ve canlı maçlar · kendiliğinden</div></div>
+  <div style="flex:1;min-width:0"><h1 id="sayfaAdi">İddaa Analiz</h1><div class="alt" id="altBaslik">Bütün bülten, dünya oranları ve canlı maçlar · kendiliğinden</div></div>
+  <button class="menu-btn" id="menuBtn" aria-label="Menü">☰</button>
   <button class="btn" id="hepsiniYenileBtn" title="Sunucudaki en son veriyi şimdi çek" style="white-space:nowrap">⟳ Yenile</button>
 </header>
 <nav id="sekmeler">
@@ -216,7 +265,7 @@ details.katla summary{font-weight:600;color:var(--yazi)}
 
 <!-- SÜRPRİZ -->
 <section id="s-surpriz" class="gizli">
-  <div class="uyari"><b>Yüksek oranlar hakkında, test sonucu:</b> 17 bin maçta İY/MS 1/2 %2.3, 2/1 %2.8 oranında geldi; adil oranları sırasıyla 44 ve 36. İddaa bunları en fazla 34.5'ten veriyor, yani bu seçeneklerde iddaa'nın payı %20 ile %70 arası, bütün bültenin en kötüsü. Ev sahibi favoriyken 2/1, deplasman favoriyken 1/2 daha sık oluyor (%3.5-4); aşağıdaki olasılıklar bunu hesaba katıyor. Aradaki eski maçlar ve geçen yıl aynı haftanın sonucu test ettiğimde hiçbir işe yaramadı.</div>
+  <details class="uyari"><summary><b>Yüksek oranlar hakkında, test sonucu:</b></summary> 17 bin maçta İY/MS 1/2 %2.3, 2/1 %2.8 oranında geldi; adil oranları sırasıyla 44 ve 36. İddaa bunları en fazla 34.5'ten veriyor, yani bu seçeneklerde iddaa'nın payı %20 ile %70 arası, bütün bültenin en kötüsü. Ev sahibi favoriyken 2/1, deplasman favoriyken 1/2 daha sık oluyor (%3.5-4); aşağıdaki olasılıklar bunu hesaba katıyor. Aradaki eski maçlar ve geçen yıl aynı haftanın sonucu test ettiğimde hiçbir işe yaramadı.</details>
   <div class="kart">
     <h2>Bültendeki yüksek oranlar · gerçek olasılıkla</h2>
     <p class="alt">Bütün maçlardaki 4.00 ve üstü oranlı seçenekler, iddaa'ya göre en az aleyhte olandan en çok aleyhte olana sıralı. Seçip kupon yaparsan aşağıda kuponun gerçek tutma ihtimalini ve beklenen değerini görürsün.</p>
@@ -231,7 +280,7 @@ details.katla summary{font-weight:600;color:var(--yazi)}
 
 <!-- BASKETBOL -->
 <section id="s-basket" class="gizli">
-  <div class="uyari"><b>Basketbol hakkında dürüst not:</b> Basketbolda düşük oranlı tarafın tutma ihtimali yüksek görünür ama oranı da o kadar düşüktür. İddaa'nın basketbol alt/üst oranlarında marj çoğu zaman %15-25 arası, futboldan daha yüksek. Tutma oranının yüksek olması para kazandırmaz; önemli olan oranın olasılığa göre yüksek olması. Canlıda maçı izleyip tempoyu görebildiğin için şansın biraz daha fazla, aşağıdaki hesaplayıcı bunun için.</div>
+  <details class="uyari"><summary><b>Basketbol hakkında dürüst not:</b></summary> Basketbolda düşük oranlı tarafın tutma ihtimali yüksek görünür ama oranı da o kadar düşüktür. İddaa'nın basketbol alt/üst oranlarında marj çoğu zaman %15-25 arası, futboldan daha yüksek. Tutma oranının yüksek olması para kazandırmaz; önemli olan oranın olasılığa göre yüksek olması. Canlıda maçı izleyip tempoyu görebildiğin için şansın biraz daha fazla, aşağıdaki hesaplayıcı bunun için.</details>
   <div class="kart">
     <h2>Canlı toplam sayı hesaplayıcı</h2>
     <p class="alt">Maç öncesi çizgi + şu anki skor ve kalan süreyle maçın kaç sayı biteceğini ve alt/üst olasılığını hesaplar. Listeden bir maça dokunursan çizgi otomatik dolar.</p>
@@ -573,6 +622,9 @@ document.querySelectorAll("#sekmeler button").forEach(b => b.onclick = () => {
   document.querySelectorAll("#altMenu button").forEach(x => x.classList.toggle("aktif", x.dataset.git === ana));
   $("digerPerde").classList.add("gizli");
   window.scrollTo(0, 0);
+  // Uygulama çubuğunda sayfanın adı; garanti uyarısı yalnız ana ekranda
+  $("sayfaAdi").textContent = b.dataset.s === "ozet" ? "İddaa Analiz" : b.textContent.trim();
+  document.body.dataset.sayfa = b.dataset.s;
   document.querySelectorAll("main > section").forEach(s => s.classList.toggle("gizli", s.id !== "s-" + b.dataset.s));
   if (b.dataset.s === "kupon") kuponCiz();
   if (b.dataset.s === "surpriz") surprizCiz();
@@ -585,6 +637,7 @@ document.querySelectorAll("[data-git]").forEach(b => b.onclick = () => {
   if (b.dataset.git === "diger"){ $("digerPerde").classList.toggle("gizli"); return; }
   document.querySelector(`#sekmeler [data-s="${b.dataset.git}"]`).click();
 });
+$("menuBtn").onclick = () => $("digerPerde").classList.toggle("gizli");
 $("digerPerde").onclick = e => { if (e.target.id === "digerPerde") $("digerPerde").classList.add("gizli"); };
 $("ligSec").innerHTML = LIGLER.map(l => `<option value="${l[0]}">${l[1]}</option>`).join("");
 $("guncelleBtn").onclick = async () => {
@@ -1022,7 +1075,31 @@ async function kiyasYenile(){
 // ---------- En iyiler (açılış ekranı) ----------
 const NTFY_KONU = "iddaa-analiz-7e4d51316682";
 // Bütün bülteni, canlıyı ve basketbolu tarar; kullanıcı hiçbir şey seçmeden en iyi seçenekleri görür
+// Alttan açılan panel (uygulamalardaki gibi): başlık, içerik, aşağı kaydırınca ya da boşluğa dokununca kapanır
+function panelAc(baslik, html){
+  let p = $("altPanel");
+  if (!p){
+    p = document.createElement("div"); p.id = "altPanel";
+    p.innerHTML = `<div class="panel-ic"><div class="panel-tut"></div><div class="panel-ust"><b id="panelBaslik"></b><button class="panel-kapat" aria-label="Kapat">✕</button></div><div id="panelGovde"></div></div>`;
+    document.body.appendChild(p);
+    p.onclick = e => { if (e.target === p || e.target.closest(".panel-kapat")) panelKapat(); };
+    let y0 = null; const ic = p.querySelector(".panel-ic");
+    ic.addEventListener("touchstart", e => { y0 = ic.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+    ic.addEventListener("touchend", e => { if (y0 != null && e.changedTouches[0].clientY - y0 > 90) panelKapat(); y0 = null; });
+  }
+  $("panelBaslik").innerHTML = baslik; $("panelGovde").innerHTML = html;
+  p.classList.add("acik"); document.body.style.overflow = "hidden";
+  p.querySelector(".panel-ic").scrollTop = 0;
+  return $("panelGovde");
+}
+function panelKapat(){ const p = $("altPanel"); if (p){ p.classList.remove("acik"); document.body.style.overflow = ""; } }
 function maciAc(id){
+  // Bültende olan maç alttan açılan panelde bütün pazarlarıyla gösterilir; başlamış maç bülten sekmesinde aranır
+  const m = BULTEN && BULTEN.futbol.find(x => String(x.id) === String(id));
+  if (m && window.innerWidth <= 720){
+    panelAc(`${esc(m.ev)} – ${esc(m.dep)}<br><span class="alt">${gunAdi(m.t)} ${saat(m.t)} · ${esc(m.lig)}</span>`, macDetay(m));
+    return;
+  }
   ACIK.add(String(id));
   document.querySelector('#sekmeler [data-s="bugun"]').click();
   bultenCiz();
@@ -1300,6 +1377,28 @@ function kuponKarnesi(){
     kp.secim.map(s => `${isaret(s.tuttu)} ${esc(s.ev)} – ${esc(s.dep)}${s.skor ? ` <b>${s.skor[0]}-${s.skor[1]}</b>${s.iy ? ` (İY ${s.iy[0]}-${s.iy[1]})` : ""}` : ""}: ${esc(s.ad)} ${s.o.toFixed(2)}`).join("<br>") + `</div>`).join("")).join("");
   return ozet + tekKupon + secimKarne + clv + liste;
 }
+// Ana ekranın üstündeki kaydırmalı banner: tek maç, fırsat durumu, karne, canlı. Dokununca ilgili yer açılır.
+function bannerHtml(firsatSlayt){
+  let n = 0, t = 0, bek = 0, tn = 0, tt = 0;
+  if (KUPONLAR && KUPONLAR.gunler) for (const v of Object.values(KUPONLAR.gunler)) for (const k of v.kuponlar){
+    if (k.sonuc !== "tuttu" && k.sonuc !== "yattı") continue;
+    n++; if (k.sonuc === "tuttu") t++; bek += k.secim.reduce((a, s) => a * s.p, 1);
+    if (k.secim.length === 1){ tn++; if (k.sonuc === "tuttu") tt++; }
+  }
+  const canliSay = CANLI && CANLI.futbol ? CANLI.futbol.length : 0;
+  const slaytlar = [firsatSlayt.replace('class="hero', 'data-git-bolum="oynanabilir" class="hero'),
+    n ? `<div class="hero karne" data-panel="karne"><div class="hero-ust"><b>${t}</b>/${n} kupon tuttu</div><div class="hero-alt">Hesaba göre ${bek.toFixed(1)} tutmalıydı. Tek maç: ${tn} oynandı, ${tt} tuttu. Ayrıntı için dokun.</div></div>` : "",
+    `<div class="hero canli" data-sekme="canli"><div class="hero-ust"><b>${canliSay}</b> canlı maç</div><div class="hero-alt">Skor, korner, şut ve canlı oran hesabı. Açmak için dokun.</div></div>`].filter(Boolean);
+  // Tek maç kartı en üstte sabit, altında aynı boydaki kısa kartlar yana kayar
+  return tekMacKarti() + `<div class="banner" id="banner" style="margin-top:12px">${slaytlar.map(x => `<div class="slayt">${x}</div>`).join("")}</div><div class="nokta">${slaytlar.map((_, i) => `<i class="${i ? "" : "aktif"}"></i>`).join("")}</div>`;
+}
+function bannerBagla(kutu){
+  const b = kutu.querySelector("#banner"); if (!b) return;
+  const noktalar = kutu.querySelectorAll(".nokta i");
+  b.addEventListener("scroll", () => { const i = Math.round(b.scrollLeft / b.clientWidth); noktalar.forEach((x, j) => x.classList.toggle("aktif", i === j)); }, { passive: true });
+  b.querySelectorAll("[data-panel=karne]").forEach(x => x.onclick = () => panelAc("🎟️ Kupon karnesi", kuponKarnesi()));
+  b.querySelectorAll("[data-git-bolum]").forEach(x => x.onclick = () => { const h = [...kutu.querySelectorAll(".bolum h2")].find(e => /Oynanabilir/.test(e.textContent)); if (h) h.scrollIntoView({ behavior: "smooth", block: "start" }); });
+}
 // Ana ekranın en üstü: bugünün tek maçları (sabah ve akşam). Kayıtta en az kaybettiren yol tek maç.
 function tekMacKarti(){
   if (!KUPONLAR || !KUPONLAR.gunler) return "";
@@ -1372,10 +1471,11 @@ function ozetCiz(){
 
   // Üst bilgi: tek bakışta durum
   const firsatSay = value.length + cv.length;
-  let h = tekMacKarti() + `<div class="hero kucuk ${firsatSay ? "var" : "yok"}">
+  const firsatSlayt = `<div class="hero kucuk ${firsatSay ? "var" : "yok"}">
     <div class="hero-ust">${firsatSay ? `<b>${firsatSay}</b> fırsat var` : "Şu an fırsat yok"}</div>
     <div class="hero-alt">${firsatSay ? "Aşağıdaki yeşil kartlar iddaa oranının gerçek ihtimalden yüksek olduğu seçenekler." : "Değerli oran yok. Program 5 dakikada bir tarar, çıkınca telefonuna bildirir."} ${ms.length} maç tarandı, son bakış ${BULTEN ? esc(BULTEN.zaman.slice(11)) : "–"}.</div>
     <div class="hero-sayi" style="display:none"><div><b>${ms.length}</b><span>maç tarandı</span></div><div><b>${CANLI && CANLI.futbol ? CANLI.futbol.length : 0}</b><span>canlı maç</span></div><div><b>${say.borsa + say.piyasa}</b><span>dünya oranıyla</span></div><div><b>${BULTEN ? esc(BULTEN.zaman.slice(11)) : "–"}</b><span>son güncelleme</span></div></div></div>`;
+  let h = bannerHtml(firsatSlayt);
   h += bolum("🎟️", "Günün kuponları", kuponlarHtml(), `Aynı günün maçlarından, gerçek ihtimale göre seçildi; her 5 dakikada yenilenir. Kuponun tutma ihtimali maçların ihtimallerinin çarpımıdır, iddaa'nın payı da her maçta katlanır; beklenen değer bu yüzden çoğunlukla eksidir. İY/MS 1/2 ve 2/1 nadir gelir (100 maçta 2-3); sürpriz kuponu az parayla oyna. Maçlardan 1 saat önce ilk 11'ler açıklanınca tekrar bakılır; bir seçeneğin ihtimali düşerse telefona uyarı ve yerine öneri gelir.`);
   if (gec.length) h += bolum("⏱️", "İddaa geç kalıyor", gec.slice(0, 8).map(v => mac(v, v.x.edge >= a.minEdge ? degerlendir(v.x.p, v.x.o, a).stake : 0, true)).join(""),
     `Borsa son ${Math.max(...gec.map(v => v.g.dk))} dakikada belirgin oynadı ama iddaa oranı yerinde duruyor. Gerçek avantajın en sık çıktığı an budur. Avantaj eksiyse oran hâlâ kötüdür.`);
@@ -1413,6 +1513,7 @@ function ozetCiz(){
     <ol class="alt"><li>Telefonuna ücretsiz <b>ntfy</b> uygulamasını kur (Play Store / App Store).</li><li>Uygulamada <b>+</b> ile abone ol, kanal adına <b>${NTFY_KONU}</b> yaz.</li></ol>
     <p class="alt">Bilgisayardan: <a href="https://ntfy.sh/${NTFY_KONU}" target="_blank" rel="noopener">ntfy.sh/${NTFY_KONU}</a></p></details>`;
   kutu.innerHTML = h;
+  bannerBagla(kutu);
   kutu.querySelectorAll("[data-ac]").forEach(t => t.onclick = () => maciAc(t.dataset.ac));
   kutu.querySelectorAll("[data-oyna]").forEach(b => b.onclick = () => { const [g, ad] = b.dataset.oyna.split("|"); kuponOynadim(g, ad); });
   kutu.querySelectorAll("[data-sekme]").forEach(t => t.onclick = () => document.querySelector(`#sekmeler [data-s="${t.dataset.sekme}"]`).click());
