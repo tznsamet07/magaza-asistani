@@ -145,7 +145,12 @@ def secenekler(m):
             # 13 bin maçlık geçmişte (football-data kapanış oranları) %65-70 ihtimalli "Alt"lar %67 değil %61 tuttu,
             # "Üst"ler ise ihtimalinin biraz üstünde: Alt seçeneklerin ihtimali kupon için 3 puan kısılır.
             p = g[k][i] - (0.03 if k in ("au15", "au25", "au35") and i == 0 else 0)
-            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": p, "e": p * o - 1, "dis": g["kaynak"] == "piyasa"})
+            # Borsa onayı: kiyas.json'da (11 Kasım, 1.356 sonuçlu maç) borsanın (Smarkets) ihtimali iddaa'nınkinden 2 puandan
+            # fazla yüksek olan %60-70'lik favoriler belirgin daha sık tuttu: MS %69 (borsa aynıyken %59), 2.5 A/Ü %77 (%59).
+            # Bu seçenekler sıralamada 5 puan öne alınır (gösterilen ihtimal değişmez).
+            sm, idd = (m.get("sm") or {}).get(k), marjsiz(m[k]["o"])
+            onay = bool(sm and idd and len(sm) == len(idd) and sm[i] > idd[i] + 0.02)
+            out.append({"k": k, "i": i, "ad": AD[k][i], "o": o, "p": p, "e": p * o - 1, "dis": g["kaynak"] == "piyasa", "onay": onay})
     return out
 
 # xG kontrolü: gol pazarlarında (alt/üst, KG) iki takımın son maçlardaki xG'sinden Poisson ihtimali.
@@ -215,14 +220,15 @@ def kuponlari_kur(maclar):
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
     # %70'lik 2 seçenek yoksa (sakin günler) eşik %65'e iner; yoksa sağlam kupon hiç çıkmıyordu
     esik = 0.7 if len({v[0]["id"] for v in normal if v[1]["p"] >= 0.7}) >= 2 else 0.65
-    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= esik]), lambda v: (-v[1]["p"], -v[1]["e"])), 2)
-    k2 = sec(sirala(ucuz([v for v in normal if 0.55 <= v[1]["p"] < 0.75]), lambda v: -v[1]["e"]), 2)
+    bon = lambda v: 0.05 if v[1].get("onay") else 0
+    k1 = sec(sirala(ucuz([v for v in normal if v[1]["p"] >= esik]), lambda v: (-v[1]["p"] - bon(v), -v[1]["e"])), 2)
+    k2 = sec(sirala(ucuz([v for v in normal if 0.55 <= v[1]["p"] < 0.75]), lambda v: -v[1]["e"] - bon(v)), 2)
     sur = sirala([v for v in aday if v[1]["k"] == "iyms" and v[1]["i"] in (2, 6)], lambda v: (-v[1]["p"], -v[1]["e"]))
     k3 = sec(sur, 1)
     if k3:
         k3 += sec(sirala([v for v in normal if v[1]["p"] >= 0.6], lambda v: -v[1]["p"]), 2)
     paket = lambda ad, xs: {"ad": ad, "secim": [{"id": str(m["id"]), "ev": m["ev"], "dep": m["dep"], "lig": m["lig"], "t": m["t"], "k": x["k"], "i": x["i"],
-                                                  "ad": x["ad"], "o": x["o"], "p": round(x["p"], 4)} for m, x in xs]}
+                                                  "ad": x["ad"], "o": x["o"], "p": round(x["p"], 4), **({"onay": True} if x.get("onay") else {})} for m, x in xs]}
     # Tek maç: en sağlam seçim tek başına. Kayıtta (3 Kasım) seçimler tek tek oynansa birim başına -%14, 2'li kupon -%36:
     # kupon iddaa'nın payını katlıyor, tek maç en az kaybettiren yol.
     tek = k1[:1]
