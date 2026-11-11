@@ -1243,6 +1243,9 @@ function gununKuponlari(){
   const kupaAlt = v => /^au/.test(v.x.k) && v.x.i === 0 && /Kupa|Cup|Copa/.test(v.m.lig || "");
   // 3.5 Alt kuponda sürekli beklenenin altında kaldı: kupona alınmaz (kuponlar.py ile aynı)
   let normal = aday.filter(v => v.x.k !== "iyms" && v.x.o >= 1.2 && !kupaAlt(v) && !(v.x.k === "au35" && v.x.i === 0) && !v.x.itiraz);  // borsa itirazı: kuponlar.py ile aynı
+  // Kadın maçları kayıtta beklenenin belirgin altında kaldı: yeterli başka maç varsa alınmaz (kuponlar.py ile aynı)
+  const erkek = normal.filter(v => !/\(K\)/.test(v.m.ev + v.m.dep));
+  if (new Set(erkek.map(v => v.m.id)).size >= 6) normal = erkek;
   // Yeterli maç varsa yalnız sonucu daha önce gelmiş liglerden seçilir (kuponlar.py ile aynı)
   const bilinenNormal = normal.filter(v => bilinen.has(v.m.lig));
   if (new Set(bilinenNormal.map(v => v.m.id)).size >= 6) normal = bilinenNormal;

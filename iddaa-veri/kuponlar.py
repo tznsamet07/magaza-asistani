@@ -218,6 +218,11 @@ def kuponlari_kur(maclar):
     normal = [v for v in aday if v[1]["k"] != "iyms" and v[1]["o"] >= 1.2 and not xg_uyar(*v) and not dusuyor(*v) and not kupa_alt(*v) and not alt35(*v) and not v[1]["itiraz"]]
     # Sonucu hiç gelmemiş liglerin maçları (ör. İngiltere U21 Kupası, Kolombiya 2. lig) kupon karnesine giremiyor:
     # yeterli maç varsa yalnız sonucu daha önce gelmiş liglerden seçilir
+    # Kadın maçları (iddaa adında "(K)"): %55-80'lik seçimler 63 seçimde %52 tuttu (iddaa %63 diyordu).
+    # Yeterli başka maç varsa kupona alınmaz.
+    erkek = [v for v in normal if "(K)" not in v[0]["ev"] + v[0]["dep"]]
+    if len({v[0]["id"] for v in erkek}) >= 6:
+        normal = erkek
     bilinen = [v for v in normal if v[0].get("lig") in BILINEN]
     if len({v[0]["id"] for v in bilinen}) >= 6:
         normal = bilinen
