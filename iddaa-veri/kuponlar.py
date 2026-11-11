@@ -109,9 +109,12 @@ def gercek(m):
     if pm.get("ms"): kms.append((pm["ms"], W["polymarket"]))
     if sm.get("ms"): kms.append((sm["ms"], W["borsa"]))
     if tam(f.get("avgMs")): kms.append((marjsiz(f["avgMs"]), W["piyasa"]))
+    # The Odds API'deki Avrupa büroları ortalaması: football-data ortalaması yoksa onun yerine (aynı tür kaynak, çift sayılmasın)
+    elif pin.get("ort_ms"): kms.append((pin["ort_ms"], W["piyasa"]))
     if tam(dk.get("ms")): kms.append((marjsiz(dk["ms"]), W["dk"]))
     if sm.get("au25"): kau.append((sm["au25"], W["borsa"]))
     if tam(f.get("avgAu")): kau.append((marjsiz(f["avgAu"]), W["piyasa"]))
+    elif pin.get("ort_au25"): kau.append((pin["ort_au25"], W["piyasa"]))
     if tam(dk.get("au25")): kau.append((marjsiz(dk["au25"]), W["dk"]))
     ort = lambda ks: [sum(k[0][i] * k[1] for k in ks) / sum(k[1] for k in ks) for i in range(len(ks[0][0]))]
     ms = au = kaynak = None

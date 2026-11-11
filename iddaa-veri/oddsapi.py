@@ -42,7 +42,7 @@ for lig in LIGLER:
         continue
     if kalan is not None and int(float(kalan)) < 10:
         print("kredi azaldı, durdu"); break
-    oranlar = al(f"sports/{lig}/odds", regions="eu", markets="h2h,totals", bookmakers="pinnacle,betfair_ex_eu", oddsFormat="decimal", commenceTimeTo=son) or []
+    oranlar = al(f"sports/{lig}/odds", regions="eu", markets="h2h,totals", oddsFormat="decimal", commenceTimeTo=son) or []
     for e in oranlar:
         kayit = {"ev": e["home_team"], "dep": e["away_team"], "t": e["commence_time"], "lig": lig}
         # Önce Pinnacle, yoksa Betfair
@@ -59,6 +59,25 @@ for lig in LIGLER:
                         kayit["au25"] = marjsiz([o["Under"]["price"], o["Over"]["price"]])
                     elif lig.startswith("basketball") and c:
                         kayit.setdefault("toplam", {}).setdefault(str(c), marjsiz([o["Under"]["price"], o["Over"]["price"]]))
+        # Konsensüs: Pinnacle/Betfair dışındaki tüm Avrupa bürolarının marjsız ihtimal ortalaması (aynı kredi).
+        # Akademik bulgu: tek bir büronun oranı rakiplerinin bildiğini tam yansıtmıyor; ortalama ondan isabetli.
+        ko = {"ms": [], "au25": []}
+        for bm in e.get("bookmakers", []):
+            if bm["key"] in ("pinnacle", "betfair_ex_eu", "betfair_ex_uk"):
+                continue
+            for mk in bm.get("markets", []):
+                o = {x["name"]: x for x in mk.get("outcomes", [])}
+                if mk["key"] == "h2h" and lig.startswith("soccer") and all(s in o for s in (e["home_team"], "Draw", e["away_team"])):
+                    ko["ms"].append(marjsiz([o[s]["price"] for s in (e["home_team"], "Draw", e["away_team"])]))
+                if mk["key"] == "totals" and lig.startswith("soccer") and "Over" in o and "Under" in o and o["Over"].get("point") == 2.5:
+                    ko["au25"].append(marjsiz([o["Under"]["price"], o["Over"]["price"]]))
+        for a, xs in ko.items():
+            xs = [x for x in xs if x]
+            if len(xs) >= 5:
+                kayit["ort_" + a] = [round(sum(x[i] for x in xs) / len(xs), 4) for i in range(len(xs[0]))]
+                kayit["ort_n"] = max(kayit.get("ort_n", 0), len(xs))
+        if not kayit.get("ms") and kayit.get("ort_ms"):
+            kayit["ms"], kayit["kaynak"] = kayit["ort_ms"], "ortalama"
         if kayit.get("ms"):
             (futbol if lig.startswith("soccer") else basket).append(kayit)
 print(len(futbol), "futbol,", len(basket), "basketbol Pinnacle/Betfair; kalan kredi", kalan)

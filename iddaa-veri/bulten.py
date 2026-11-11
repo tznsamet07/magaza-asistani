@@ -239,7 +239,7 @@ for e in ham["sg"]["EA"]:
         m["sm"] = borsa_eslestir(e["HN"], e["AN"], bas)
         m["dkf"] = dk_eslestir(e["HN"], e["AN"], bas)
         m["pm"] = borsa_eslestir(e["HN"], e["AN"], bas, pm_futbol, ("ms",)) or None
-        m["pin"] = borsa_eslestir(e["HN"], e["AN"], bas, pin_futbol, ("ms", "au25")) or None
+        m["pin"] = borsa_eslestir(e["HN"], e["AN"], bas, pin_futbol, ("ms", "au25", "ort_ms", "ort_au25", "ort_n")) or None
         oynanma_ekle(m, e)
         hareket(m)
         futbol.append(m)
@@ -366,6 +366,8 @@ for m in futbol:
         k["dk"] = {"ms": oran_ol(m["dkf"]["ms"]), "au25": oran_ol(m["dkf"].get("au25"))}
     if m.get("pin"):
         k["pinnacle"] = {"ms": m["pin"].get("ms"), "au25": m["pin"].get("au25")}
+        if m["pin"].get("ort_ms"):
+            k["konsensus"] = {"ms": m["pin"].get("ort_ms"), "au25": m["pin"].get("ort_au25")}
     if m.get("pm"):
         k["polymarket"] = {"ms": m["pm"].get("ms")}
     k = {a: {p: v for p, v in b.items() if v} for a, b in k.items()}
