@@ -3,9 +3,9 @@
 # GitHub zamanlanmış işleri 5 dakikada bir başlatmıyor (pratikte saatte bir civarı). Bu yüzden her çalışma
 # ~50 dakika açık kalır ve iddaa-veri/tur.sh'yi 5 dakikada bir tekrarlar. Kasım 2026'da zamanlanmış çalışmalar 6 saate kadar
 # aralıklı başladı; bu yüzden her çalışma bitmeden kendinden sonrakini başlatır (zincir), zamanlama yalnız yedek.
-# tur.sh: iddaa bülteni ve canlı bülten, oynanma, Smarkets, Polymarket, The Odds API (anahtar varsa), football-data,
-# ESPN canlı/sonuç, ilk 11, xG, bildirimler, günün kuponları, haftalık karne. Her turdan önce dal yeniden çekilir,
-# yani betikte yapılan değişiklik bir sonraki turda devreye girer.
+# tur.sh: iddaa bülteni ve canlı bülten, oynanma, Smarkets, Polymarket, The Odds API (anahtar varsa), API-Football sakat/cezalı
+# listesi (anahtar varsa), football-data, ESPN canlı/sonuç, ilk 11, xG, bildirimler, günün kuponları, haftalık karne.
+# Her turdan önce dal yeniden çekilir, yani betikte yapılan değişiklik bir sonraki turda devreye girer.
 name: iddaa-gunluk
 on:
   schedule:
@@ -28,6 +28,7 @@ jobs:
     timeout-minutes: 58
     env:
       ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      APIFOOTBALL_KEY: ${{ secrets.APIFOOTBALL_KEY }}
       DAL: claude/project-thread-brb60g
     steps:
       - uses: actions/checkout@v4
