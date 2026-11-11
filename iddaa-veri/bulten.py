@@ -1,5 +1,6 @@
 # Nesine'nin herkese açık iddaa bülteninden (nesine.json) günün futbol ve basketbol maçlarını çıkarır,
 # football-data fikstürüyle eşleştirir ve oran hareketini tutar -> bulten.json
+import ortak
 import json, os, csv, io, difflib, unicodedata, re, datetime, gzip
 
 from ortak import oku_json, sade, benzer, K, TR
@@ -340,10 +341,8 @@ print(len(takip["maclar"]), "takipte,", sum(1 for k in takip["maclar"].values() 
 # Her maç için her kaynağın başlama öncesi son olasılığı kaydedilir; sonuç gelince (canli.py, ESPN ya da football-data)
 # uygulama hangi kaynağın daha isabetli olduğunu Brier skoruyla gösterir ve ağırlıkları buna göre ayarlar.
 def oran_ol(o):
-    if not o or not all(o):
-        return None
-    t = sum(1 / x for x in o)
-    return [round(1 / x / t, 4) for x in o]
+    p = ortak.marjsiz(o)
+    return [round(x, 4) for x in p] if p else None
 
 def halk_ol(v):
     y = (v or {}).get("y")

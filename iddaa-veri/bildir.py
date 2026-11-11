@@ -1,6 +1,7 @@
 # Avantajlı bahis çıkınca telefona bildirim gönderir (ntfy.sh, ücretsiz).
 # Telefonda ntfy uygulamasını kurup KONU kanalına abone olmak yeterli.
 # Her seçenek bir kez bildirilir; avantajı belirgin büyürse yeniden bildirilir. -> bildirim.json
+import ortak
 import json, os, datetime, urllib.request, base64
 from ortak import oku_json, K, TR, KONU, ESIK, W
 
@@ -8,10 +9,7 @@ ESIK_GECIKME = 0.03  # borsa oynadı, iddaa durdu: %3 yeter
 AD = {"ms": ["MS 1", "MS X", "MS 2"], "au25": ["2.5 Alt", "2.5 Üst"], "kg": ["KG Var", "KG Yok"]}
 
 def marjsiz(o):
-    if not o or not all(o):
-        return None
-    t = sum(1 / x for x in o)
-    return [1 / x / t for x in o]
+    return ortak.marjsiz(o)
 
 def gercek(m, k):
     # Uygulamadaki gibi: Pinnacle 4, Smarkets 3, piyasa ortalaması 2, DraftKings ve Polymarket 1 ağırlıkla

@@ -30,6 +30,25 @@ def benzer(a, b):
     return difflib.SequenceMatcher(None, a, b).ratio()
 
 
+def marjsiz(o):
+    # Oranlardan bahisçi payını ayırıp ihtimal çıkarır. 2'li pazarda (alt/üst) payı orantılı dağıtmak en isabetlisi.
+    # 3'lü pazarda (MS) Shin yöntemi: bahisçi payın çoğunu sürpriz sonuçlara yüklüyor, orantılı dağıtım favorinin
+    # ihtimalini düşük çıkarıyordu (iddaa 1.349 maç: %60+ favoriler %68 denip %74 tuttu; Shin ile %71 / %70).
+    if not o or not all(o):
+        return None
+    q = [1 / x for x in o]
+    B = sum(q)
+    if len(o) != 3:
+        return [x / B for x in q]
+    lo, hi = 0.0, 0.4
+    for _ in range(50):
+        z = (lo + hi) / 2
+        p = [((z * z + 4 * (1 - z) * x * x / B) ** 0.5 - z) / (2 * (1 - z)) for x in q]
+        lo, hi = (z, hi) if sum(p) > 1 else (lo, z)
+    s = sum(p)
+    return [x / s for x in p]
+
+
 # Bildirim kanalı ve avantaj eşiği (bildir.py, karne.py)
 KONU = "iddaa-analiz-7e4d51316682"
 ESIK = 0.05  # dış kaynaklı gerçek olasılıkta en az %5 avantaj

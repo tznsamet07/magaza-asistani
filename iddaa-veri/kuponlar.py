@@ -3,6 +3,7 @@
 # 1) En sağlam: gerçek ihtimali en yüksek 3 seçenek  2) Dengeli: ihtimal %55-75, avantajı en iyi 3 seçenek
 # 3) Sürpriz: ihtimali en yüksek İY/MS 1/2 ya da 2/1 + 2 sağlam seçenek
 # -> kuponlar.json
+import ortak
 import json, os, math, datetime, urllib.request, base64
 from ortak import oku_json, K, TR, KONU, W
 
@@ -18,10 +19,7 @@ kayit = oku_json("kuponlar.json") or {"gunler": {}}
 
 # ---------- Olasılık motoru (uygulamadakinin aynısı) ----------
 def marjsiz(o):
-    if not o or not all(o):
-        return None
-    t = sum(1 / x for x in o)
-    return [1 / x / t for x in o]
+    return ortak.marjsiz(o)
 
 POI = {}
 def poisson(l, n=10):

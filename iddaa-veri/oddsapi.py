@@ -2,6 +2,7 @@
 # Anahtar GitHub'da ODDS_API_KEY sırrında durur; yoksa hiçbir şey yapmaz.
 # Kredi idaresi: günde bir kez (16:00 TR'den sonra), sadece önümüzdeki 30 saatte maçı olan liglerden MS ve 2.5 çekilir
 # (lig başına 2 kredi). Lig listesi ve maç takvimi uç noktaları kredi harcamaz. -> oddsapi.json
+import ortak
 import json, os, datetime, urllib.request, urllib.parse
 from ortak import oku_json, K, TR
 
@@ -30,10 +31,8 @@ def al(yol, **p):
         return None
 
 def marjsiz(o):
-    if not o or not all(o):
-        return None
-    t = sum(1 / x for x in o)
-    return [round(1 / x / t, 4) for x in o]
+    p = ortak.marjsiz(o)
+    return [round(x, 4) for x in p] if p else None
 
 son = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
 futbol, basket = [], []
