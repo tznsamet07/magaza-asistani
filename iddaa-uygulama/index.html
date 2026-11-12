@@ -253,14 +253,15 @@ details.katla summary{font-weight:600;color:var(--yazi)}
   <div class="kart">
     <h2>Günün maçları · iddaa bülteni</h2>
     <div class="alt" id="bultenDurum"></div>
-    <p class="alt">İddaa bültenindeki bütün futbol maçları otomatik geliyor, 5 dakikada bir yenileniyor. Her maçta iddaa oranını <b>gerçek olasılık</b> tahminiyle karşılaştırıyorum. Gerçek olasılık için dünya bahis piyasasının ortalama oranını (marjı temizlenmiş) kullanıyorum, çünkü testlerde en isabetli tahmin bu çıktı. İddaa oranı bu olasılığın üstündeyse satır yeşil yanar. Maça dokunursan bütün pazarlar açılır.</p>
+    <input type="search" id="bAra" placeholder="Takım ya da lig ara…" autocomplete="off" style="width:100%;margin:10px 0 4px;padding:11px 14px;border-radius:12px;border:1px solid var(--cizgi);background:var(--giris);color:inherit;font:inherit">
+    <details class="nasil"><summary class="alt" style="cursor:pointer">Nasıl çalışıyor?</summary><p class="alt">İddaa bültenindeki bütün futbol maçları otomatik geliyor, 5 dakikada bir yenileniyor. Her maçta iddaa oranını <b>gerçek olasılık</b> tahminiyle karşılaştırıyorum. Gerçek olasılık için dünya bahis piyasasının ortalama oranını (marjı temizlenmiş) kullanıyorum, çünkü testlerde en isabetli tahmin bu çıktı. İddaa oranı bu olasılığın üstündeyse satır yeşil yanar. Maça dokunursan bütün pazarlar açılır.</p></details>
     <div class="satir" style="margin-top:0">
       <label class="secim"><input type="checkbox" id="bSadeceValue"> Sadece value çıkanlar</label>
       <label class="secim"><input type="checkbox" id="bSadecePiyasa"> Sadece piyasa verisi olanlar</label>
     </div>
   </div>
-  <div id="takipOzet"></div>
   <div id="bultenListe"><div class="kart">Yükleniyor…</div></div>
+  <div id="takipOzet"></div>
 </section>
 
 <!-- SÜRPRİZ -->
@@ -1786,6 +1787,7 @@ function bultenCiz(){
   $("bultenDurum").innerHTML = `Son bülten: <b>${esc(BULTEN.zaman)}</b> (Türkiye saati)`;
   const simdi = Date.now();
   const sadeceValue = $("bSadeceValue").checked, sadecePiyasa = $("bSadecePiyasa").checked;
+  const ara = ($("bAra").value || "").trim().toLocaleLowerCase("tr");
   const gunler = {};
   let n = 0;
   for (const m of BULTEN.futbol){
@@ -1794,6 +1796,7 @@ function bultenCiz(){
     const enIyi = sc[0], value = enIyi && enIyi.edge >= esikFor(enIyi.kaynak);
     if (sadeceValue && !value) continue;
     if (sadecePiyasa && (gercekOlasiliklar(m) || {}).kaynak !== "piyasa") continue;
+    if (ara && !(m.ev + " " + m.dep + " " + m.lig).toLocaleLowerCase("tr").includes(ara)) continue;
     n++;
     const g = gunAdi(m.t);
     (gunler[g] = gunler[g] || []).push({ m, enIyi, value });
@@ -1924,7 +1927,7 @@ document.addEventListener("click", e => {
   $("aLig").value = lig; takimlariDoldur(); $("aEv").value = ev; $("aDep").value = dep;
   $("analizBtn").click(); window.scrollTo(0, 0);
 });
-$("bSadeceValue").onchange = bultenCiz; $("bSadecePiyasa").onchange = bultenCiz;
+$("bAra").oninput = bultenCiz; $("bSadeceValue").onchange = bultenCiz; $("bSadecePiyasa").onchange = bultenCiz;
 
 // ---------- Otomatik takip ----------
 // Sunucu her maçın başlama öncesi son iddaa oranını ve piyasa olasılığını kaydeder; burada sinyallerin gerçek sonucu hesaplanır
@@ -1953,7 +1956,7 @@ function takipCiz(){
     const p = marjsiz(k.son.avgMs);
     p.forEach((pi, i) => { const a = pi * k.ilk.ms[i] - 1, b = pi * k.son.ms[i] - 1; clvIlk += a; clvSon += b; nClv++; if (a > b) clvPoz++; });
   }
-  kutu.innerHTML = `<div class="kart"><h2>Otomatik takip · gerçek iddaa oranlarıyla</h2>
+  kutu.innerHTML = `<details class="kart"><summary style="cursor:pointer"><b>Otomatik takip · gerçek iddaa oranlarıyla</b> <span class="alt">· ${ks.length} maç, dokun aç</span></summary>
     <div class="ozet">
       <div><b>${ks.length}</b><span>Takip edilen maç</span></div>
       <div><b>${biten.length}</b><span>Sonuçlanan</span></div>
@@ -1962,7 +1965,7 @@ function takipCiz(){
       <div><b>${nEdge ? (edgeTop / nEdge * 100).toFixed(1) + "%" : "–"}</b><span>İddaa'nın ortalama avantajı (eksi = aleyhine)</span></div>
     </div>
     <p class="alt">Uygulama, piyasa verisi olan her maçın başlamadan önceki son iddaa oranını kendiliğinden kaydediyor ve maç bitince sonucu işliyor. Böylece value sinyallerinin gerçekten para kazandırıp kazandırmadığını senin bir şey yapmana gerek kalmadan görüyoruz. ${biten.length < 200 ? "Henüz az maç var; en az birkaç yüz maç birikmeden sonuca güvenme." : ""}${nDeg ? ` İddaa oranları ilk açılıştan maç başına ortalama %${(oranDegisim / nDeg * 100).toFixed(1)} değişti.` : ""}</p>
-    ${nClv ? `<p class="alt"><b>Kapanış oranı karşılaştırması (CLV):</b> ${nClv / 3} maçta, maç başlarken piyasanın gerçek ihtimaline göre iddaa'nın ilk açtığı oranlar ortalama %${(clvIlk / nClv * 100).toFixed(1)}, maç önceki son oranları %${(clvSon / nClv * 100).toFixed(1)} avantaj veriyordu; seçeneklerin %${Math.round(clvPoz / nClv * 100)}'inde erken oran daha iyiydi. ${Math.abs(clvIlk - clvSon) / nClv < 0.005 ? "Erken ya da geç oynamak arasında belirgin fark yok." : clvIlk > clvSon ? "Yani iddaa'da erken oynamak genelde daha iyi fiyat veriyor." : "Yani iddaa'da beklemek genelde daha iyi fiyat veriyor."} Profesyoneller kazanıp kazanmadığını kısa vadede sonuçtan değil, aldığı oranın kapanış oranını yenip yenmediğinden anlar.</p>` : ""}</div>`;
+    ${nClv ? `<p class="alt"><b>Kapanış oranı karşılaştırması (CLV):</b> ${nClv / 3} maçta, maç başlarken piyasanın gerçek ihtimaline göre iddaa'nın ilk açtığı oranlar ortalama %${(clvIlk / nClv * 100).toFixed(1)}, maç önceki son oranları %${(clvSon / nClv * 100).toFixed(1)} avantaj veriyordu; seçeneklerin %${Math.round(clvPoz / nClv * 100)}'inde erken oran daha iyiydi. ${Math.abs(clvIlk - clvSon) / nClv < 0.005 ? "Erken ya da geç oynamak arasında belirgin fark yok." : clvIlk > clvSon ? "Yani iddaa'da erken oynamak genelde daha iyi fiyat veriyor." : "Yani iddaa'da beklemek genelde daha iyi fiyat veriyor."} Profesyoneller kazanıp kazanmadığını kısa vadede sonuçtan değil, aldığı oranın kapanış oranını yenip yenmediğinden anlar.</p>` : ""}</details>`;
 }
 
 async function bulteniYenile(){
