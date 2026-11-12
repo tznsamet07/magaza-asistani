@@ -858,3 +858,37 @@
 3288505;2026-11-12 04:00;El Salvador Primera Division, Açılış;CD Fas;Fundacion F. Un Atleta;2-1;2-2;1,63;3,13;3,32;1,66;1,59;52,5;24,6;22,9;1;hayır;Üst;evet;iddaa
 3387600;2026-11-12 05:00;Meksika Expansion MX Açılış, Playoff;Piratas Veracruz;Atletico La Paz;0-0;1-1;1,65;3,22;3,16;1,98;1,37;56,7;23,2;20,1;1;hayır;Üst;hayır;borsa
 3387598;2026-11-12 06:00;Meksika Liga MX Kadınlar, Açılış;Pachuca (K);Monterrey (K);0-1;0-1;2,36;3,14;2,03;2,01;1,35;34,5;24,6;41,0;2;evet;Üst;hayır;iddaa
+3339022;2026-11-12 18:00;Uluslararası Hazırlık Maçları;Özbekistan;Rusya;1-0;2-3;3,9;3,15;1,52;1,62;1,62;18,8;24,5;56,8;2;evet;Alt;hayır;iddaa
+3330648;2026-11-12 19:00;Afrika Uluslar Kupası;Madagaskar;Gine Bissau;0-0;1-1;2,98;2,64;1,93;1,3;2,14;26,1;30,8;43,1;2;hayır;Alt;evet;borsa,dk
+3330664;2026-11-12 19:00;Afrika Uluslar Kupası;D. Kongo Cum.;Sierra Leone;2-0;3-1;1,06;5,03;10,9;1,63;1,61;83,7;12,5;3,8;1;evet;Üst;evet;iddaa
+3330692;2026-11-12 19:00;Afrika Uluslar Kupası;Ekvator Ginesi;Zimbabve;0-0;0-0;2,26;2,52;2,53;1,28;2,24;35,7;32,4;31,9;1;hayır;Alt;evet;borsa,dk
+3288510;2026-11-12 20:00;UEFA Uluslar Ligi;Türkiye;Belçika;1-2;1-2;3,13;3,55;1,71;2,42;1,29;26,1;22,5;51,5;2;evet;Üst;evet;iddaa
+3330660;2026-11-12 20:00;Afrika Uluslar Kupası;Gine;Eritre;1-0;2-1;1,08;4,88;9,85;1,77;1,5;77,9;15,7;6,4;1;evet;Üst;evet;borsa,dk
+3381504;2026-11-12 20:30;İspanya Kral Kupası;C. Sotelo Puertollano;Albacete;0-2;0-3;4,91;3,83;1,3;1,92;1,41;16,8;21,6;61,6;2;evet;Üst;evet;borsa,dk
+3286942;2026-11-12 20:45;UEFA Şamp. Ligi Kadınlar ;Barcelona (K);Arsenal (K);0-1;1-1;1,06;6,03;8,01;3,37;1,07;79,5;11,6;8,9;1;hayır;Üst;hayır;borsa,dk
+3380163;2026-11-12 21:00;İspanya Kupası, Kadınlar;CA Osasuna (K);Cdef Logrono (K);1-2;2-3;2,82;3,04;1,82;1,68;1,56;28,0;25,6;46,4;2;evet;Üst;evet;iddaa
+3380164;2026-11-12 22:00;İspanya Kupası, Kadınlar;CE Europa (K);Dep. La Coruna (K);0-0;0-1;4,8;4,57;1,24;;;14,1;15,1;70,8;2;evet;;;iddaa
+3330645;2026-11-12 22:00;Afrika Uluslar Kupası;Benin;Orta Afrika Cum.;3-1;4-1;1,33;3,37;5,48;1,44;1,86;65,7;22,4;11,9;1;evet;Alt;hayır;iddaa
+3330675;2026-11-12 22:00;Afrika Uluslar Kupası;Kamerun;Namibya;2-0;2-0;1,08;4,44;11,6;1,42;1,89;78,5;16,9;4,6;1;evet;Alt;evet;borsa,dk
+3307392;2026-11-12 22:00;CONCACAF Uluslar Ligi;Barbados;Guadeloupe;0-2;0-3;2,36;3,12;2,04;1,98;1,38;37,4;25,8;36,8;1;hayır;Üst;evet;borsa,dk
+3288565;2026-11-12 22:45;UEFA Uluslar Ligi;Arnavutluk;Finlandiya;1-0;2-0;1,89;2,68;3,51;1,29;2,42;46,1;31,1;22,8;1;evet;Alt;evet;iddaa
+3288733;2026-11-12 22:45;UEFA Uluslar Ligi;İtalya;Fransa;1-1;3-1;3,37;3,31;1,7;1,95;1,48;23,2;25,4;51,4;2;hayır;Üst;evet;borsa,dk
+3307399;2026-11-12 23:00;CONCACAF Uluslar Ligi;Bonaire;Küba;0-1;1-7;9,33;5,28;1,07;2,27;1,26;8,7;15,4;75,9;2;evet;Üst;evet;iddaa
+3286996;2026-11-12 23:00;UEFA Şamp. Ligi Kadınlar ;Benfica (K);FK Austria Wien (K);1-0;3-1;1,3;3,76;5,08;1,8;1,47;64,2;21,5;14,3;1;evet;Üst;evet;borsa,dk
+3288570;2026-11-13 00:30;El Salvador Primera Division, Açılış;Atletico Balboa;CD Inca;;4-1;1,38;3,52;4,47;1,79;1,48;62,1;21,7;16,1;1;evet;Üst;evet;borsa,dk
+3288740;2026-11-13 00:30;El Salvador Primera Division, Açılış;CD Aguila;Municipal L.;1-0;1-1;1,5;3,29;3,78;1,83;1,45;56,5;23,4;20,2;1;hayır;Üst;hayır;borsa,dk
+3293785;2026-11-13 01:00;Brezilya Serie B;Ponte Preta;Operario;0-0;0-2;3,92;3,48;1,45;1,79;1,48;19,6;22,8;57,7;2;evet;Üst;hayır;borsa,dk
+3309437;2026-11-13 01:00;CONCACAF Uluslar Ligi, Hazırlık;Aruba;Martinik;0-0;0-0;6,33;4,61;1,16;2,14;1,31;11,5;16,5;72,0;2;hayır;Üst;hayır;borsa
+3335774;2026-11-13 01:00;Venezuela Prmr Lig, Kapanış, Ana Tur;A. Puerto C.;Monagas SC;0-0;0-1;1,3;3,68;5,14;1,75;1,51;63,2;22,1;14,7;1;hayır;Üst;hayır;borsa
+3279450;2026-11-13 01:00;Guatemala Ulusal Lig, Açılış;Aurora;Deportivo Mixco;0-1;0-1;1,72;2,99;3,16;1,6;1,65;49,1;26,3;24,6;1;hayır;Alt;evet;borsa,dk
+3309438;2026-11-13 02:00;CONCACAF Uluslar Ligi, Hazırlık;Antigua & Bar.;Trinidad & T.;1-3;2-3;6,13;4,39;1,19;2,05;1,34;11,5;17,1;71,3;2;evet;Üst;evet;borsa
+3379520;2026-11-13 02:00;Uruguay Prmr Ligi, Kapanış;Cerro Largo;CA Progreso;1-0;2-2;1,53;2,97;4,13;1,38;1,96;54,6;26,4;19,0;1;hayır;Alt;hayır;borsa,dk
+3295351;2026-11-13 02:00;Brezilya Serie B;Sao Bernardo FC;Athletic Club MG;0-0;2-2;1,97;2,8;2,71;1,51;1,74;42,4;27,6;30,0;1;hayır;Alt;hayır;borsa,dk
+3381499;2026-11-13 02:00;Bolivya Profesyonel Lig Kupası, Playoff;Real Potosi;Nacional Potosi;2-4;5-5;2,09;2,86;2,46;1,6;1,65;38,1;29,2;32,7;1;hayır;Alt;hayır;borsa
+3286926;2026-11-13 02:00;Arjantin Süper Kupa;Estudiantes;Ind. Mendoza;0-0;3-2;2,16;2,54;3,02;1,22;2,69;39,7;33,1;27,2;1;evet;Alt;hayır;iddaa
+3390353;2026-11-13 03:00;Kolombiya Liga Dimayor, Final;Llaneros;Boyaca Chico;0-0;0-0;1,19;3,98;7,08;1,66;1,59;70,3;19,8;9,9;1;hayır;Üst;hayır;borsa,dk
+3307394;2026-11-13 03:30;CONCACAF Uluslar Ligi;Curaçao;Panama;0-0;0-0;3,14;2,83;1,78;1,45;1,85;23,7;29,1;47,2;2;hayır;Alt;evet;borsa
+3387599;2026-11-13 05:00;Meksika Expansion MX Açılış, Playoff;Atl Morelia;Leones Negros;0-0;1-0;1,51;3,1;4,04;1,54;1,72;57,1;25,6;17,3;1;evet;Alt;evet;borsa
+3330669;2026-11-13 16:00;Afrika Uluslar Kupası;Mozambik;Etiyopya;0-0;0-1;1,34;3,33;5,32;1,42;1,89;63,0;24,2;12,7;1;hayır;Alt;evet;borsa,dk
+3330684;2026-11-13 16:00;Afrika Uluslar Kupası;Zambiya;Burundi;0-0;1-1;1,46;3,06;4,52;1,31;2,13;58,3;25,9;15,8;1;hayır;Alt;evet;borsa,dk
+3386157;2026-11-13 17:10;Uluslararası Hazırlık Maçları;B. A. Emirlikleri;Honduras;1-0;3-1;1,83;2,91;2,91;1,44;1,85;46,1;26,9;26,9;1;evet;Alt;hayır;iddaa
