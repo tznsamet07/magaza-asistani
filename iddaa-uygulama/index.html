@@ -1427,7 +1427,7 @@ function tekMacKarti(){
   let n = 0, t = 0;
   for (const v of Object.values(KUPONLAR.gunler)) for (const k of v.kuponlar) if (/tek maç/i.test(k.ad) && (k.sonuc === "tuttu" || k.sonuc === "yattı")){ n++; if (k.sonuc === "tuttu") t++; }
   const karne = n ? `Tek maç karnesi: <b>${n}</b> oynandı, <b>${t}</b> tuttu.` : "";
-  if (!tekler.length) return `<div class="tek"><div class="tek-baslik">Bugünün tek maçı</div><div class="tek-not">${g ? "Bugün ihtimali %65'in üstünde, güvenilir bir seçenek çıkmadı. Böyle günlerde oynamamak en iyisi. Akşam 18:00'de yeniden bakılır." : "Sabah 09:00'da seçilir, akşam 18:00'de bir tane daha gelir."} ${karne}</div></div>`;
+  if (!tekler.length) return `<div class="tek"><div class="tek-baslik">Bugünün tek maçı</div><div class="tek-not">${g ? "Bugün ihtimali %72'nin üstünde, borsanın da itiraz etmediği bir seçenek çıkmadı. Bugün oynama. Akşam 18:00'de yeniden bakılır." : "Sabah 09:00'da seçilir, akşam 18:00'de bir tane daha gelir."} ${karne}</div></div>`;
   return `<div class="tek"><div class="tek-baslik">Bugünün tek maçı</div>` + tekler.map(k => { const s = k.secim[0];
     const durum = s.tuttu === true ? `<span class="tek-durum ok">TUTTU${s.skor ? " " + s.skor.join("-") : ""}</span>` : s.tuttu === false ? `<span class="tek-durum yok">YATTI${s.skor ? " " + s.skor.join("-") : ""}</span>` : "";
     return `<div class="tek-satir" data-ac="${esc(s.id)}"><div class="ts-sol"><div class="ts-mac">${esc(s.ev)} – ${esc(s.dep)}${durum}</div><div class="ts-alt">${/akşam/i.test(k.ad) ? "Akşam · " : ""}${saat(s.t)} · ${esc(s.lig)}</div><div class="ts-secim">${esc(s.ad)}${s.onay ? ` <span class="iyi">· borsa onaylı</span>` : ""}</div></div>

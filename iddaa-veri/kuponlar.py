@@ -243,7 +243,9 @@ def kuponlari_kur(maclar):
                                                   "ad": x["ad"], "o": x["o"], "p": round(x["p"], 4), **({"onay": True} if x.get("onay") else {})} for m, x in xs]}
     # Tek maç: en sağlam seçim tek başına. Kayıtta (3 Kasım) seçimler tek tek oynansa birim başına -%14, 2'li kupon -%36:
     # kupon iddaa'nın payını katlıyor, tek maç en az kaybettiren yol.
-    tek = k1[:1]
+    # 12 Kasım: tek maç yalnız %72 ve üstü seçimden çıkar (borsa itirazı olanlar zaten elendi). iddaa'nın %75+ favorileri
+    # kayıtta %80-91 tuttu; emin seçim yoksa o gün tek maç verilmez ("bugün oynama").
+    tek = [v for v in k1 if v[1]["p"] >= 0.72][:1]
     return [paket(a, xs) for a, xs in (("Tek maç", tek), ("En sağlam", k1), ("Dengeli", k2), ("Sürpriz", k3)) if xs]
 
 # ---------- Sonuçlar ----------
