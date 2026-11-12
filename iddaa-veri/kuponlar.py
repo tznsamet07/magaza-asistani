@@ -220,7 +220,8 @@ def kuponlari_kur(maclar):
     # yeterli maç varsa yalnız sonucu daha önce gelmiş liglerden seçilir
     # Kadın maçları (iddaa adında "(K)"): %55-80'lik seçimler 63 seçimde %52 tuttu (iddaa %63 diyordu).
     # Yeterli başka maç varsa kupona alınmaz.
-    erkek = [v for v in normal if "(K)" not in v[0]["ev"] + v[0]["dep"]]
+    # Hazırlık maçlarında (milli ve genç takımlar) çok oyuncu değişikliği ve düşük motivasyon var: aynı kuralla dışarıda
+    erkek = [v for v in normal if "(K)" not in v[0]["ev"] + v[0]["dep"] and "Hazırlık" not in (v[0].get("lig") or "")]
     if len({v[0]["id"] for v in erkek}) >= 6:
         normal = erkek
     bilinen = [v for v in normal if v[0].get("lig") in BILINEN]
