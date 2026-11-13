@@ -1,6 +1,6 @@
 # API-Football ücretsiz katmanı (günde 100 sorgu): bugünkü ve yarınki maçların sakat / cezalı oyuncu listesi.
 # Anahtar GitHub'da APIFOOTBALL_KEY sırrında durur; yoksa hiçbir şey yapmaz.
-# Sorgu idaresi: 3 saatte bir, gün başına en çok 3 sorgu (fixtures, injuries?date, gerekirse injuries?ids) -> günde ~50 sorgu.
+# Sorgu idaresi: 3 saatte bir; gün başına fixtures + injuries?date, ayrıca kupondaki en çok 8 maç için injuries?fixture -> günde ~100 sorguya kadar.
 # Bülten maçlarıyla takım adı + başlama saatinden eşleştirilir -> apifootball.json
 import json, os, datetime, urllib.request, urllib.parse
 from ortak import oku_json, benzer, K, TR
@@ -57,18 +57,27 @@ for g in sorted({datetime.datetime.fromtimestamp(m["t"] / 1000, TR).strftime("%Y
         if en and puan >= 1.4:
             eksik[str(m["id"])] = {"fid": en["fixture"]["id"], "hid": en["teams"]["home"]["id"], "aid": en["teams"]["away"]["id"]}
     teshis[g] = {"fikstur": len(fik), "sakat_tarihle": len(sak)}
-    # Tarihle sorgu boş dönerse (11-12 Kasım'da 95 maçta 0 kayıt) maç numarasıyla sorulur: ids=1-2-3 (en çok 20)
-    if not sak:
-        ids = [str(v["fid"]) for v in eksik.values() if not v.get("bakildi")][:20]
-        for i in range(0, len(ids), 20):
-            for s in al("injuries", ids="-".join(ids[i:i + 20])):
-                fid, tid = s.get("fixture", {}).get("id"), s.get("team", {}).get("id")
-                p = s.get("player", {})
-                oyuncu.setdefault((fid, tid), []).append([p.get("name"), p.get("type"), p.get("reason")])
-        teshis[g]["sakat_idle"] = sum(len(v) for v in oyuncu.values())
     for v in eksik.values():
-        if "hid" in v:
-            v["ev"], v["dep"], v["bakildi"] = oyuncu.get((v["fid"], v.pop("hid")), []), oyuncu.get((v["fid"], v.pop("aid")), []), True
+        if "ev" not in v:
+            v["ev"], v["dep"] = oyuncu.get((v["fid"], v["hid"]), []), oyuncu.get((v["fid"], v["aid"]), [])
+
+# Ücretsiz planda ids= kapalı, date= ile de kayıt gelmedi (11-13 Kasım). Kupondaki maçlar tek tek fixture= ile sorulur
+# (en çok 8 sorgu; günde ~80 sorgu). Gelmezse plan bu sezonun sakatlık verisini vermiyor demektir.
+kup = (oku_json("kuponlar.json") or {}).get("gunler", {}).get(simdi.strftime("%Y-%m-%d"), {}).get("kuponlar", [])
+kup_id = list(dict.fromkeys(s["id"] for kp in kup for s in kp["secim"] if s["t"] > simdi_ms))[:8]
+n = 0
+for mid in kup_id:
+    v = eksik.get(mid)
+    if not v:
+        continue
+    r = al("injuries", fixture=v["fid"]); n += 1
+    for x in r:
+        tid, p = x.get("team", {}).get("id"), x.get("player", {})
+        (v["ev"] if tid == v["hid"] else v["dep"] if tid == v["aid"] else []).append([p.get("name"), p.get("type"), p.get("reason")])
+teshis["kupon_sorgu"] = n
+teshis["kupon_kayit"] = sum(len(eksik[m]["ev"]) + len(eksik[m]["dep"]) for m in kup_id if m in eksik)
+for v in eksik.values():
+    v.pop("hid", None); v.pop("aid", None)
 
 with open(os.path.join(K, "apifootball.json"), "w", encoding="utf-8") as f:
     json.dump({"zaman": simdi.strftime("%Y-%m-%d %H:%M"), "ms": simdi_ms, "kalan": kalan, "hata": hatalar[:5], "teshis": teshis, "maclar": eksik},
