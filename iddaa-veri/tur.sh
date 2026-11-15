@@ -15,7 +15,7 @@ echo "=== tur $(date -u +%H:%M) ==="
   # Kupalar ESPN'in "all" tablosunda eksik çıkıyor (Kral Kupası alt tur maçları gelmiyordu): ayrıca dün ve bugün
   rm -f espn-futbol-ek-*.json
   for d in $G0 $G1; do
-    echo esp.copa_del_rey eng.league_cup eng.fa eng.trophy ger.dfb_pokal ita.coppa_italia fra.coupe_de_france por.taca.portugal ned.cup sco.cis sco.tennents tur.1 ksa.kings.cup | tr ' ' '\n' | \
+    echo esp.copa_del_rey eng.league_cup eng.fa eng.trophy ger.dfb_pokal ita.coppa_italia fra.coupe_de_france por.taca.portugal ned.cup sco.cis sco.tennents sco.challenge sco.2 sco.3 tur.1 ksa.kings.cup | tr ' ' '\n' | \
       xargs -P 6 -I{} sh -c "curl -sSfL -m 30 -o espn-futbol-ek-{}-$d.json 'https://site.api.espn.com/apis/site/v2/sports/soccer/{}/scoreboard?dates=$d' 2>/dev/null || true"
   done
   for l in nba wnba; do
