@@ -14,6 +14,10 @@ simdi_ms = simdi.timestamp() * 1000
 eski = oku_json("apifootball.json") or {}
 if eski.get("ms", 0) > simdi_ms - 3 * 3600e3:
     raise SystemExit(0)
+# 16 Kasım: hesap API-Football tarafından askıya alındı; tekrar denemek boşuna (ve ücretsiz plan zaten bu sezonun
+# sakatlık verisini vermiyordu). Askıya alma hatası kayıtlıysa hiç sorgu yapılmaz.
+if any("suspended" in h for h in eski.get("hata") or []):
+    raise SystemExit(0)
 
 hatalar, kalan = [], None
 def al(yol, **p):
