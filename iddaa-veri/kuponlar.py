@@ -221,12 +221,12 @@ def kuponlari_kur(maclar):
     # Kadın maçları (iddaa adında "(K)"): %55-80'lik seçimler 63 seçimde %52 tuttu (iddaa %63 diyordu).
     # Yeterli başka maç varsa kupona alınmaz.
     # Hazırlık maçlarında (milli ve genç takımlar) çok oyuncu değişikliği ve düşük motivasyon var: aynı kuralla dışarıda
-    erkek = [v for v in normal if "(K)" not in v[0]["ev"] + v[0]["dep"] and "Hazırlık" not in (v[0].get("lig") or "")]
-    if len({v[0]["id"] for v in erkek}) >= 6:
-        normal = erkek
-    bilinen = [v for v in normal if v[0].get("lig") in BILINEN]
-    if len({v[0]["id"] for v in bilinen}) >= 6:
-        normal = bilinen
+    # 19 Kasım: geri dönüş (az maç varsa yine de al) kaldırıldı. Sakin günlerde kadın maçları ve sonucu hiç gelmemiş
+    # liglerin maçları (Venezuela Kupası, Cezayir, Slovenya Kupası...) kupona girdi; sonuçları gelmediği için karne kör kaldı.
+    # Böyle günlerde daha az kupon çıkar, sorun değil.
+    normal = [v for v in normal if "(K)" not in v[0]["ev"] + v[0]["dep"] and "Hazırlık" not in (v[0].get("lig") or "")]
+    if len(BILINEN) >= 30:
+        normal = [v for v in normal if v[0].get("lig") in BILINEN]
     # Sağlam ve dengeli kupon 2 maçlık: 3 maçta %70'lik seçimlerle bile kupon ancak %35 tutuyordu
     # iddaa'nın payı seçenekten seçeneğe değişiyor; payı %12'den fazla olanlar yeterince aday varsa alınmaz
     ucuz = lambda xs: [v for v in xs if v[1]["e"] >= -ESIK_PAY] if len([v for v in xs if v[1]["e"] >= -ESIK_PAY]) >= 6 else xs
